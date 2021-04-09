@@ -1,0 +1,90 @@
+.ant-btn{
+    font-weight: 500 ;
+}
+.ant-input-affix-wrapper .ant-input:not(:first-child) {
+    padding-left: 35px !important;
+}
+.ant-btn.ant-btn-link.underline {
+    span{
+        text-decoration: underline;
+    }
+}
+
+.ant-modal-mask {
+        z-index: 10000 !important;
+}
+
+.ant-modal-wrap{
+    z-index: 10001 !important;
+}
+
+.ant-input-password{
+    .has-error.has-feedback .ant-form-item-children-icon{
+        display: none !important;
+    }
+}
+
+.ant-btn-primary-outline {
+    color: var(--primary);
+    background-color: white;
+    border-color: var(--primary);
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
+
+    &:hover{
+        background-color:var(--primary);
+        color:#fff
+    }
+}
+
+.ant-modal-close{
+    outline: none !important;
+}
+
+.ant-modal-mask{
+    background:rgba(10,10,10,0.86) !important;
+}
+
+.ant-modal-content {
+    border-radius: 6px !important;;
+}
+
+.ant-modal-header {
+       border-radius: 6px 6px 0 0 !important;;
+}
+
+.ant-message-custom-content.ant-message-success {
+    display: flex !important;
+    align-items: center !important;
+}
+
+.ant-back-top {
+  right: 50px !important;
+  bottom: 50px;
+  &-content {
+    background: var(--primary);
+  }
+}
+.ant-modal-close-x {
+    width: 54px;
+    height: 54px;
+    font-size: 14px;
+
+    .anticon {
+    vertical-align: .03em;
+    }
+}
+
+.ant-checkbox-inner {
+    border-radius: 3px;
+}
+
+.ant-form-item-control.has-feedback{
+.ant-input{
+    &:not(:first-child){
+        padding-left: 35px !important;
+    }
+        padding-right: 30px !important;
+    // padding: 6px 30px 6px 11px !important;
+}
+}

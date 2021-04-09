@@ -1,0 +1,13 @@
+{
+    "__schema": {
+        "types": [{
+            "kind": "INTERFACE",
+            "name": "Post",
+            "possibleTypes": [{
+                "name": "PostImages"
+            }, {
+                "name": "PostQuestion"
+            }]
+        }]
+    }
+}

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
+    <link href="<%= BASE_URL%>css/animate.min.css" rel="stylesheet">
+    <link href="<%= BASE_URL%>css/bootstrap4.4.min.css" rel="stylesheet">
+    <link href="<%= BASE_URL%>css/nprogress.css" rel="stylesheet">
+    <link href="<%= BASE_URL%>lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="<%= BASE_URL%>lib/ionicons/css/ionicons.min.css" rel="stylesheet">
+    <link href="<%= BASE_URL%>lib/mdb/mdb.min.css" rel="stylesheet">
+    <link href="<%= BASE_URL%>lib/hover-master/hover-min.css" rel="stylesheet">
+    <link href="<%= BASE_URL%>lib/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet">
+    <link href="<%= BASE_URL%>lib/jquery-switchbutton/jquery.switchButton.css" rel="stylesheet">
+    <link href="<%= BASE_URL%>lib/rickshaw/rickshaw.min.css" rel="stylesheet">
+    <link href="<%= BASE_URL%>lib/chartist/chartist.css" rel="stylesheet">
+    <!-- MiniAdmin CSS -->
+    <link rel="stylesheet" href="../css/style.css">
+
+    <title>Lextool 2.0</title>
+
+ 
+     <meta name="importmap-type" content="systemjs-importmap">
+     <!-- "@vue-mf/rate-dogs": "http://localhost:8503/js/app.js", -->
+     <script type="systemjs-importmap">
+       {
+         "imports": {
+          "@vue-mf/automatic-entry": "http://localhost:8503/js/app.js",
+          "vue": "/js/vendors/vue.js",
+          "vue-router": "/js/vendors/vue-router.min.js"
+        }
+      }
+     </script>
+
+     <script src="/js/vendors/system.js"></script>
+     <script src="/js/vendors/amd.js"></script>
+     <script src="/js/vendors/named-exports.js"></script>
+     <script src="/js/vendors/named-register.min.js"></script>
+     <script src="/js/vendors/import-map-overrides.js"></script>
+     <script src="/js/vendors/zone.js"></script>
+
+  </head>
+  <body id="body">
+    <script>
+      System.import('vue');
+      System.import('vue-router')
+    </script>
+
+    <noscript>
+      <strong>
+        We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work
+        properly without JavaScript enabled. Please enable it to continue.
+      </strong>
+    </noscript>
+    </div>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+  </body>
+
+</html>

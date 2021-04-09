@@ -1,0 +1,351 @@
+.u-pointer {
+    cursor: pointer !important;
+}
+.flex{
+    display: flex;
+}
+.flexC {
+  display: flex;
+  flex-direction: column;
+}
+
+.flexR {
+  display: flex;
+  flex-direction: row;
+}
+
+.fadeInUp{
+    opacity: 1 !important;
+}
+.primary{
+    color: var(--primary) !important;
+}
+.bg-primary{
+background-color:  var(--primary) !important;
+background:  var(--primary) !important;
+}
+.overflow-y-hidden{
+    overflow-y: hidden !important;
+}
+.overflow-x-hidden{
+    overflow-x: hidden !important;
+}
+.bg-gray{
+    background: #f4f4f4 !important
+}
+
+.u-cursor-help {
+    cursor: help !important;
+}
+
+.radius {
+    border-radius: var(--radius);
+}
+
+.break-word {
+    overflow-wrap: break-word !important;
+}
+
+.u-absCenter {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+}
+
+.u-transition-1 {
+    transition: all 1s !important;
+}
+
+.u-transition-04 {
+    transition: all .4s !important;
+}
+
+.u-transition-06 {
+    transition: all .6s !important;
+}
+
+.u-transition-02 {
+    transition: all .2s !important;
+}
+
+.text-shadow {
+    text-shadow: 1px 1px 1px black !important;
+}
+
+.u-text-shadow {
+    text-shadow: 0.1rem 0.2rem 0.2rem #000000;
+}
+
+.u-text-shadow-low {
+    text-shadow: .4px 1px 1px #000000
+}
+
+.u-shadow-small {
+    box-shadow: darkgrey 0.5px 0.5px 2px;
+}
+
+.u-shadow-medium {
+    box-shadow: darkgrey 1px 1px 3px;
+}
+
+.btn-dashed{
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    flex-direction: column !important;
+}
+
+//From Material Bootstrap
+.hoverable {
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;
+    transition: all .20s ease-in-out;
+
+    &:hover {
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important
+    }
+}
+
+.backface-hidden {
+    backface-visibility: hidden !important;
+}
+
+.u-text-ellipsis {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.fs-smaller {
+    font-size: smaller !important;
+}
+
+.fs-small {
+    font-size: small !important;
+}
+
+.fs-medium {
+    font-size: medium !important;
+}
+
+.fs-larger {
+    font-size: larger !important;
+}
+
+@keyframes rotate-s-loader {
+    from {
+        transform: rotate(0);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.w-fit-content {
+    width: fit-content !important;
+}
+
+.h-fit-content {
+    height: fit-content !important;
+}
+
+.u-word-break {
+    word-break: break-all !important;
+}
+
+.u-cover {
+    object-fit: cover;
+}
+
+.justify-center {
+    justify-content: center !important;
+}
+
+.u-opacity-1 {
+    opacity: 1 !important;
+}
+
+.u-opacity-70 {
+    opacity: 0.70;
+}
+
+.u-opacity-65 {
+    opacity: 0.65;
+}
+
+.u-opacity-0 {
+    opacity: 0 !important;
+}
+
+.price-line {
+  height: 8px;
+  border-bottom: 1px dashed #d1cfcf;
+  margin: 0 10px;
+  flex-grow: 1;
+}
+
+.u-overlay{
+    i{
+        opacity: 0 ;
+         display: flex;
+        position: absolute;
+        border-radius: 50%;
+        border: 2px solid white;
+        cursor: pointer;
+        color: white;
+        right: 10px;
+        top: 10px;
+        height: 34px;
+        width: 34px;
+        z-index: 2;
+        padding: 6px;
+    }
+    &:before{
+        position: absolute;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,.6);
+        opacity: 0;
+        transition: all .3s;
+        content: " ";
+    }
+    &:hover{
+        &:before,i{
+            opacity:1;
+        }
+    }
+}
+
+.form-dashed {
+    position: relative;
+    padding:20px;
+    border-color: #d9d9d9 !important;
+    border: 1px dashed;
+
+    &>label{
+        font-weight: 500;
+        background: white;
+    position: absolute;
+    top: -14px;
+    background: white;
+        padding-left: 7px;
+    padding-right: 7px;
+
+    }
+}
+.d-grid {
+    display: grid
+}
+
+.link {
+    transition: all .3s;
+    &:hover {
+        cursor: pointer !important;
+        color: var(--primary) !important;
+    }
+}
+
+.border-dashed{
+    border-color: #d9d9d9 !important;
+    border: 1px dashed;
+}
+
+
+.underline{
+    text-decoration: underline !important;
+}
+
+  .wow:first-child {
+      visibility: hidden;
+    }
+
+    .wow{
+        animation-duration: 1.4s !important;
+    }
+
+.flex-center {
+    display: flex !important;
+    align-items: center !important;
+}
+.align-center {
+    align-items: center !important;
+}
+
+.fw-400 {
+    font-weight: 400 !important;
+}
+
+.fw-500 {
+    font-weight: 500 !important;
+}
+
+.h-100vh {
+    min-height: 100vh;
+}
+
+
+@-webkit-keyframes spinAround {
+    from {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg)
+    }
+
+    to {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg)
+    }
+}
+
+@keyframes spinAround {
+    from {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg)
+    }
+
+    to {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg)
+    }
+}
+
+// html{
+//         -webkit-animation: spinAround 500ms infinite linear;
+//         animation: spinAround 500ms infinite linear;
+// }
+
+.loads {
+    border-radius: 3px;
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+    -webkit-animation-name: placeload;
+    animation-name: placeload;
+    -webkit-animation-timing-function: linear;
+    animation-timing-function: linear;
+    background: #f6f7f8;
+    background: #eee;
+    background: -webkit-gradient(linear,  left top,  right top,  color-stop(8%,  #eee),  color-stop(18%,  #ddd),  color-stop(33%,  #eee));
+    background: linear-gradient(to right,  #eee 8%,  #ddd 18%,  #eee 33%);
+    background-size: 1200px 104px;
+    position: relative;
+}
+@-webkit-keyframes placeload {
+    0% {
+    background-position: -468px 0;
+}
+100% {
+    background-position: 468px 0;
+}
+}@keyframes placeload {
+    0% {
+    background-position: -468px 0;
+}
+100% {
+    background-position: 468px 0;
+}
+}
