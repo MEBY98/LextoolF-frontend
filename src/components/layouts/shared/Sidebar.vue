@@ -55,38 +55,9 @@ export default defineComponent({
   data: () => ({
     links: [
       {
-        text: 'Crear proyecto',
-        to: { name: 'createProject' },
+        text: 'Estudios Fraseologicos',
         icon: 'ion-ios-book-outline',
-      },
-      {
-        text: 'Unidad fraseológica',
-        icon: 'ion-ios-compose-outline',
-        children: [
-          { text: 'Excel', to: { name: 'excel' } },
-          { text: 'Nueva', to: { name: 'home' } },
-          // { text: 'Editar Entradas', to: { name: 'editEntries' } },
-        ],
-      },
-      // {
-      //   text: 'Fuente',
-      //   to: { name: 'home' },
-      //   icon: 'ion-ios-list-outline',
-      // },
-      {
-        text: 'Descriptores',
-        to: { name: 'home' },
-        icon: 'ion-ios-list-outline',
-      },
-      {
-        text: 'Análisis',
-        to: { name: 'home' },
-        icon: 'ion-ios-eye-outline',
-      },
-      {
-        text: 'Búsqueda',
-        to: { name: 'home' },
-        icon: 'ion-ios-search',
+        to: { name: 'studies' },
       },
     ],
   }),

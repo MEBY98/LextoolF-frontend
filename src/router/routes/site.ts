@@ -1,32 +1,49 @@
 import { RouteRecordRaw } from 'vue-router';
 
-const CreateProject = () =>
-  import('@/components/pages/project/CreateProject.vue');
+const home = () => import('@/components/pages/home.vue');
+const studies = () => import('@/components/pages/study/studies.vue');
+const newStudy = () => import('@/components/pages/study/newStudy.vue');
+const editStudy = () => import('@/components/pages/study/editStudy.vue');
+const dictionaries = () =>
+  import('@/components/pages/dictionary/dictionaries.vue');
 
-const ExcelView = () => import('@/components/pages/UF/excel/ExcelView.vue');
-
-const AutomaticEntry = () =>
-  import('@/components/pages/entry/automaticEntry/AutomaticEntry.vue');
-
-const EditEntry = () =>
-  import('@/components/pages/entry/editEntries/EditEntries.vue');
+const newEntry = () => import('@/components/pages/entry/newEntry.vue');
 
 export const SiteRoutes: RouteRecordRaw[] & any = [
   {
-    name: 'createProject',
-    exact: true,
-    path: 'create-project',
-    component: CreateProject,
-  },
-  {
-    path: 'home',
-    exact: true,
     name: 'home',
+    exact: true,
+    path: '',
+    component: home,
   },
   {
-    path: 'excel',
+    name: 'studies',
     exact: true,
-    name: 'excel',
-    component: ExcelView,
+    path: 'studies',
+    component: studies,
+  },
+  {
+    name: 'newStudy',
+    exact: true,
+    path: 'newStudy',
+    component: newStudy,
+  },
+  {
+    name: 'editStudy',
+    exact: true,
+    path: 'editStudy/:id',
+    component: editStudy,
+  },
+  {
+    name: 'dictionaries',
+    exact: true,
+    path: 'dictionaries',
+    component: dictionaries,
+  },
+  {
+    name: 'newEntry',
+    exact: true,
+    path: 'newEntry/:letter',
+    component: newEntry,
   },
 ];

@@ -1,30 +1,12 @@
 import Vue, { reactive } from 'vue';
-import { SiteStore, CLIENT, OWNER } from './modules/site/site.store';
-import { User } from './../graphql/modules/user/user.model';
+import { StudyStore } from './modules/study';
 import { LayoutStore } from './modules/layout/layout.store';
+import { DictionaryStore } from './modules/dictionary';
+import { EntryStore } from './modules/entry';
 
 export const store = reactive({
-  site: new SiteStore(),
   layout: new LayoutStore(),
-
-  get isAuth(): boolean {
-    return this.site.user ? true : false;
-  },
-
-  get user(): User {
-    return this.site.user;
-  },
-
-  get userName(): string {
-    const nameSplit = this.site.user.name.split(' ');
-    return nameSplit.length > 1 ? nameSplit[0] : this.site.user.name;
-  },
-
-  get isClient(): boolean {
-    return this.isAuth && this.site.user?.accountType == CLIENT;
-  },
-
-  get isOwner(): boolean {
-    return this.isAuth && this.site.user?.accountType == OWNER;
-  },
+  study: new StudyStore(),
+  dictionary: new DictionaryStore(),
+  entries: [EntryStore],
 });

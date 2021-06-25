@@ -2,7 +2,6 @@ import 'ant-design-vue/dist/antd.css';
 import 'ant-design-vue/lib/message/style';
 import 'ant-design-vue/lib/modal/style';
 
-import { PlusOutlined, UserOutlined } from '@ant-design/icons-vue';
 import Antd from 'ant-design-vue';
 import configProvider from 'ant-design-vue/lib/config-provider';
 import message from 'ant-design-vue/lib/message';
@@ -24,6 +23,4 @@ export function antdGlobal(app) {
 
   app.use(configProvider);
   app.use(Antd);
-  app.component('UserOutlined', UserOutlined);
-  app.component('PlusOutlined', PlusOutlined);
 }

@@ -1,6 +1,5 @@
 import { hasUpper, hasLower } from './utils';
 import { FetchPolicy } from '@/graphql/apolloProvider';
-import { User } from './../graphql/modules/user/user.model';
 import { withAsync } from '@vuelidate/validators/src/utils/common.js';
 import { debounceAsyncValidator } from './utilsdebounce.js';
 
@@ -11,14 +10,6 @@ export function isEmail(str) {
   return emailRegex.test(str);
 }
 
-export async function emailExists(email) {
-  let exists = await User.exists(
-    { email, active: true },
-    FetchPolicy.network_only
-  );
-  return exists.data;
-}
-
 export function oneUpper(value) {
   return hasUpper(value);
 }
@@ -26,9 +17,6 @@ export function oneUpper(value) {
 export function oneLower(value) {
   return hasLower(value);
 }
-
-// func: emailExists
-// mapReturnFunction: (exists) => return !exists
 
 /**
  * @param func The function to be executed
@@ -53,28 +41,3 @@ export function debounceValidator(
     }, 500)
   );
 }
-
-// export function debounceValidator(
-//   func: Function,
-//   mapReturnFunction: Function,
-//   syncValidation: Function
-// ) {
-//   return withAsync(
-//     debounceAsyncValidator(function (value, debounce) {
-//       // console.log(value, 'value');
-
-//       // let valid = syncValidation(value);
-//       // if (!valid) {
-//       //   return new Promise((resolve) => resolve(true));
-//       // } else {
-//       return debounce()
-//         .then(() => func(value))
-//         .then((result) => {
-//           console.log(mapReturnFunction(result));
-
-//           return mapReturnFunction(result);
-//         });
-//       // }
-//     }, 500)
-//   );
-// }

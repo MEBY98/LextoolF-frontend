@@ -1,29 +1,28 @@
 import gql from 'graphql-tag';
 
-export const getElementsQuery = gql`
-  query getElements {
-    getElements {
-      pagination {
-        totalElements
-      }
-      elements {
-        _id
-        name
-      }
-    }
-  }
-`;
-
-export const getManyTemplatesQuery = gql`
-  query getManyTemplates {
-    getManyTemplates {
-      _id
-      elements {
-        _id
-        required
-        element
-      }
+export const getDictionaryByIDQuery = gql`
+  query getDictionaryByID($dictionaryID: String!) {
+    getDictionaryByID(dictionaryID: $dictionaryID) {
+      id
       name
+      shortName
+      author {
+        name
+        siglas
+      }
+      annoOfPublication
+      reference
+      letters
+      entries {
+        id
+        letter
+        context
+        lemma
+        UFs {
+          id
+          UF
+        }
+      }
     }
   }
 `;
