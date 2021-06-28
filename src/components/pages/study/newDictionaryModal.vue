@@ -92,6 +92,7 @@
           show-search
           :target-keys="newDictionary.letters"
           :locale="transferLocale"
+          :style="{ width: '100%' }"
           @change="handleChangeLettersTransfer"
         ></a-transfer>
       </a-form-item>
@@ -101,7 +102,6 @@
       <a-button key="submit" type="primary" :loading="loading" @click="submit">
         Agregar
       </a-button>
-      <a-button key="reset" @click="resetForm">Limpiar</a-button>
     </template>
   </a-modal>
 </template>

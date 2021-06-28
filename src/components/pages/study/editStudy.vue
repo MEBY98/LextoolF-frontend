@@ -8,6 +8,7 @@
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
       :colon="false"
+      :rules="rules"
     >
       <template #label>
         <span :style="{ 'font-weight': '700' }">Nombre del Estudio</span>
@@ -17,23 +18,9 @@
         :style="{ 'font-weight': '500' }"
       ></a-input>
     </a-form-item>
-    <a-form-item
-      ref="shortName"
-      label="Siglas del Estudio"
-      name="shortName"
-      :label-col="labelCol"
-      :wrapper-col="wrapperCol"
-    >
-      <a-input v-model:value="studyToEdit.shortName"></a-input>
-    </a-form-item>
-    <a-form-item>
-      <a-table
-        :data-source="studyToEdit.dictionaries"
-        :columns="columns"
-        :row-key="(record) => record.name"
-        bordered
-      >
-        <template #title>
+    <a-form-item :colon="false">
+      <template #label>
+        <span :style="{ 'font-weight': '700' }">
           Diccionarios
           <a-tooltip title="Agregar Diccionario" placement="right">
             <PlusSquareFilled
@@ -41,28 +28,42 @@
               @click="showNewDictionaryModalMethod"
             />
           </a-tooltip>
-        </template>
+        </span>
+      </template>
+      <a-table
+        :data-source="studyToEdit.dictionaries"
+        :columns="columns"
+        :row-key="(record) => record.name"
+        :pagination="false"
+        bordered
+      >
         <template #operation="{ record }">
-          <a @click="showDictionaryDetailsModalMethod(record)">
-            <EyeFilled
-              :style="{ fontSize: '20px', color: '#08c', margin: '5px' }"
-            />
-          </a>
-          <a @click="showDictionaryEditModalMethod(record)">
-            <EditFilled
-              :style="{ fontSize: '20px', color: '#08c', margin: '5px' }"
-            />
-          </a>
+          <a-tooltip title="Detalles del Diccionario" placement="bottom">
+            <a @click="showDictionaryDetailsModalMethod(record)">
+              <EyeFilled
+                :style="{ fontSize: '20px', color: '#08c', margin: '5px' }"
+              />
+            </a>
+          </a-tooltip>
+          <a-tooltip title="Editar Diccionario" placement="bottom">
+            <a @click="showDictionaryEditModalMethod(record)">
+              <EditFilled
+                :style="{ fontSize: '20px', color: '#08c', margin: '5px' }"
+              />
+            </a>
+          </a-tooltip>
           <a-popconfirm
             v-if="studyToEdit.dictionaries.length"
             title="Seguro de Eliminar?"
             @confirm="deleteDictionary(record)"
           >
-            <a>
-              <DeleteFilled
-                :style="{ fontSize: '20px', color: 'red', margin: '5px' }"
-              />
-            </a>
+            <a-tooltip title="Eliminar Diccionario" placement="bottom">
+              <a v-if="studyToEdit.dictionaries.length > 1">
+                <DeleteFilled
+                  :style="{ fontSize: '20px', color: 'red', margin: '5px' }"
+                />
+              </a>
+            </a-tooltip>
           </a-popconfirm>
         </template>
       </a-table>
@@ -72,6 +73,7 @@
         key="submit"
         type="primary"
         style="margin-right: 5px"
+        :loading="loading"
         @click="editStudy"
       >
         Guardar
@@ -158,12 +160,24 @@ export default defineComponent({
         slots: { customRender: 'operation' },
       },
     ];
+    const rules = {
+      name: [
+        {
+          required: true,
+          message: 'Por favor escriba el Nombre',
+          trigger: 'blur',
+        },
+      ],
+    };
 
     const formRef = ref();
     const showDictionaryDetailsModal = false;
     const showDictionaryEditModal = false;
     const showNewDictionaryModal = false;
+    const loading = false;
     return {
+      loading,
+      rules,
       showNewDictionaryModal,
       showDictionaryDetailsModal,
       showDictionaryEditModal,
@@ -204,11 +218,12 @@ export default defineComponent({
         (item) => record.id !== item.id
       );
     },
-    editStudy() {
+    async editStudy() {
       console.log(this.studyToEdit);
-
-      Study.editStudy(this.studyToEdit);
-      this.$router.push('studies');
+      this.loading = !this.loading;
+      await Study.editStudy(this.studyToEdit);
+      this.loading = !this.loading;
+      this.$router.push({ name: 'studies' });
     },
     goStudies() {
       this.$router.push('studies');
@@ -237,6 +252,7 @@ export default defineComponent({
         this.studyToEdit.dictionaries[i - 1] = dictionaryEdited;
         console.log('dictionaries:', this.studyToEdit.dictionaries);
       }
+      this.showDictionaryEditModal = false;
     },
   },
 });

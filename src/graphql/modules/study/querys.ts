@@ -5,7 +5,6 @@ export const getAllStudiesQuery = gql`
     getAllStudies {
       id
       name
-      shortName
       period
       dictionaries {
         id
@@ -27,7 +26,6 @@ export const getStudyByIDQuery = gql`
     getStudyByID(studyID: $studyID) {
       id
       name
-      shortName
       period
       dictionaries {
         id

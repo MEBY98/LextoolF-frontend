@@ -16,7 +16,7 @@
       <a-form-item
         ref="shortName"
         label="Siglas del Diccionario"
-        name="ShortName"
+        name="shortName"
         :label-col="labelColModal"
         :wrapper-col="wrapperColModal"
       >
@@ -41,6 +41,7 @@
       <a-form-item
         v-for="(author, index) in $store.dictionary.author"
         :key="index"
+        name="author"
         :label-col="labelColModal"
         :wrapper-col="wrapperColModal"
         :label="'Autor ' + (index + 1)"
@@ -173,11 +174,47 @@ export default defineComponent({
         sm: { span: 20 },
       },
     };
+    const validateAuthor = async (rule, value) => {
+      console.log('validatorvalue:', value);
+      if (value.length === 1) {
+        if (value[0].name === '') {
+          if (value[0].siglas === '') {
+            return Promise.reject('Por favor agregue el autor');
+          } else {
+            return Promise.reject('Por favor agregue el nombre');
+          }
+        } else if (value[0].siglas === '') {
+          return Promise.reject('Por favor agregue las siglas');
+        }
+      } else {
+        return Promise.resolve();
+      }
+    };
     const rules = {
       name: [
         {
           required: true,
-          message: 'Por favor escriba el Año',
+          message: 'Por favor escriba el nombre',
+          trigger: 'change',
+        },
+      ],
+      shortName: [
+        {
+          required: true,
+          message: 'Por favor escriba las siglas',
+          trigger: 'change',
+        },
+      ],
+      reference: [
+        {
+          required: true,
+          message: 'Por favor escriba la referencia del diccionario',
+          trigger: 'blur',
+        },
+      ],
+      author: [
+        {
+          validator: validateAuthor,
           trigger: 'blur',
         },
       ],
@@ -190,7 +227,7 @@ export default defineComponent({
         {
           required: true,
           message: 'Por favor escriba el Año',
-          trigger: 'blur',
+          trigger: 'change',
         },
       ],
     };

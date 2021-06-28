@@ -12,14 +12,6 @@
       <a-form-item :colon="false">
         <template #label>
           <span style="font-weight: 700">
-            Siglas del Estudio:
-            <span style="font-weight: 500">{{ selectedStudy.shortName }}</span>
-          </span>
-        </template>
-      </a-form-item>
-      <a-form-item :colon="false">
-        <template #label>
-          <span style="font-weight: 700">
             Periodo del Estudio:
             <span style="font-weight: 500">{{ selectedStudy.period }}</span>
           </span>

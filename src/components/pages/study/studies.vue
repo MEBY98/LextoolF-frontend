@@ -13,6 +13,47 @@
     :row-key="(record) => record.id"
     bordered
   >
+    <template
+      #filterDropdown="{
+        setSelectedKeys,
+        selectedKeys,
+        confirm,
+        clearFilters,
+        column,
+      }"
+    >
+      <div style="padding: 8px">
+        <a-input
+          ref="searchInput"
+          :placeholder="`Buscar ${column.title}`"
+          :value="selectedKeys[0]"
+          style="width: 188px; margin-bottom: 8px; display: block"
+          @change="
+            (e) => setSelectedKeys(e.target.value ? [e.target.value] : [])
+          "
+          @pressEnter="handleSearch(confirm)"
+        />
+        <a-button
+          type="primary"
+          size="small"
+          style="width: 90px; margin-right: 8px"
+          @click="handleSearch(confirm)"
+        >
+          <template #icon><SearchOutlined /></template>
+          Search
+        </a-button>
+        <a-button
+          size="small"
+          style="width: 90px"
+          @click="handleReset(clearFilters)"
+        >
+          Reset
+        </a-button>
+      </div>
+    </template>
+    <template #filterIcon="filtered">
+      <search-outlined :style="{ color: filtered ? '#108ee9' : undefined }" />
+    </template>
     <template #period="{ record }">
       <a :style="{ color: 'black' }">{{ record.period }}</a>
     </template>
@@ -75,8 +116,9 @@ import {
   DeleteFilled,
   PlusSquareFilled,
   CarryOutFilled,
+  SearchOutlined,
 } from '@ant-design/icons-vue';
-import { defineComponent } from 'vue';
+import { defineComponent, reactive, ref } from 'vue';
 import { Study } from '@/graphql/modules/study/model.ts';
 import Table from 'ant-design-vue/lib/table';
 import StudyDetailsModal from './studyDetailsModal.vue';
@@ -90,11 +132,14 @@ export default defineComponent({
     CarryOutFilled,
     PlusSquareFilled,
     StudyDetailsModal,
+    SearchOutlined,
   },
   data() {
     const showDetailsModal = false;
     const selectedStudy = {};
+    const searchInput = ref();
     return {
+      searchInput,
       selectedStudy,
       showDetailsModal,
       columns: [
@@ -102,15 +147,34 @@ export default defineComponent({
           title: 'Periodo',
           dataIndex: 'period',
           width: 200,
-          sorter: true,
-          slots: { customRender: 'period' },
+          sorter: (a, b) => {
+            return a.period.localeCompare(b.period);
+          },
         },
         {
           title: 'Nombre del Estudio',
           key: 'name',
           dataIndex: 'name',
+          sorter: (a, b) => a.name.localeCompare(b.name),
           width: 300,
-          slots: { customRender: 'name' },
+          slots: {
+            filterDropdown: 'filterDropdown',
+            filterIcon: 'filterIcon',
+          },
+          onFilter: (value, record) => {
+            return record.name
+              .toString()
+              .toLowerCase()
+              .includes(value.toLowerCase());
+          },
+          // onFilterDropdownVisibleChange: (visible) => {
+          //   if (visible) {
+          //     setTimeout(() => {
+          //       console.log(searchInput.value);
+          //       searchInput.value.focus();
+          //     }, 0);
+          //   }
+          // },
         },
         {
           title: 'Operación',
@@ -155,6 +219,12 @@ export default defineComponent({
       this.$store.study = record;
       console.log('storeStudy:', this.$store.study);
       this.$router.push('dictionaries');
+    },
+    handleSearch: (confirm) => {
+      confirm();
+    },
+    handleReset: (clearFilters) => {
+      clearFilters();
     },
   },
 });

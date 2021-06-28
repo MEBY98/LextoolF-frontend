@@ -5,7 +5,6 @@ export const deleteStudyByIDMutation = gql`
     deleteStudyByID(studyID: $studyID) {
       id
       name
-      shortName
     }
   }
 `;
@@ -15,7 +14,6 @@ export const createStudyMutation = gql`
     createStudy(fraseograficStudy: $fraseograficStudy) {
       id
       name
-      shortName
       period
       dictionaries
     }
@@ -27,7 +25,6 @@ export const editStudyMutation = gql`
     editStudy(newStudy: $newStudy) {
       id
       name
-      shortName
       period
       dictionaries {
         id

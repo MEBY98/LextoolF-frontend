@@ -11,14 +11,18 @@
     >
       <a-input v-model:value="study.name"></a-input>
     </a-form-item>
+
     <a-form-item
-      ref="shortName"
-      label="Siglas del Estudio"
-      name="shortName"
+      ref="period"
+      label="Periodo de Estudio"
+      name="period"
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
-      <a-input v-model:value="study.shortName"></a-input>
+      <a-input
+        v-model:value="study.period"
+        @input="autogeneratePeriod = !autogeneratePeriod"
+      ></a-input>
     </a-form-item>
     <a-form-item>
       <a-table
@@ -160,23 +164,11 @@ export default defineComponent({
           trigger: 'blur',
         },
       ],
-      shortName: [
-        {
-          required: true,
-          message: 'Por favor escriba las siglas',
-          trigger: 'blur',
-        },
-        {
-          max: 10,
-          message: 'Debe tener menos de 10 siglas',
-          trigger: 'blur',
-        },
-      ],
     };
     const formRef = ref();
     const study: UnwrapRef<any> = reactive({
       name: '',
-      shortName: '',
+      period: '',
       dictionaries: [],
     });
     const newDictionaryModalShow = false;
@@ -184,7 +176,9 @@ export default defineComponent({
     const editDictionaryModalShow = false;
     const loading = false;
     const selectedDictionary = {};
+    const autogeneratePeriod = true;
     return {
+      autogeneratePeriod,
       loading,
       newDictionaryModalShow,
       dictionaryDetailsShow,
@@ -205,7 +199,29 @@ export default defineComponent({
     addDictionary(newDictionary) {
       console.log(newDictionary);
       this.study.dictionaries.push(newDictionary);
+      if (this.autogeneratePeriod) {
+        this.updatePeriod(this.study.dictionaries);
+      }
       this.showModal();
+    },
+    updatePeriod(dictionaries) {
+      let maxYear = 0;
+      let minYear = 1000000;
+      console.log(dictionaries);
+      if (dictionaries.length === 1) {
+        this.study.period = dictionaries[0].annoOfPublication;
+      } else {
+        dictionaries.forEach((element) => {
+          if (element.annoOfPublication > maxYear) {
+            maxYear = element.annoOfPublication;
+          }
+          if (element.annoOfPublication < minYear) {
+            minYear = element.annoOfPublication;
+          }
+        });
+        console.log(minYear.toString() + '-' + maxYear.toString());
+        this.study.period = minYear.toString() + '-' + maxYear.toString();
+      }
     },
     deleteDictionary(record) {
       console.log(record);
