@@ -6,6 +6,7 @@ export const getAllStudiesQuery = gql`
       id
       name
       period
+      state
       dictionaries {
         id
         name
@@ -27,6 +28,7 @@ export const getStudyByIDQuery = gql`
       id
       name
       period
+      state
       dictionaries {
         id
         name
