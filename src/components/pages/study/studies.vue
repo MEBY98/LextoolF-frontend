@@ -145,6 +145,7 @@
   <study-details-modal
     v-model:visible="showDetailsModal"
     :selected-study="selectedStudy"
+    @close-modal="closeStudyDetailsModal"
   ></study-details-modal>
 </template>
 <script lang="ts">
@@ -281,6 +282,9 @@ export default defineComponent({
       this.selectedStudy = study;
       console.log('selectedStudy:', this.selectedStudy);
     },
+    closeStudyDetailsModal() {
+      this.showDetailsModal = !this.showDetailsModal;
+    },
     editStudy(study) {
       console.log(this.$route.path);
       this.$router.push('studies/' + study.id);
@@ -295,16 +299,6 @@ export default defineComponent({
     },
     handleReset: (clearFilters) => {
       clearFilters();
-    },
-    handleSearchFilterState(confirm) {
-      confirm();
-    },
-    handleResetFilterState(clearFilters) {
-      clearFilters();
-    },
-    a(e, setSelectedKey) {
-      console.log('setSelectedKey', setSelectedKey);
-      console.log('e', e);
     },
   },
 });
