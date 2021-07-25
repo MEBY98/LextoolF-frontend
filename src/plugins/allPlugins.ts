@@ -1,4 +1,4 @@
-import { apolloClient } from '../graphql/apolloProvider';
+import { apolloClient, apolloClientA } from '../graphql/apolloProvider';
 import { DefaultApolloClient } from '@vue/apollo-composable';
 import { store } from '@/store/store';
 import router from '@/router/router';
@@ -13,7 +13,7 @@ export function registerPlugins(app: any): void {
   // Plugins
   app.use(router);
   antdGlobal(app);
-  app.provide(DefaultApolloClient, apolloClient);
+  app.provide(DefaultApolloClient, apolloClient, apolloClientA);
 
   app.component('Spinner', Spinner);
 }

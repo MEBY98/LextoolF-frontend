@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve  --mode development --port=7000 --open",
+    "serve": "vue-cli-service serve  --mode development --port=7020 --open",
     "postinstall": "node scripts/vue-apollo-patch.js",
     "build": "vue-cli-service build --modern",
     "lint": "vue-cli-service lint --no-fix",
