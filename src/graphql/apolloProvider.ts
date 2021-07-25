@@ -22,6 +22,10 @@ const httpLink = createHttpLink({
   uri: 'http://localhost:10000/graphql',
 });
 
+const httpLinkA = createHttpLink({
+  uri: 'http://localhost:8000/graphql',
+});
+
 const authLink = setContext((_, { headers }) => {
   // const token = store.site.token;
   return {
@@ -50,6 +54,14 @@ const defaultOptions: any = {
 export const apolloClient = new ApolloClient({
   connectToDevTools: true,
   link: httpLink,
+  cache,
+  defaultOptions,
+  queryDeduplication: true,
+});
+
+export const apolloClientA = new ApolloClient({
+  connectToDevTools: true,
+  link: httpLinkA,
   cache,
   defaultOptions,
   queryDeduplication: true,
