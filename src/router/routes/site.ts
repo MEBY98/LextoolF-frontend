@@ -8,6 +8,7 @@ const dictionaries = () =>
   import('@/components/pages/dictionary/dictionaries.vue');
 
 const newEntry = () => import('@/components/pages/entry/newEntry.vue');
+const sources = () => import('@/components/pages/sourcesA/sources.vue');
 
 export const SiteRoutes: RouteRecordRaw[] & any = [
   {
@@ -45,5 +46,11 @@ export const SiteRoutes: RouteRecordRaw[] & any = [
     exact: true,
     path: 'newEntry/:letter',
     component: newEntry,
+  },
+  {
+    name: 'sources',
+    exact: true,
+    path: 'sources',
+    component: sources,
   },
 ];
