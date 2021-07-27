@@ -4,6 +4,9 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import ApolloClient from 'apollo-client';
 import { setContext } from 'apollo-link-context';
 import { createHttpLink } from 'apollo-link-http';
+import { WebSocketLink } from 'apollo-link-ws';
+import { getOperationAST } from 'graphql';
+
 import router from './../router/router';
 
 const cache = new InMemoryCache({
@@ -14,16 +17,15 @@ const cache = new InMemoryCache({
     }
     return undefined;
   },
-  addTypename: false,
   // fragmentMatcher
 });
 
-const httpLink = createHttpLink({
+const httpLinkA = createHttpLink({
   uri: 'http://localhost:10000/graphql',
 });
 
-const httpLinkA = createHttpLink({
-  uri: 'http://localhost:8000/graphql',
+const httpLink = createHttpLink({
+  uri: 'http://localhost:11000/graphql',
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -36,6 +38,25 @@ const authLink = setContext((_, { headers }) => {
     },
   };
 });
+
+const responseLogger = new ApolloLink((operation, forward) => {
+  return forward(operation).map((result) => {
+    // if (result.errors) {
+    //   let status = result.errors[0].extensions?.exception?.status;
+    //   if (status == 403 || status == 401 || status == 404) {
+    //     router.push({ name: '404' });
+    //   }
+    // }
+    return result;
+  });
+});
+
+const linkWithAuth = ApolloLink.from([responseLogger, authLink, httpLink]); // TODO: Verificar el http link
+const sourcelinkWithAuth = ApolloLink.from([
+  responseLogger,
+  authLink,
+  httpLinkA,
+]); // TODO: Verificar el http link
 
 const defaultOptions: any = {
   watchQuery: {
@@ -51,17 +72,55 @@ const defaultOptions: any = {
   },
 };
 
-export const apolloClient = new ApolloClient({
+const webSocketLink = new WebSocketLink({
+  // Para las subscriptions
+  uri: `ws://localhost:5000/subscriptions`,
+  options: {
+    lazy: true,
+    reconnect: true,
+    reconnectionAttempts: 20,
+    connectionParams: () => ({
+      authToken: store.sources.name,
+    }),
+    connectionCallback: (error: any, result: any) => {
+      if (error) {
+        console.log(error, 'connectionCallback error');
+      }
+    },
+  },
+});
+
+export const apolloClientA = new ApolloClient({
   connectToDevTools: true,
-  link: httpLink,
+  link: ApolloLink.split(
+    (operation) => {
+      const operationAST = getOperationAST(
+        operation.query,
+        operation.operationName
+      );
+      return !!operationAST && operationAST.operation === 'subscription';
+    },
+    webSocketLink,
+    httpLinkA
+  ),
   cache,
   defaultOptions,
   queryDeduplication: true,
 });
 
-export const apolloClientA = new ApolloClient({
+export const apolloClient = new ApolloClient({
   connectToDevTools: true,
-  link: httpLinkA,
+  link: ApolloLink.split(
+    (operation) => {
+      const operationAST = getOperationAST(
+        operation.query,
+        operation.operationName
+      );
+      return !!operationAST && operationAST.operation === 'subscription';
+    },
+    webSocketLink,
+    httpLink
+  ),
   cache,
   defaultOptions,
   queryDeduplication: true,

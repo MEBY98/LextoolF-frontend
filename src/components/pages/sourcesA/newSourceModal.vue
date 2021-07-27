@@ -51,6 +51,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { MinusCircleFilled, PlusOutlined } from '@ant-design/icons-vue';
+import { Sources } from '@/graphql/modules/sourcesA/model';
 
 export default defineComponent({
   components: {
@@ -98,8 +99,10 @@ export default defineComponent({
   },
   methods: {
     submit() {
-      this.$emit('add-source', this.source);
-      this.resetForm();
+      console.log(this.source);
+      this.loading = true;
+      Sources.createSource(this.source);
+      this.$router.push('sources');
     },
     closeModal(event) {
       this.$emit('close-modal');

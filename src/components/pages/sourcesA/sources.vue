@@ -4,7 +4,7 @@
   <a-tooltip title="Agregar Fuente" placement="right">
     <PlusSquareFilled
       :style="{ fontSize: '25px', color: '#08c', margin: '5px' }"
-      @click="showModal"
+      @click="showModalS"
     />
   </a-tooltip>
   <a-table
@@ -69,16 +69,6 @@
           />
         </a>
       </a-tooltip>
-      <a-tooltip title="Editar fuente" placement="bottom">
-        <router-link :to="{ name: 'editSource', params: { id: record.id } }">
-          <a>
-            <EditFilled
-              :style="{ fontSize: '20px', color: '#08c', margin: '5px' }"
-            />
-          </a>
-        </router-link>
-      </a-tooltip>
-
       <a-popconfirm
         v-if="sources.length"
         title="Seguro de Eliminar?"
@@ -96,7 +86,7 @@
   </a-table>
   <new-source-modal
     v-model:visible="newSourceModalShow"
-    @close-modal="showModal"
+    @close-modal="showModalS"
     @add-source="addSource"
   ></new-source-modal>
   <sources-details-modal
@@ -118,7 +108,6 @@ import { Sources } from '@/graphql/modules/sourcesA/model.ts';
 import NewSourceModal from './newSourceModal.vue';
 import Table from 'ant-design-vue/lib/table';
 //import StudyDetailsModal from './studyDetailsModal.vue';
-import { Source } from 'graphql';
 
 export default defineComponent({
   components: {
@@ -139,11 +128,11 @@ export default defineComponent({
     return {
       searchInput,
       selectedSource,
-      showDetailsModal,
       newSourceModalShow,
       columns: [
         {
           title: 'Nombre',
+          key: 'name',
           dataIndex: 'name',
           width: 300,
           sorter: (a, b) => a.name.localeCompare(b.name),
@@ -160,7 +149,6 @@ export default defineComponent({
         },
         {
           title: 'Referencia',
-          key: 'ref',
           dataIndex: 'ref',
           sorter: (a, b) => a.ref.localeCompare(b.ref),
           width: 200,
@@ -177,9 +165,19 @@ export default defineComponent({
         },
         {
           title: 'Archivo',
-          key: 'file',
           dataIndex: 'file',
+          sorter: (a, b) => a.file.localeCompare(b.file),
           width: 300,
+          slots: {
+            filterDropdown: 'filterDropdown',
+            filterIcon: 'filterIcon',
+          },
+          onFilter: (value, record) => {
+            return record.file
+              .toString()
+              .toLowerCase()
+              .includes(value.toLowerCase());
+          },
         },
         {
           title: 'Operación',
@@ -194,7 +192,6 @@ export default defineComponent({
   async mounted() {
     const { data } = await Sources.findAllSources();
     this.sources = data.findAllSources;
-    console.log(this.sources);
   },
   methods: {
     async deleteSource(id) {
@@ -209,21 +206,12 @@ export default defineComponent({
       }
       this.sources = this.sources.filter((item) => item.id !== id);
     },
-    showModal() {
+    showModalS() {
       this.newSourceModalShow = !this.newSourceModalShow;
     },
     addSource(source) {
       console.log(source);
-      this.showModal();
-    },
-    showDetailsModalMethod(source) {
-      this.showDetailsModal = !this.showDetailsModal;
-      this.selectedSource = source;
-      console.log('selectedSource:', this.selectedSource);
-    },
-    editSource(source) {
-      console.log(this.$route.path);
-      this.$router.push('sources/' + source.id);
+      this.showModalS();
     },
     handleSearch: (confirm) => {
       confirm();

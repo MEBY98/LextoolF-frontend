@@ -47,7 +47,6 @@ export const apolloQuery = (
     fetchPolicy: policy,
   });
 };
-
 export const apolloSubscription = (query: DocumentNode, variables = {}) => {
   return apolloClient.subscribe({
     query,
