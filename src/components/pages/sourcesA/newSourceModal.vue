@@ -33,11 +33,20 @@
         :label-col="labelColModal"
         :wrapper-col="wrapperColModal"
       >
-        <a-textarea
-          v-model:value="source.file"
-          placeholder="Archivo"
-          allow-clear
-        />
+        <a-upload-dragger
+          v-model:fileList="fileList"
+          name="file"
+          :multiple="false"
+          action="C:/Users/Arelis/Pictures/uploads"
+          @change="handleChange"
+        >
+          <p class="ant-upload-drag-icon">
+            <inbox-outlined></inbox-outlined>
+          </p>
+          <p class="ant-upload-text">
+            Click or drag file to this area to upload
+          </p>
+        </a-upload-dragger>
       </a-form-item>
     </a-form>
     <template #footer>
@@ -49,14 +58,47 @@
   </a-modal>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
 import { MinusCircleFilled, PlusOutlined } from '@ant-design/icons-vue';
 import { Sources } from '@/graphql/modules/sourcesA/model';
+import VueDocPreview from 'vue-doc-preview';
+import { InboxOutlined } from '@ant-design/icons-vue';
+import { message } from 'ant-design-vue';
+import { defineComponent, ref } from 'vue';
 
+interface FileItem {
+  uid: string;
+  name?: string;
+  status?: string;
+  response?: string;
+  url?: string;
+}
+interface FileInfo {
+  file: FileItem;
+  fileList: FileItem[];
+}
 export default defineComponent({
   components: {
+    InboxOutlined,
     MinusCircleFilled,
     PlusOutlined,
+    VueDocPreview,
+  },
+  setup() {
+    const handleChange = (info: FileInfo) => {
+      const status = info.file.status;
+      if (status !== 'uploading') {
+        console.log(info.file, info.fileList);
+      }
+      if (status === 'done') {
+        message.success(`${info.file.name} file uploaded successfully.`);
+      } else if (status === 'error') {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    };
+    return {
+      handleChange,
+      fileList: ref([]),
+    };
   },
   emits: ['close-modal', 'add-source'],
   data() {

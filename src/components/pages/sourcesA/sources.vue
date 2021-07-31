@@ -72,7 +72,7 @@
       <a-popconfirm
         v-if="sources.length"
         title="Seguro de Eliminar?"
-        @confirm="deleteSource(record.id)"
+        @confirm="deleteSourceByID(record.id)"
       >
         <a-tooltip title="Eliminar de la fuente" placement="bottom">
           <a>
@@ -107,6 +107,7 @@ import { defineComponent, reactive, ref } from 'vue';
 import { Sources } from '@/graphql/modules/sourcesA/model.ts';
 import NewSourceModal from './newSourceModal.vue';
 import Table from 'ant-design-vue/lib/table';
+import { deleteSourceByIDMutation } from '@/graphql/modules/sourcesA/mutations';
 //import StudyDetailsModal from './studyDetailsModal.vue';
 
 export default defineComponent({
@@ -194,7 +195,7 @@ export default defineComponent({
     this.sources = data.findAllSources;
   },
   methods: {
-    async deleteSource(id) {
+    async deleteSourceByID(id) {
       const deletedSource = await Sources.deleteSourceByID(id);
       let index = 0;
       let found = false;
