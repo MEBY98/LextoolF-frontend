@@ -21,42 +21,12 @@ const cache = new InMemoryCache({
 });
 
 const httpLinkA = createHttpLink({
-  uri: 'http://localhost:10000/graphql',
-});
-
-const httpLink = createHttpLink({
   uri: 'http://localhost:11000/graphql',
 });
 
-const authLink = setContext((_, { headers }) => {
-  // const token = store.site.token;
-  return {
-    headers: {
-      ...headers,
-      // authorization: token ? `Bearer ${token}` : '',
-      authorization: '',
-    },
-  };
+const httpLink = createHttpLink({
+  uri: 'http://localhost:10000/graphql',
 });
-
-const responseLogger = new ApolloLink((operation, forward) => {
-  return forward(operation).map((result) => {
-    // if (result.errors) {
-    //   let status = result.errors[0].extensions?.exception?.status;
-    //   if (status == 403 || status == 401 || status == 404) {
-    //     router.push({ name: '404' });
-    //   }
-    // }
-    return result;
-  });
-});
-
-const linkWithAuth = ApolloLink.from([responseLogger, authLink, httpLink]); // TODO: Verificar el http link
-const sourcelinkWithAuth = ApolloLink.from([
-  responseLogger,
-  authLink,
-  httpLinkA,
-]); // TODO: Verificar el http link
 
 const defaultOptions: any = {
   watchQuery: {
@@ -72,37 +42,9 @@ const defaultOptions: any = {
   },
 };
 
-const webSocketLink = new WebSocketLink({
-  // Para las subscriptions
-  uri: `ws://localhost:5000/subscriptions`,
-  options: {
-    lazy: true,
-    reconnect: true,
-    reconnectionAttempts: 20,
-    connectionParams: () => ({
-      authToken: store.sources.name,
-    }),
-    connectionCallback: (error: any, result: any) => {
-      if (error) {
-        console.log(error, 'connectionCallback error');
-      }
-    },
-  },
-});
-
 export const apolloClientA = new ApolloClient({
   connectToDevTools: true,
-  link: ApolloLink.split(
-    (operation) => {
-      const operationAST = getOperationAST(
-        operation.query,
-        operation.operationName
-      );
-      return !!operationAST && operationAST.operation === 'subscription';
-    },
-    webSocketLink,
-    httpLinkA
-  ),
+  link: httpLinkA,
   cache,
   defaultOptions,
   queryDeduplication: true,
@@ -110,17 +52,7 @@ export const apolloClientA = new ApolloClient({
 
 export const apolloClient = new ApolloClient({
   connectToDevTools: true,
-  link: ApolloLink.split(
-    (operation) => {
-      const operationAST = getOperationAST(
-        operation.query,
-        operation.operationName
-      );
-      return !!operationAST && operationAST.operation === 'subscription';
-    },
-    webSocketLink,
-    httpLink
-  ),
+  link: httpLink,
   cache,
   defaultOptions,
   queryDeduplication: true,
