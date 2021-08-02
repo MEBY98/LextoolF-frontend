@@ -58,10 +58,13 @@
       <span>{{ record.name }}</span>
     </template>
     <template #operation="{ record }">
-      <a-tooltip
-        title="Seleccionar del diccionario"
-        placement="bottom"
-      ></a-tooltip>
+      <a-tooltip title="Seleccionar del Diccionario" placement="bottom">
+        <a @click="selectDictionaryToWork(record.id)">
+          <CarryOutFilled
+            :style="{ fontSize: '20px', color: '#08c', margin: '5px' }"
+          />
+        </a>
+      </a-tooltip>
       <a-tooltip title="Detalles del diccionario" placement="bottom">
         <a @click="view">
           <EyeFilled
@@ -84,6 +87,11 @@
       </a-popconfirm>
     </template>
   </a-table>
+  <new-lemario-modal
+    v-model:visible="newLemarioModalShow"
+    @close-modal="showModalL"
+    @add-lemario="addLemario"
+  ></new-lemario-modal>
 </template>
 <script lang="ts">
 import {
@@ -96,7 +104,8 @@ import {
 } from '@ant-design/icons-vue';
 import { defineComponent, reactive, ref } from 'vue';
 import { DictionaryA } from '@/graphql/modules/dictionaryA/model.ts';
-
+import { LemarioA } from '@/graphql/modules/lemarioA/model.ts';
+import NewLemarioModal from './newLemarioModal.vue';
 import Table from 'ant-design-vue/lib/table';
 //import StudyDetailsModal from './studyDetailsModal.vue';
 
@@ -109,14 +118,31 @@ export default defineComponent({
     CarryOutFilled,
     PlusSquareFilled,
     SearchOutlined,
+    NewLemarioModal,
   },
   data() {
     const showDetailsModal = false;
-    const selectedDictionary = {};
+    const selectedDictionary = {
+      id: '',
+      name: '',
+      description: '',
+      reference: '',
+      sources: [],
+      lemario: '',
+    };
+    const lemario = {
+      id: '',
+      name: '',
+      dectionaryType: '',
+      entries: [],
+    };
+    const newLemarioModalShow = false;
     const searchInput = ref();
     return {
       searchInput,
+      lemario,
       selectedDictionary,
+      newLemarioModalShow,
       columns: [
         {
           title: 'Nombre',
@@ -183,22 +209,6 @@ export default defineComponent({
           },
         },
         {
-          title: 'Letras',
-          dataIndex: 'letters',
-          sorter: (a, b) => a.file.localeCompare(b.file),
-          width: 300,
-          slots: {
-            filterDropdown: 'filterDropdown',
-            filterIcon: 'filterIcon',
-          },
-          onFilter: (value, record) => {
-            return record.file
-              .toString()
-              .toLowerCase()
-              .includes(value.toLowerCase());
-          },
-        },
-        {
           title: 'Operación',
           key: 'operation',
           width: 150,
@@ -210,6 +220,7 @@ export default defineComponent({
   },
   async mounted() {
     const { data } = await DictionaryA.findAllDictionariesA();
+    console.log('Data mounted:', data.findAllDictionariesA);
     this.dictionariesA = data.findAllDictionariesA;
   },
   methods: {
@@ -236,6 +247,21 @@ export default defineComponent({
     },
     handleReset: (clearFilters) => {
       clearFilters();
+    },
+    async selectDictionaryToWork(recordID) {
+      const { data } = await DictionaryA.getDictionaryByAID(recordID);
+      const lemarioID = data.getDictionaryByID.lemario;
+      this.$store.dictionariesA = data.getDictionaryByID;
+      if (lemarioID === null) {
+        this.showModalL();
+      } else {
+        const { data } = await LemarioA.getLemarioByID(lemarioID);
+        this.$store.lemario = data.getLemarioByID;
+        this.$router.push('lemario');
+      }
+    },
+    showModalL() {
+      this.newLemarioModalShow = !this.newLemarioModalShow;
     },
   },
 });

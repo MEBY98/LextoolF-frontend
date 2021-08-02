@@ -37,22 +37,6 @@
         allow-clear
       />
     </a-form-item>
-    <a-form-item
-      label="Letras del Diccionario"
-      :label-col="labelCol"
-      :wrapper-col="wrapperCol"
-    >
-      <a-transfer
-        :titles="['Sin agregar', 'Agregadas']"
-        :data-source="letters"
-        :render="(letter) => letter.title"
-        :filter-option="filterOptionLettersTransfer"
-        show-search
-        :target-keys="dictionaryA.letters"
-        :locale="transferLocale"
-        @change="handleChangeLettersTransfer"
-      ></a-transfer>
-    </a-form-item>
     <a-form-item>
       <a-table
         :data-source="dictionaryA.sources"
@@ -175,45 +159,15 @@ export default defineComponent({
       notFoundContent: 'No hay letras',
       searchPlaceholder: 'Buscar Letra',
     };
-    const letters = [
-      { title: 'A', key: 'A' },
-      { title: 'B', key: 'B' },
-      { title: 'C', key: 'C' },
-      { title: 'D', key: 'D' },
-      { title: 'E', key: 'E' },
-      { title: 'F', key: 'F' },
-      { title: 'G', key: 'G' },
-      { title: 'H', key: 'H' },
-      { title: 'I', key: 'I' },
-      { title: 'J', key: 'J' },
-      { title: 'K', key: 'K' },
-      { title: 'L', key: 'L' },
-      { title: 'M', key: 'M' },
-      { title: 'N', key: 'N' },
-      { title: 'Ñ', key: 'Ñ' },
-      { title: 'O', key: 'O' },
-      { title: 'P', key: 'P' },
-      { title: 'Q', key: 'Q' },
-      { title: 'R', key: 'R' },
-      { title: 'S', key: 'S' },
-      { title: 'T', key: 'T' },
-      { title: 'U', key: 'U' },
-      { title: 'V', key: 'V' },
-      { title: 'W', key: 'W' },
-      { title: 'X', key: 'X' },
-      { title: 'Y', key: 'Y' },
-      { title: 'Z', key: 'Z' },
-    ];
     const source = {
       name: '',
       ref: '',
       file: '',
+      letters: [],
     };
-    const selectedLetters = [];
     const dictionaryA: UnwrapRef<any> = reactive({
       name: '',
       description: '',
-      letters: [],
       reference: '',
       sources: [],
     });
@@ -222,9 +176,7 @@ export default defineComponent({
       newSourceModalShow,
       transferLocale,
       selectedSource,
-      letters,
       source,
-      selectedLetters,
       columns,
       formRef,
       dictionaryA,
@@ -254,16 +206,11 @@ export default defineComponent({
         name: newSource.name,
         ref: newSource.ref,
         file: newSource.file,
+        letters: newSource.letters,
       });
       console.log(this.dictionaryA.sources);
       console.log(this.dictionaryA.sources);
       this.showModalS();
-    },
-    handleChangeLettersTransfer(targetKeys, direction, moveKeys) {
-      this.dictionaryA.letters = targetKeys;
-    },
-    filterOptionLettersTransfer(inputValue, option) {
-      return option.title.indexOf(inputValue) > -1;
     },
     async deleteSourceByID(id) {
       for (let i = 0; i < this.dictionaryA.sources.length; i++) {
