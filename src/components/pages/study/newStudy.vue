@@ -32,12 +32,26 @@
         bordered
       >
         <template #title>
-          Diccionarios
-          <a-tooltip title="Agregar Diccionario" placement="right">
-            <PlusSquareFilled
-              :style="{ fontSize: '25px', color: '#08c', margin: '5px' }"
-              @click="showModal"
-            />
+          <a-tooltip title="Agregar Diccionario Nuevo" placement="right">
+            <a @click="showModal">
+              Nuevo
+              <PlusSquareFilled
+                :style="{ fontSize: '25px', color: '#08c', margin: '5px' }"
+                @click="showModal"
+              />
+            </a>
+          </a-tooltip>
+          <a-tooltip
+            title="Agregar Diccionario de otro Estudio"
+            placement="right"
+          >
+            <a @click="showModalImportDictionaryMethod">
+              Importar
+              <PlusSquareFilled
+                :style="{ fontSize: '25px', color: '#08c', margin: '5px' }"
+                @click="showModalImportDictionaryMethod"
+              />
+            </a>
           </a-tooltip>
         </template>
         <template #operation="{ record }">
@@ -172,6 +186,7 @@ export default defineComponent({
       dictionaries: [],
     });
     const newDictionaryModalShow = false;
+    const showModalImportDictionary = false;
     const dictionaryDetailsShow = false;
     const editDictionaryModalShow = false;
     const loading = false;
@@ -181,6 +196,7 @@ export default defineComponent({
       autogeneratePeriod,
       loading,
       newDictionaryModalShow,
+      showModalImportDictionary,
       dictionaryDetailsShow,
       editDictionaryModalShow,
       selectedDictionary,
@@ -195,6 +211,9 @@ export default defineComponent({
   methods: {
     showModal() {
       this.newDictionaryModalShow = !this.newDictionaryModalShow;
+    },
+    showModalImportDictionaryMethod() {
+      this.showModalImportDictionary = !this.showModalImportDictionary;
     },
     addDictionary(newDictionary) {
       console.log(newDictionary);

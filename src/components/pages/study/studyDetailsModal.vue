@@ -1,5 +1,5 @@
 <template>
-  <a-modal title="Detalles">
+  <a-modal title="Detalles" width="775px" @ok="closeModal">
     <a-form :model="selectedStudyData">
       <a-form-item :colon="false">
         <template #label>
@@ -38,10 +38,15 @@ export default defineComponent({
   },
   // eslint-disable-next-line vue/require-prop-types
   props: ['selectedStudy'],
+  emits: ['close-modal'],
   data() {
     const columns = [
       {
-        title: 'Siglas del Diccionario',
+        title: 'Nombre del Diccionario',
+        dataIndex: 'shortName',
+      },
+      {
+        title: 'Siglas',
         dataIndex: 'shortName',
       },
       {
@@ -58,7 +63,7 @@ export default defineComponent({
         },
       },
       {
-        title: 'Año de Publicacion',
+        title: 'Año',
         dataIndex: 'annoOfPublication',
         sorter: true,
       },
@@ -70,8 +75,8 @@ export default defineComponent({
     };
   },
   methods: {
-    s() {
-      console.log(this.selectedStudyData);
+    closeModal() {
+      this.$emit('close-modal');
     },
   },
 });

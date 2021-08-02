@@ -13,6 +13,10 @@
     :row-key="(record) => record.id"
     bordered
   >
+    <template #period="{ record }">
+      <a :style="{ color: 'black' }">{{ record.period }}</a>
+    </template>
+
     <template
       #filterDropdown="{
         setSelectedKeys,
@@ -40,26 +44,60 @@
           @click="handleSearch(confirm)"
         >
           <template #icon><SearchOutlined /></template>
-          Search
+          Buscar
         </a-button>
         <a-button
           size="small"
           style="width: 90px"
           @click="handleReset(clearFilters)"
         >
-          Reset
+          Reiniciar
         </a-button>
       </div>
     </template>
     <template #filterIcon="filtered">
       <search-outlined :style="{ color: filtered ? '#108ee9' : undefined }" />
     </template>
-    <template #period="{ record }">
-      <a :style="{ color: 'black' }">{{ record.period }}</a>
-    </template>
     <template #name="{ record }">
       <span>{{ record.name }}</span>
     </template>
+
+    <!-- <template
+      #filterDropdownState="{
+        selectedKeys,
+        setSelectedKeys,
+        confirm,
+        clearFilters,
+      }"
+    >
+      <div style="padding: 8px">
+        <a-checkbox-group
+          :options="filterStateOptions"
+          :v-model:value="selectedKeys"
+          @change=""
+        />
+        <br />
+        <a-button
+          type="primary"
+          size="small"
+          style="width: 90px; margin-right: 8px"
+          @click="handleSearchFilterState(confirm)"
+        >
+          Filtrar
+        </a-button>
+        <a-button
+          size="small"
+          style="width: 90px"
+          @click="handleResetFilterState(clearFilters)"
+        >
+          Reiniciar
+        </a-button>
+      </div>
+    </template> -->
+    <!-- <template #state="{ record }">
+      <span>{{ record.state }}</span>
+    </template> -->
+
     <template #operation="{ record }">
       <a-tooltip
         title="Seleccionar del estudio fraseologico"
@@ -107,6 +145,7 @@
   <study-details-modal
     v-model:visible="showDetailsModal"
     :selected-study="selectedStudy"
+    @close-modal="closeStudyDetailsModal"
   ></study-details-modal>
 </template>
 <script lang="ts">
@@ -135,10 +174,17 @@ export default defineComponent({
     SearchOutlined,
   },
   data() {
+    const filterStateOptions = [
+      { label: 'Ejecución', value: 'Ejecucion' },
+      { label: 'Finalizado', value: 'Finalizado' },
+    ];
+    const selectedOptionsFilterState = [];
     const showDetailsModal = false;
     const selectedStudy = {};
     const searchInput = ref();
     return {
+      filterStateOptions,
+      selectedOptionsFilterState,
       searchInput,
       selectedStudy,
       showDetailsModal,
@@ -165,7 +211,7 @@ export default defineComponent({
             return record.name
               .toString()
               .toLowerCase()
-              .includes(value.toLowerCase());
+              .includes(value[0].toLowerCase());
           },
           // onFilterDropdownVisibleChange: (visible) => {
           //   if (visible) {
@@ -174,6 +220,31 @@ export default defineComponent({
           //       searchInput.value.focus();
           //     }, 0);
           //   }
+          // },
+        },
+        {
+          title: 'Estado',
+          dataIndex: 'state',
+          filters: [
+            {
+              text: 'Ejecución',
+              value: 'Ejecucion',
+            },
+            {
+              text: 'Finalizado',
+              value: 'Finalizado',
+            },
+          ],
+          onFilter: (value, record) => {
+            console.log(value);
+            console.log(record);
+            return record.state
+              .toString()
+              .toLowerCase()
+              .includes(value[0].toLowerCase());
+          },
+          // slots: {
+          //   filterDropdown: 'filterDropdownState',
           // },
         },
         {
@@ -210,6 +281,9 @@ export default defineComponent({
       this.showDetailsModal = !this.showDetailsModal;
       this.selectedStudy = study;
       console.log('selectedStudy:', this.selectedStudy);
+    },
+    closeStudyDetailsModal() {
+      this.showDetailsModal = !this.showDetailsModal;
     },
     editStudy(study) {
       console.log(this.$route.path);
