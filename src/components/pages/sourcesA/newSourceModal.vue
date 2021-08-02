@@ -48,6 +48,22 @@
           </p>
         </a-upload-dragger>
       </a-form-item>
+      <a-form-item
+        label="Letras de la Fuente"
+        :label-col="labelCol"
+        :wrapper-col="wrapperCol"
+      >
+        <a-transfer
+          :titles="['Sin agregar', 'Agregadas']"
+          :data-source="letters"
+          :render="(letter) => letter.title"
+          :filter-option="filterOptionLettersTransfer"
+          show-search
+          :target-keys="source.letters"
+          :locale="transferLocale"
+          @change="handleChangeLettersTransfer"
+        ></a-transfer>
+      </a-form-item>
     </a-form>
     <template #footer>
       <a-button key="back" @click="closeModal">Cerrar</a-button>
@@ -83,33 +99,50 @@ export default defineComponent({
     PlusOutlined,
     VueDocPreview,
   },
-  setup() {
-    const handleChange = (info: FileInfo) => {
-      const status = info.file.status;
-      if (status !== 'uploading') {
-        console.log(info.file, info.fileList);
-      }
-      if (status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully.`);
-      } else if (status === 'error') {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    };
-    return {
-      handleChange,
-      fileList: ref([]),
-    };
-  },
   emits: ['close-modal', 'add-source'],
   data() {
     const transferLocale = {
       itemUnit: '',
       itemsUnit: '',
+      notFoundContent: 'No hay letras',
+      searchPlaceholder: 'Buscar Letra',
     };
+
+    const letters = [
+      { title: 'A', key: 'A' },
+      { title: 'B', key: 'B' },
+      { title: 'C', key: 'C' },
+      { title: 'D', key: 'D' },
+      { title: 'E', key: 'E' },
+      { title: 'F', key: 'F' },
+      { title: 'G', key: 'G' },
+      { title: 'H', key: 'H' },
+      { title: 'I', key: 'I' },
+      { title: 'J', key: 'J' },
+      { title: 'K', key: 'K' },
+      { title: 'L', key: 'L' },
+      { title: 'M', key: 'M' },
+      { title: 'N', key: 'N' },
+      { title: 'Ñ', key: 'Ñ' },
+      { title: 'O', key: 'O' },
+      { title: 'P', key: 'P' },
+      { title: 'Q', key: 'Q' },
+      { title: 'R', key: 'R' },
+      { title: 'S', key: 'S' },
+      { title: 'T', key: 'T' },
+      { title: 'U', key: 'U' },
+      { title: 'V', key: 'V' },
+      { title: 'W', key: 'W' },
+      { title: 'X', key: 'X' },
+      { title: 'Y', key: 'Y' },
+      { title: 'Z', key: 'Z' },
+    ];
+    const selectedLetters = [];
     const source = {
       name: '',
       ref: '',
       file: '',
+      letters: [],
     };
     const formItemLayoutWithOutLabelModal = {
       wrapperCol: {
@@ -133,10 +166,29 @@ export default defineComponent({
       transferLocale,
       formItemLayoutWithOutLabelModal,
       source,
+      letters,
+      selectedLetters,
       loading,
       modalShow,
       labelColModal: { span: 8 },
       wrapperColModal: { span: 14 },
+    };
+  },
+  setup() {
+    const handleChange = (info: FileInfo) => {
+      const status = info.file.status;
+      if (status !== 'uploading') {
+        console.log(info.file, info.fileList);
+      }
+      if (status === 'done') {
+        message.success(`${info.file.name} file uploaded successfully.`);
+      } else if (status === 'error') {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    };
+    return {
+      handleChange,
+      fileList: ref([]),
     };
   },
   methods: {
@@ -146,6 +198,12 @@ export default defineComponent({
       Sources.createSource(this.source);
       this.$router.push('sources');
     },
+    handleChangeLettersTransfer(targetKeys, direction, moveKeys) {
+      this.source.letters = targetKeys;
+    },
+    filterOptionLettersTransfer(inputValue, option) {
+      return option.title.indexOf(inputValue) > -1;
+    },
     closeModal(event) {
       this.$emit('close-modal');
     },
@@ -154,6 +212,7 @@ export default defineComponent({
         name: '',
         ref: '',
         file: '',
+        letters: [],
       };
     },
   },
