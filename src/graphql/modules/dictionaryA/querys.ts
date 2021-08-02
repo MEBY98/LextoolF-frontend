@@ -8,7 +8,7 @@ export const findAllDictionariesAQuery = gql`
       reference
       description
       state
-      letters
+      lemario
     }
   }
 `;
@@ -19,7 +19,6 @@ export const getDictionaryByAIDQuery = gql`
       id
       name
       reference
-      letters
       sources {
         id
         name
@@ -28,6 +27,30 @@ export const getDictionaryByAIDQuery = gql`
       }
       description
       state
+      lemario
+    }
+  }
+`;
+
+export const getLemarioByDictionaryIDQuery = gql`
+  query getLemarioByDictionaryID($dictionaryID: String!) {
+    getLemarioByDictionaryID(dictionaryID: $dictionaryID) {
+      id
+      name
+      dictionaryType
+      entries {
+        id
+        lemma
+        letter
+        ref
+        context
+        source {
+          id
+          name
+          ref
+          file
+        }
+      }
     }
   }
 `;

@@ -1,11 +1,16 @@
 import { apolloQuery, apolloMutate } from '@/graphql/apollo';
-import { findAllDictionariesAQuery, getDictionaryByAIDQuery } from './querys';
+import {
+  findAllDictionariesAQuery,
+  getDictionaryByAIDQuery,
+  getLemarioByDictionaryIDQuery,
+} from './querys';
 import { FetchPolicy, apolloClientA } from '@/graphql/apolloProvider';
 import {
   createDictionaryAMutation,
   deleteDictionaryAByIDMutation,
   updateDictionaryAByIDMutation,
   addSourcesToDictionaryAMutation,
+  createLemarioByDictionaryIDMutation,
 } from './mutations';
 
 export class DictionaryA {
@@ -18,9 +23,27 @@ export class DictionaryA {
     );
   }
 
+  static createLemarioByDictionaryID(dictionaryID: String, newLemario: any) {
+    return apolloQuery(
+      createLemarioByDictionaryIDMutation,
+      { newLemario: newLemario, dictionaryID: dictionaryID },
+      FetchPolicy.network_only,
+      apolloClientA
+    );
+  }
+
   static getDictionaryByAID(dictionaryID: String) {
     return apolloQuery(
       getDictionaryByAIDQuery,
+      { dictionaryID },
+      FetchPolicy.network_only,
+      apolloClientA
+    );
+  }
+
+  static getLemarioByDictionaryID(dictionaryID: String) {
+    return apolloQuery(
+      getLemarioByDictionaryIDQuery,
       { dictionaryID },
       FetchPolicy.network_only,
       apolloClientA
