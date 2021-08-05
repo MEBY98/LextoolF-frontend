@@ -4,6 +4,9 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import ApolloClient from 'apollo-client';
 import { setContext } from 'apollo-link-context';
 import { createHttpLink } from 'apollo-link-http';
+import { WebSocketLink } from 'apollo-link-ws';
+import { getOperationAST } from 'graphql';
+
 import router from './../router/router';
 
 const cache = new InMemoryCache({
@@ -14,23 +17,15 @@ const cache = new InMemoryCache({
     }
     return undefined;
   },
-  addTypename: false,
   // fragmentMatcher
+});
+
+const httpLinkA = createHttpLink({
+  uri: 'http://localhost:11000/graphql',
 });
 
 const httpLink = createHttpLink({
   uri: 'http://localhost:10000/graphql',
-});
-
-const authLink = setContext((_, { headers }) => {
-  // const token = store.site.token;
-  return {
-    headers: {
-      ...headers,
-      // authorization: token ? `Bearer ${token}` : '',
-      authorization: '',
-    },
-  };
 });
 
 const defaultOptions: any = {
@@ -46,6 +41,14 @@ const defaultOptions: any = {
     errorPolicy: 'all',
   },
 };
+
+export const apolloClientA = new ApolloClient({
+  connectToDevTools: true,
+  link: httpLinkA,
+  cache,
+  defaultOptions,
+  queryDeduplication: true,
+});
 
 export const apolloClient = new ApolloClient({
   connectToDevTools: true,

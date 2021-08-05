@@ -10,7 +10,7 @@
           class="br-menu-link"
         >
           <div class="br-menu-item">
-            <i :class="link.icon" class="menu-item-icon icon tx-20"></i>
+            <i :class="link.icon" class="menu-item-icon icon tx-25"></i>
             <span class="menu-item-label">{{ link.text }}</span>
             <i
               v-if="link.children"
@@ -58,6 +58,11 @@ export default defineComponent({
         text: 'Estudios Fraseologicos',
         icon: 'ion-ios-book-outline',
         to: { name: 'studies' },
+      },
+      {
+        text: 'Proyectos de Diccionarios ',
+        icon: 'ion-ios-book',
+        to: { name: 'dictionariesA' },
       },
     ],
   }),

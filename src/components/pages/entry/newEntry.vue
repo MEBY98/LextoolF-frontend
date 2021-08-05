@@ -554,6 +554,51 @@ export default defineComponent({
     handleTabsChange(activeKey) {
       console.log(activeKey);
     },
+    changeImageFile(e) {
+      const imgFile = e.file.originFileObj;
+      if (imgFile) {
+        this.readImageUrl(imgFile);
+      }
+    },
+    readImageUrl(imgFile) {
+      readImageAsUrl(imgFile, (reader) => {
+        this.showCroppie = true;
+        this.croppieRef.bind({
+          url: reader.result,
+        });
+      });
+      this.showCropperModal = true;
+    },
+    reset() {
+      this.showCroppie = false;
+      this.croppieRef.refresh();
+    },
+    crop() {
+      this.croppieRef.result(this.options, (base64) => {
+        const file = base64ImageToFile(base64);
+        const image = {
+          file,
+          base64,
+        };
+        this.imageUrl = image.base64;
+      });
+      this.closeCroppieModal();
+    },
+    closeCroppieModal() {
+      this.showCropperModal = false;
+    },
+    removeUF(UF) {
+      let index = this.newEntry.UFs.indexOf(UF);
+      if (index !== -1) {
+        this.newEntry.UFs.splice(index, 1);
+      }
+    },
+    addUF() {
+      this.newEntry.UFs.push({
+        UF: '',
+        clasification: [],
+      });
+    },
   },
 });
 </script>
