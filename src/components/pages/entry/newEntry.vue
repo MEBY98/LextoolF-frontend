@@ -412,7 +412,6 @@ export default defineComponent({
         paradigmaticInfo: [],
       });
       this.UFUbications.push(ubication.ubication);
-<<<<<<< HEAD
     },
     addContornoDefinition(selectedUF) {
       this.newEntry.UFs[selectedUF].ContornoDefinition.push({
@@ -443,38 +442,6 @@ export default defineComponent({
         update.selectedObservation
       ].descriptors[0] = update.descriptor;
     },
-=======
-    },
-    addContornoDefinition(selectedUF) {
-      this.newEntry.UFs[selectedUF].ContornoDefinition.push({
-        definition: {
-          definition: '',
-          descriptors: {
-            typeOfDefinition: '',
-            relationship: [],
-          },
-        },
-        contorno: {
-          contorno: '',
-          descriptors: [],
-        },
-      });
-    },
-    updateUFGeneralDescriptionDescriptor(update) {
-      this.newEntry.UFs[update.indexUFS].generalDescription[update.indexDT] =
-        update.descriptor;
-    },
-    updateUFAnotationUseInformationDescriptor(update) {
-      this.newEntry.UFs[update.indexUFS].useInformation[
-        update.selectedObservation
-      ].anotation = update.descriptor;
-    },
-    updateUFD1UseInformationDescriptor(update) {
-      this.newEntry.UFs[update.indexUFS].useInformation[
-        update.selectedObservation
-      ].descriptors[0] = update.descriptor;
-    },
->>>>>>> de0e6ee4b3326d7004cc51503a3d578a7f7da214
     updateUFD2UseInformationDescriptor(update) {
       this.newEntry.UFs[update.indexUFS].useInformation[
         update.selectedObservation
@@ -586,54 +553,6 @@ export default defineComponent({
     },
     handleTabsChange(activeKey) {
       console.log(activeKey);
-<<<<<<< HEAD
-=======
-    },
-    changeImageFile(e) {
-      const imgFile = e.file.originFileObj;
-      if (imgFile) {
-        this.readImageUrl(imgFile);
-      }
-    },
-    readImageUrl(imgFile) {
-      readImageAsUrl(imgFile, (reader) => {
-        this.showCroppie = true;
-        this.croppieRef.bind({
-          url: reader.result,
-        });
-      });
-      this.showCropperModal = true;
-    },
-    reset() {
-      this.showCroppie = false;
-      this.croppieRef.refresh();
-    },
-    crop() {
-      this.croppieRef.result(this.options, (base64) => {
-        const file = base64ImageToFile(base64);
-        const image = {
-          file,
-          base64,
-        };
-        this.imageUrl = image.base64;
-      });
-      this.closeCroppieModal();
-    },
-    closeCroppieModal() {
-      this.showCropperModal = false;
-    },
-    removeUF(UF) {
-      let index = this.newEntry.UFs.indexOf(UF);
-      if (index !== -1) {
-        this.newEntry.UFs.splice(index, 1);
-      }
-    },
-    addUF() {
-      this.newEntry.UFs.push({
-        UF: '',
-        clasification: [],
-      });
->>>>>>> de0e6ee4b3326d7004cc51503a3d578a7f7da214
     },
   },
 });
