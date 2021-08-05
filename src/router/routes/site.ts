@@ -9,6 +9,15 @@ const dictionaries = () =>
 
 const newEntry = () => import('@/components/pages/entry/newEntry.vue');
 const editEntry = () => import('@/components/pages/entry/editEntry.vue');
+<<<<<<< HEAD
+=======
+const sources = () => import('@/components/pages/sourcesA/sources.vue');
+const dictionariesA = () =>
+  import('@/components/pages/dictionaryA/dictionariesA.vue');
+const newDictionaryA = () =>
+  import('@/components/pages/dictionaryA/newDictionaryA.vue');
+const lemario = () => import('@/components/pages/lemarioA/lemario.vue');
+>>>>>>> de0e6ee4b3326d7004cc51503a3d578a7f7da214
 
 export const SiteRoutes: RouteRecordRaw[] & any = [
   {
@@ -52,5 +61,32 @@ export const SiteRoutes: RouteRecordRaw[] & any = [
     exact: true,
     path: 'editEntry/:id',
     component: editEntry,
+<<<<<<< HEAD
+=======
+  }
+  {
+    name: 'sources',
+    exact: true,
+    path: 'sources',
+    component: sources,
+  },
+  {
+    name: 'dictionariesA',
+    exact: true,
+    path: 'dictionariesA',
+    component: dictionariesA,
+  },
+  {
+    name: 'newDictionaryA',
+    exact: true,
+    path: 'newDictionaryA',
+    component: newDictionaryA,
+  },
+  {
+    name: 'lemario',
+    exact: true,
+    path: 'lemario',
+    component: lemario,
+>>>>>>> de0e6ee4b3326d7004cc51503a3d578a7f7da214
   },
 ];

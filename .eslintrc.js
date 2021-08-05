@@ -21,7 +21,6 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 0,
     semi: 0,
     '@typescript-eslint/no-explicit-any': 0,
-    '@typescript-eslint/no-unused-vars': 0,
     '@typescript-eslint/no-var-requires': 0,
     '@typescript-eslint/ban-types': 0,
     '@typescript-eslint/prefer-const': 0,
@@ -29,12 +28,7 @@ module.exports = {
     'vue/valid-template-root': 0,
     'vue/require-default-prop': 0,
     'vue/no-v-html': 0,
-    'prettier/prettier': [
-      'error',
-      {
-        endOfLine: 'auto',
-      },
-    ],
+    'prettier/prettier': 1,
     'prefer-const': 0,
   },
   // overrides: [{

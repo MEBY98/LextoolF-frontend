@@ -11,6 +11,13 @@ import {
   DescriptorTypeStore,
   ObservationStore,
 } from './modules/descriptorTabs';
+<<<<<<< HEAD
+=======
+import { SourcesStore } from './modules/sourcesA';
+import { DictionaryAStore } from './modules/dictionaryA';
+import { LemarioStore } from './modules/lemarioA';
+
+>>>>>>> de0e6ee4b3326d7004cc51503a3d578a7f7da214
 export const store = reactive({
   layout: new LayoutStore(),
   study: new StudyStore(),
@@ -27,4 +34,10 @@ export const store = reactive({
   ContornoDescriptorsTypes: [DescriptorTypeStore],
   ExampleDescriptorsTypes: [DescriptorTypeStore],
   ParadigmaticInfoDescriptorsTypes: [DescriptorTypeStore],
+<<<<<<< HEAD
+=======
+  sources: new SourcesStore(),
+  dictionariesA: new DictionaryAStore(),
+  lemario: new LemarioStore(),
+>>>>>>> de0e6ee4b3326d7004cc51503a3d578a7f7da214
 });
