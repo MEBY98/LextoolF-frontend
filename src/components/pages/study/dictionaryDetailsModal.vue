@@ -1,5 +1,5 @@
 <template>
-  <a-modal title="Detalles">
+  <a-modal title="Detalles" :footer="null">
     <div>
       <span :style="{ 'font-weight': '700' }">
         Nombre del Diccionario:

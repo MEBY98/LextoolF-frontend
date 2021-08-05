@@ -26,17 +26,21 @@ export const editStudyMutation = gql`
       id
       name
       period
+      state
       dictionaries {
         id
         name
-        annoOfPublication
+        shortName
         author {
           name
           siglas
         }
+        annoOfPublication
         reference
         letters
-        shortName
+        entries {
+          id
+        }
       }
     }
   }
