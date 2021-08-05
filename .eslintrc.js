@@ -28,7 +28,12 @@ module.exports = {
     'vue/valid-template-root': 0,
     'vue/require-default-prop': 0,
     'vue/no-v-html': 0,
-    'prettier/prettier': 1,
+    'prettier/prettier': [
+      'error',
+      {
+        endOfLine: 'auto',
+      },
+    ],
     'prefer-const': 0,
   },
   // overrides: [{
