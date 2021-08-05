@@ -18,56 +18,76 @@
         :style="{ 'font-weight': '500' }"
       ></a-input>
     </a-form-item>
-    <a-form-item :colon="false">
+
+    <a-form-item
+      ref="period"
+      name="period"
+      :label-col="labelCol"
+      :wrapper-col="wrapperCol"
+      :colon="false"
+    >
       <template #label>
-        <span :style="{ 'font-weight': '700' }">
-          Diccionarios
-          <a-tooltip title="Agregar Diccionario" placement="right">
-            <PlusSquareFilled
-              :style="{ fontSize: '25px', color: '#08c', margin: '5px' }"
-              @click="showNewDictionaryModalMethod"
-            />
-          </a-tooltip>
-        </span>
+        <span :style="{ 'font-weight': '700' }">Periodo</span>
       </template>
-      <a-table
-        :data-source="studyToEdit.dictionaries"
-        :columns="columns"
-        :row-key="(record) => record.name"
-        :pagination="false"
-        bordered
-      >
-        <template #operation="{ record }">
-          <a-tooltip title="Detalles del Diccionario" placement="bottom">
-            <a @click="showDictionaryDetailsModalMethod(record)">
-              <EyeFilled
-                :style="{ fontSize: '20px', color: '#08c', margin: '5px' }"
-              />
-            </a>
-          </a-tooltip>
-          <a-tooltip title="Editar Diccionario" placement="bottom">
-            <a @click="showDictionaryEditModalMethod(record)">
-              <EditFilled
-                :style="{ fontSize: '20px', color: '#08c', margin: '5px' }"
-              />
-            </a>
-          </a-tooltip>
-          <a-popconfirm
-            v-if="studyToEdit.dictionaries.length"
-            title="Seguro de Eliminar?"
-            @confirm="deleteDictionary(record)"
-          >
-            <a-tooltip title="Eliminar Diccionario" placement="bottom">
-              <a v-if="studyToEdit.dictionaries.length > 1">
-                <DeleteFilled
-                  :style="{ fontSize: '20px', color: 'red', margin: '5px' }"
-                />
-              </a>
-            </a-tooltip>
-          </a-popconfirm>
-        </template>
-      </a-table>
+      <a-input
+        v-model:value="studyToEdit.period"
+        :style="{ 'font-weight': '500' }"
+      ></a-input>
     </a-form-item>
+
+    <span :style="{ 'font-weight': '700' }">
+      Diccionarios
+      <a-tooltip title="Agregar Diccionario" placement="right">
+        <PlusSquareFilled
+          :style="{ fontSize: '25px', color: '#08c', margin: '5px' }"
+          @click="showNewDictionaryModalMethod"
+        />
+      </a-tooltip>
+    </span>
+
+    <a-table
+      :data-source="studyToEdit.dictionaries"
+      :columns="columns"
+      :row-key="(record) => record.name"
+      :pagination="false"
+      bordered
+    >
+      <template #operation="{ record }">
+        <a-tooltip title="Detalles del Diccionario" placement="bottom">
+          <a @click="showDictionaryDetailsModalMethod(record)">
+            <EyeFilled
+              :style="{ fontSize: '20px', color: '#08c', margin: '5px' }"
+            />
+          </a>
+        </a-tooltip>
+        <a-tooltip title="Editar Diccionario" placement="bottom">
+          <a @click="showDictionaryEditModalMethod(record)">
+            <EditFilled
+              :style="{ fontSize: '20px', color: '#08c', margin: '5px' }"
+            />
+          </a>
+        </a-tooltip>
+        <a-popconfirm
+          v-if="studyToEdit.dictionaries.length"
+          title="Seguro de Eliminar?"
+          @confirm="deleteDictionary(record)"
+        >
+          <a-tooltip title="Eliminar Diccionario" placement="bottom">
+            <a
+              v-if="
+                studyToEdit.dictionaries.length > 1 &&
+                record.entries.length === 0
+              "
+            >
+              <DeleteFilled
+                :style="{ fontSize: '20px', color: 'red', margin: '5px' }"
+              />
+            </a>
+          </a-tooltip>
+        </a-popconfirm>
+      </template>
+    </a-table>
+
     <div style="text-align: right">
       <a-button
         key="submit"
@@ -226,7 +246,7 @@ export default defineComponent({
       this.$router.push({ name: 'studies' });
     },
     goStudies() {
-      this.$router.push('studies');
+      this.$router.push({ name: 'studies' });
     },
     showDictionaryDetailsModalMethod(record) {
       this.showDictionaryDetailsModal = !this.showDictionaryDetailsModal;

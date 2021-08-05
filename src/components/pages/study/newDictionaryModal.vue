@@ -83,7 +83,11 @@
           :min="1"
         ></a-input-number>
       </a-form-item>
-      <a-form-item label="Letras del Diccionario">
+
+      <div class="p-3">
+        <span style="font-weight: 500">Letras</span>
+      </div>
+      <div class="container ml-4 w-100">
         <a-transfer
           :titles="['Sin agregar', 'Agregadas']"
           :data-source="letters"
@@ -92,10 +96,10 @@
           show-search
           :target-keys="newDictionary.letters"
           :locale="transferLocale"
-          :style="{ width: '100%' }"
+          class="w-100"
           @change="handleChangeLettersTransfer"
         ></a-transfer>
-      </a-form-item>
+      </div>
     </a-form>
     <template #footer>
       <a-button key="back" @click="closeModal">Cerrar</a-button>
@@ -223,7 +227,7 @@ export default defineComponent({
       this.newDictionary.letters = targetKeys;
     },
     filterOptionLettersTransfer(inputValue, option) {
-      return option.title.indexOf(inputValue) > -1;
+      return option.title.toLowerCase().indexOf(inputValue.toLowerCase()) > -1;
     },
   },
 });

@@ -3,7 +3,7 @@
     <a href="index.html">
       <h2 class="mb-1 ml-2">
         <span class="text-primary">Lex</span>
-        <span class="fw-500">tool 2.0</span>
+        <span class="fw-500">tool &#402;</span>
       </h2>
     </a>
   </div>

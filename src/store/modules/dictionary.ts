@@ -1,3 +1,5 @@
+import { EntryStore } from './entry';
+
 export class DictionaryStore {
   id: String;
   name: String;
@@ -6,6 +8,7 @@ export class DictionaryStore {
   annoOfPublication: Number;
   reference: String;
   letters: String[];
+  entries: [EntryStore];
 }
 
 export class Author {

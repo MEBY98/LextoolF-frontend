@@ -19,6 +19,7 @@ export const createDictionaryByStudyIDMutation = gql`
       annoOfPublication
       reference
       letters
+      entries
     }
   }
 `;

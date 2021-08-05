@@ -1,5 +1,11 @@
 <template>
-  <a-modal title="Detalles">
+  <a-modal
+    :visible="visible"
+    title="Detalles del Estudio"
+    width="775px"
+    :footer="null"
+    @cancel="closeModal"
+  >
     <a-form :model="selectedStudyData">
       <a-form-item :colon="false">
         <template #label>
@@ -16,13 +22,14 @@
             <span style="font-weight: 500">{{ selectedStudy.period }}</span>
           </span>
         </template>
-        <a-table
-          :data-source="selectedStudy.dictionaries"
-          :row-key="(record) => record.id"
-          :columns="columns"
-          bordered
-        ></a-table>
       </a-form-item>
+      <a-table
+        :data-source="selectedStudy.dictionaries"
+        :row-key="(record) => record.id"
+        :columns="columns"
+        :pagination="false"
+        bordered
+      ></a-table>
     </a-form>
   </a-modal>
 </template>
@@ -37,17 +44,21 @@ export default defineComponent({
     CheckOutlined,
   },
   // eslint-disable-next-line vue/require-prop-types
-  props: ['selectedStudy'],
+  props: ['selectedStudy', 'visible'],
+  emits: ['close-modal'],
   data() {
     const columns = [
       {
-        title: 'Siglas del Diccionario',
+        title: 'Nombre del Diccionario',
+        dataIndex: 'shortName',
+      },
+      {
+        title: 'Siglas',
         dataIndex: 'shortName',
       },
       {
         title: 'Siglas del Autor',
         dataIndex: 'author',
-        sorter: true,
         customRender: ({ text }) => {
           let result = [];
           text.forEach((element) => {
@@ -58,9 +69,8 @@ export default defineComponent({
         },
       },
       {
-        title: 'Año de Publicacion',
+        title: 'Año',
         dataIndex: 'annoOfPublication',
-        sorter: true,
       },
     ];
     const selectedStudyData = {};
@@ -70,8 +80,8 @@ export default defineComponent({
     };
   },
   methods: {
-    s() {
-      console.log(this.selectedStudyData);
+    closeModal() {
+      this.$emit('close-modal');
     },
   },
 });

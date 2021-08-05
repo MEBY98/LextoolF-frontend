@@ -17,10 +17,29 @@ export const getDictionaryByIDQuery = gql`
         id
         letter
         context
-        lemma
+        lemma {
+          id
+          lemma
+          clasification {
+            id
+            clasification
+          }
+        }
         UFs {
           id
           UF
+          ubication {
+            id
+            ubication
+          }
+        }
+        sublemmas {
+          id
+          sublemma
+          clasification {
+            id
+            clasification
+          }
         }
       }
     }

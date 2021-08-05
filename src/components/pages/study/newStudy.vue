@@ -1,5 +1,5 @@
 <template>
-  <h4>Crear Nuevo Estudio Fraseografico</h4>
+  <h4>Crear Nuevo Estudio Fraseologico</h4>
   <br />
   <a-form ref="formRef" :model="study" :rules="rules">
     <a-form-item
@@ -32,12 +32,25 @@
         bordered
       >
         <template #title>
-          Diccionarios
-          <a-tooltip title="Agregar Diccionario" placement="right">
-            <PlusSquareFilled
-              :style="{ fontSize: '25px', color: '#08c', margin: '5px' }"
-              @click="showModal"
-            />
+          <a-tooltip title="Agregar Diccionario Nuevo" placement="right">
+            <a @click="showModal">
+              Nuevo
+              <PlusSquareFilled
+                :style="{ fontSize: '25px', color: '#08c', margin: '5px' }"
+              />
+            </a>
+          </a-tooltip>
+          <a-tooltip
+            title="Agregar Diccionario de otro Estudio"
+            placement="right"
+          >
+            <a @click="showModalImportDictionaryMethod">
+              Importar
+              <PlusSquareFilled
+                :style="{ fontSize: '25px', color: '#08c', margin: '5px' }"
+                @click="showModalImportDictionaryMethod"
+              />
+            </a>
           </a-tooltip>
         </template>
         <template #operation="{ record }">
@@ -172,6 +185,7 @@ export default defineComponent({
       dictionaries: [],
     });
     const newDictionaryModalShow = false;
+    const showModalImportDictionary = false;
     const dictionaryDetailsShow = false;
     const editDictionaryModalShow = false;
     const loading = false;
@@ -181,6 +195,7 @@ export default defineComponent({
       autogeneratePeriod,
       loading,
       newDictionaryModalShow,
+      showModalImportDictionary,
       dictionaryDetailsShow,
       editDictionaryModalShow,
       selectedDictionary,
@@ -195,6 +210,9 @@ export default defineComponent({
   methods: {
     showModal() {
       this.newDictionaryModalShow = !this.newDictionaryModalShow;
+    },
+    showModalImportDictionaryMethod() {
+      this.showModalImportDictionary = !this.showModalImportDictionary;
     },
     addDictionary(newDictionary) {
       console.log(newDictionary);
@@ -236,10 +254,10 @@ export default defineComponent({
       console.log(this.study);
       this.loading = true;
       Study.createStudy(this.study);
-      this.$router.push('studies');
+      this.$router.push({ name: 'studies' });
     },
     goStudies() {
-      this.$router.push('studies');
+      this.$router.push({ name: 'studies' });
     },
     dictionaryDetailsShowMethod(record) {
       this.selectedDictionary = record;
@@ -261,6 +279,7 @@ export default defineComponent({
       if (found) {
         this.study.dictionaries[i - 1] = editedDictionary;
       }
+      this.editDictionaryModalShow = !this.editDictionaryModalShow;
     },
   },
 });
