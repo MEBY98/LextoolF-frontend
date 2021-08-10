@@ -33,7 +33,7 @@
           :key="indexDT"
           :type="descriptorType.inputType"
           :descriptors="descriptorType.descriptors"
-          :value="ufs[indexUFS].example[indexDT]"
+          :value="ufs[indexUFS].generalDescription[indexDT]"
           :label="descriptorType.name"
           @input-change="updateUFDescriptor($event, indexDT, indexUFS)"
           @select-change="updateUFDescriptor($event, indexDT, indexUFS)"

@@ -32,6 +32,62 @@ export const getDictionaryByIDQuery = gql`
             id
             ubication
           }
+          generalDescription {
+            id
+            description
+          }
+          useInformation {
+            anotation
+            descriptors {
+              id
+              description
+            }
+          }
+          orderLemma {
+            id
+            description
+          }
+          ContornoDefinition {
+            definition {
+              definition
+              descriptors {
+                typeOfDefinition {
+                  id
+                  description
+                }
+                relationship {
+                  id
+                  description
+                }
+              }
+            }
+            contorno {
+              contorno
+              descriptors {
+                id
+                description
+              }
+            }
+          }
+          example {
+            anotation
+            typeOfExample {
+              id
+              description
+            }
+            formatOfExample {
+              id
+              description
+            }
+            functionOfExample {
+              id
+              description
+            }
+          }
+          paradigmaticInfo {
+            id
+            description
+          }
         }
         sublemmas {
           id

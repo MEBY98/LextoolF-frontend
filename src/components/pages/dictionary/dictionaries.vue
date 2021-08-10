@@ -45,7 +45,7 @@
             </a-tooltip>
 
             <a-tooltip title="Editar" placement="bottom">
-              <a @click="goToEditEntry">
+              <a @click="goToEditEntry(record)">
                 <EditFilled
                   :style="{ fontSize: '20px', color: '#08c', margin: '5px' }"
                 />
@@ -80,14 +80,8 @@
   ></entry-details-modal>
 </template>
 <script lang="ts">
-import {
-  EyeFilled,
-  EditFilled,
-  DeleteFilled,
-  PlusSquareFilled,
-  CarryOutFilled,
-} from '@ant-design/icons-vue';
-import { defineComponent, ref, h } from 'vue';
+import { EyeFilled, EditFilled, PlusSquareFilled } from '@ant-design/icons-vue';
+import { defineComponent, h } from 'vue';
 import { EntryStore } from '@/store/modules/entry';
 
 import EntryDetailsModal from '@/components/pages/entry/EntryDetailsModal.vue';
@@ -104,8 +98,8 @@ export default defineComponent({
   data() {
     const selectedEntry: EntryStore = {
       id: '',
+      letter: '',
       context: [''],
-      letter: 'A',
       lemma: {
         id: '',
         lemma: '',
@@ -122,7 +116,6 @@ export default defineComponent({
         {
           id: '',
           UF: '',
-          // descriptors: [['']],
         },
       ],
     };
