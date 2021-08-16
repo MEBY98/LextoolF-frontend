@@ -1,7 +1,8 @@
 export class SourcesStore {
   id: String;
   name: String;
-  ref: String;
   file: String;
-  letters: [String];
+  ref: String;
+  type: String;
+  subType: String;
 }

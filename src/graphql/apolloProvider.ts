@@ -21,7 +21,7 @@ const cache = new InMemoryCache({
 });
 
 const httpLinkA = createHttpLink({
-  uri: 'http://localhost:11000/graphql',
+  uri: 'http://localhost:12000/graphql',
 });
 
 const httpLink = createHttpLink({

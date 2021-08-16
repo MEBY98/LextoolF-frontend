@@ -6,15 +6,18 @@ const newStudy = () => import('@/components/pages/study/newStudy.vue');
 const editStudy = () => import('@/components/pages/study/editStudy.vue');
 const dictionaries = () =>
   import('@/components/pages/dictionary/dictionaries.vue');
-
 const newEntry = () => import('@/components/pages/entry/newEntry.vue');
 const editEntry = () => import('@/components/pages/entry/editEntry.vue');
+
 const sources = () => import('@/components/pages/sourcesA/sources.vue');
 const dictionariesA = () =>
   import('@/components/pages/dictionaryA/dictionariesA.vue');
 const newDictionaryA = () =>
   import('@/components/pages/dictionaryA/newDictionaryA.vue');
 const lemario = () => import('@/components/pages/lemarioA/lemario.vue');
+const extractionTask = () =>
+  import('@/components/pages/entryA/extractionTask.vue');
+const newEntryA = () => import('@/components/pages/entryA/newEntryA.vue');
 
 export const SiteRoutes: RouteRecordRaw[] & any = [
   {
@@ -82,5 +85,17 @@ export const SiteRoutes: RouteRecordRaw[] & any = [
     exact: true,
     path: 'lemario',
     component: lemario,
+  },
+  {
+    name: 'extractionTask',
+    exact: true,
+    path: 'extractionTask',
+    component: extractionTask,
+  },
+  {
+    name: 'newEntryA',
+    exact: true,
+    path: 'newEntryA/:source',
+    component: newEntryA,
   },
 ];

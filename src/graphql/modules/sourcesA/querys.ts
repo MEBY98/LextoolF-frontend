@@ -5,8 +5,10 @@ export const findAllSourcesQuery = gql`
     findAllSources {
       id
       name
-      ref
       file
+      ref
+      type
+      subType
     }
   }
 `;
@@ -16,7 +18,9 @@ export const getSourceByIDQuery = gql`
     getSourceByID(sourceID: $sourceID) {
       id
       name
+      type
       ref
+      subType
       file
     }
   }

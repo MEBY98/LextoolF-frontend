@@ -14,6 +14,7 @@ import {
 import { SourcesStore } from './modules/sourcesA';
 import { DictionaryAStore } from './modules/dictionaryA';
 import { LemarioStore } from './modules/lemarioA';
+import { EntryAStore } from './modules/entryA';
 
 export const store = reactive({
   layout: new LayoutStore(),
@@ -34,4 +35,5 @@ export const store = reactive({
   sources: new SourcesStore(),
   dictionariesA: new DictionaryAStore(),
   lemario: new LemarioStore(),
+  entriesA: [EntryAStore],
 });

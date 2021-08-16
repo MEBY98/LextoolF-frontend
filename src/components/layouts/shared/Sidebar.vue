@@ -60,9 +60,9 @@ export default defineComponent({
         to: { name: 'studies' },
       },
       {
-        text: 'Proyectos de Diccionarios ',
+        text: 'Proyecto de Lemario',
         icon: 'ion-ios-book',
-        to: { name: 'dictionariesA' },
+        to: { name: 'sources' },
       },
     ],
   }),

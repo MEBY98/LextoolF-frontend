@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.2.5",
+    "@braid/vue-formulate": "^2.5.2",
     "@types/vuelidate": "^0.7.13",
     "@vue/apollo-composable": "^4.0.0-alpha.10",
     "@vue/apollo-util": "^4.0.0-alpha.6",
@@ -39,6 +40,7 @@
     "install": "^0.13.0",
     "jquery": "^3.5.1",
     "jsonwebtoken": "^8.5.1",
+    "mdb-vue-ui-kit": "^1.0.0",
     "moment": "^2.29.1",
     "npm": "^6.14.8",
     "single-spa": "^5.8.3",
@@ -56,6 +58,7 @@
     "vue-file-agent": "^1.7.3",
     "vue-router": "^4.0.0-beta.13",
     "vue3-carousel": "^0.1.4",
+    "vue3-simple-file-input": "^1.0.3",
     "vuelidate": "^0.7.5",
     "vuex": "^4.0.2",
     "wowjs": "^1.1.3"

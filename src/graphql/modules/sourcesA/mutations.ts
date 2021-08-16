@@ -5,7 +5,9 @@ export const deleteSourceByIDMutation = gql`
     deleteSourceByID(SourceID: $SourceID) {
       id
       name
+      type
       ref
+      subType
       file
     }
   }
@@ -16,7 +18,9 @@ export const createSourceMutation = gql`
     createSource(source: $source) {
       id
       name
+      type
       ref
+      subType
       file
     }
   }
@@ -27,7 +31,8 @@ export const updateSourceByIDMutation = gql`
     updateSourceByID(source: $source) {
       id
       name
-      ref
+      type
+      subType
       file
     }
   }

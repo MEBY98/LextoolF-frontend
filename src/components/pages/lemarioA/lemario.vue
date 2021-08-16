@@ -3,28 +3,24 @@
     <div class="row">
       <div class="col-md-12">
         <ul
-          class="
-            nav nav-primary nav-dotted nav-square-separated
-            justify-content-center justify-content-md-start
-          "
+          class="nav nav-primary nav-dotted nav-square-separated justify-content-center justify-content-md-start"
         >
-          <li class="nav-item hvr-forward col-md-6" >
-            <a-card hoverable title= "Proyecto de Diccionario Seleccionado">
-                <p>Nombre: {{ $store.dictionariesA.name }}</p>
-                <p>Descripcion: {{ $store.dictionariesA.description }}</p>
+          <li class="nav-item hvr-forward col-md-6">
+            <a-card hoverable title="Proyecto de Diccionario Seleccionado">
+              <p>Nombre: {{ $store.dictionariesA.name }}</p>
+              <p>Descripcion: {{ $store.dictionariesA.description }}</p>
             </a-card>
           </li>
           <li class="nav-item hvr-forward col-md-6" style="padding-left: 10px">
-            <a-card hoverable title= "Lemario">
-                <p>Nombre: {{ $store.lemario.name }}</p>
-                <p>Tipo: {{ $store.lemario.dictionaryType }}</p>
+            <a-card hoverable title="Lemario">
+              <p>Nombre: {{ $store.lemario.name }}</p>
+              <p>Tipo: {{ $store.lemario.dictionaryType }}</p>
             </a-card>
           </li>
         </ul>
       </div>
     </div>
-    
-   
+
     <a-tabs
       v-model:activeKey="activeKey"
       :style="{ 'margin-top': '5px' }"

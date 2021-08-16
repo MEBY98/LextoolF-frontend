@@ -62,8 +62,15 @@
         title="Seleccionar de la fuente"
         placement="bottom"
       ></a-tooltip>
+      <a-tooltip title="Seleccionar la Fuente" placement="bottom">
+        <a @click="selectSourceToWork(record.id)">
+          <CarryOutFilled
+            :style="{ fontSize: '20px', color: '#08c', margin: '5px' }"
+          />
+        </a>
+      </a-tooltip>
       <a-tooltip title="Detalles de la fuente" placement="bottom">
-        <a @click="showDetailsModalMethod(record)">
+        <a @click="sourceDetailsModalShowMethod(record)">
           <EyeFilled
             :style="{ fontSize: '20px', color: '#08c', margin: '5px' }"
           />
@@ -89,10 +96,11 @@
     @close-modal="showModalS"
     @add-source="addSource"
   ></new-source-modal>
-  <sources-details-modal
-    v-model:visible="showDetailsModal"
+  <source-details-modal
+    v-model:visible="sourceDetailsModalShow"
     :selected-source="selectedSource"
-  ></sources-details-modal>
+    @close-modal="closeSourceDetailsModal"
+  ></source-details-modal>
 </template>
 <script lang="ts">
 import {
@@ -103,12 +111,11 @@ import {
   CarryOutFilled,
   SearchOutlined,
 } from '@ant-design/icons-vue';
-import { defineComponent, reactive, ref } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { Sources } from '@/graphql/modules/sourcesA/model.ts';
 import NewSourceModal from './newSourceModal.vue';
 import Table from 'ant-design-vue/lib/table';
-import { deleteSourceByIDMutation } from '@/graphql/modules/sourcesA/mutations';
-//import StudyDetailsModal from './studyDetailsModal.vue';
+import SourceDetailsModal from './sourceDetailsModal.vue';
 
 export default defineComponent({
   components: {
@@ -120,15 +127,17 @@ export default defineComponent({
     NewSourceModal,
     PlusSquareFilled,
     SearchOutlined,
+    SourceDetailsModal,
   },
   data() {
-    const showDetailsModal = false;
+    const sourceDetailsModalShow = false;
     const selectedSource = {};
     const newSourceModalShow = false;
     const searchInput = ref();
     return {
       searchInput,
       selectedSource,
+      sourceDetailsModalShow,
       newSourceModalShow,
       columns: [
         {
@@ -165,16 +174,32 @@ export default defineComponent({
           },
         },
         {
-          title: 'Archivo',
-          dataIndex: 'file',
-          sorter: (a, b) => a.file.localeCompare(b.file),
-          width: 300,
+          title: 'Tipo',
+          dataIndex: 'type',
+          sorter: (a, b) => a.type.localeCompare(b.type),
+          width: 200,
           slots: {
             filterDropdown: 'filterDropdown',
             filterIcon: 'filterIcon',
           },
           onFilter: (value, record) => {
-            return record.file
+            return record.type
+              .toString()
+              .toLowerCase()
+              .includes(value.toLowerCase());
+          },
+        },
+        {
+          title: 'Sub-Tipo',
+          dataIndex: 'subType',
+          sorter: (a, b) => a.subType.localeCompare(b.subType),
+          width: 200,
+          slots: {
+            filterDropdown: 'filterDropdown',
+            filterIcon: 'filterIcon',
+          },
+          onFilter: (value, record) => {
+            return record.subType
               .toString()
               .toLowerCase()
               .includes(value.toLowerCase());
@@ -211,6 +236,7 @@ export default defineComponent({
       this.newSourceModalShow = !this.newSourceModalShow;
     },
     addSource(source) {
+      this.sources.push(source);
       console.log(source);
       this.showModalS();
     },
@@ -219,6 +245,18 @@ export default defineComponent({
     },
     handleReset: (clearFilters) => {
       clearFilters();
+    },
+    sourceDetailsModalShowMethod(source) {
+      this.selectedSource = source;
+      this.sourceDetailsModalShow = true;
+    },
+    closeSourceDetailsModal() {
+      this.sourceDetailsModalShow = false;
+    },
+    async selectSourceToWork(recordID) {
+      const { data } = await Sources.getSourceByID(recordID);
+      this.$store.sources = data.getSourceByID;
+      this.$router.push({ name: 'extractionTask' });
     },
   },
 });
