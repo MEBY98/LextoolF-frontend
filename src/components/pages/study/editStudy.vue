@@ -68,17 +68,11 @@
           </a>
         </a-tooltip>
         <a-popconfirm
-          v-if="studyToEdit.dictionaries.length"
           title="Seguro de Eliminar?"
           @confirm="deleteDictionary(record)"
         >
           <a-tooltip title="Eliminar Diccionario" placement="bottom">
-            <a
-              v-if="
-                studyToEdit.dictionaries.length > 1 &&
-                record.entries.length === 0
-              "
-            >
+            <a v-if="record.entries.length === 0">
               <DeleteFilled
                 :style="{ fontSize: '20px', color: 'red', margin: '5px' }"
               />
@@ -88,7 +82,7 @@
       </template>
     </a-table>
 
-    <div style="text-align: right">
+    <div class="mt-2" style="text-align: right">
       <a-button
         key="submit"
         type="primary"
@@ -97,6 +91,9 @@
         @click="editStudy"
       >
         Guardar
+      </a-button>
+      <a-button style="margin-right: 5px" :loading="loading" @click="goStudies">
+        Cancelar
       </a-button>
     </div>
   </a-form>
@@ -221,14 +218,14 @@ export default defineComponent({
     },
     async addDictionary(newDictionary) {
       console.log(newDictionary);
-      const { data } = await Dictionary.createDictionaryByStudyID(
-        this.studyToEdit.id,
-        newDictionary
-      );
-      console.log('data:', data);
-      const createdDictionary = data.createDictionaryByStudyID;
-      this.studyToEdit.dictionaries.push(createdDictionary);
-      console.log('createdDictionary:', createdDictionary);
+      // const { data } = await Dictionary.createDictionaryByStudyID(
+      //   this.studyToEdit.id,
+      //   newDictionary
+      // );
+      // console.log('data:', data);
+      // const createdDictionary = data.createDictionaryByStudyID;
+      this.studyToEdit.dictionaries.push(newDictionary);
+      // console.log('createdDictionary:', createdDictionary);
       console.log('studyToEdit:', this.studyToEdit);
       this.showNewDictionaryModal = !this.showNewDictionaryModal;
     },

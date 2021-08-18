@@ -1,12 +1,9 @@
 <template>
-  <div
-    v-if="images.length > 0"
-    class="container overflow-scroll"
-    style="height: 400px; width: 600px; background-color: rgba(255, 0, 0, 0.1)"
-  >
+  <div v-if="images.length > 0" class="container d-flex">
     <div v-for="(i, index) in images" :key="index">
       <img
         v-if="i.context !== ''"
+        class="m-2"
         :src="MINIO_URL + '/' + i.context"
         alt="Articulo Lexicografico"
         :style="index === selectedImageIndex ? selectedImageStyle : {}"
@@ -14,6 +11,7 @@
       />
       <img
         v-else
+        class="m-2"
         :src="i.base64"
         alt="Articulo Lexicografico"
         :style="index === selectedImageIndex ? selectedImageStyle : {}"

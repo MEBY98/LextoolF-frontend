@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <h4>Crear Nueva Unidad Fraseologica</h4>
     <br />
     <div class="box01">
@@ -16,7 +16,6 @@
         </h6>
       </div>
       <div class="w-100 h-100 d-flex justify-content-start">
-        <!-- <a-form-item name="context"> -->
         <div>
           <lexicografics-articles-images
             :images="images"
@@ -46,10 +45,10 @@
             </a-button>
           </div>
         </div>
-        <!-- </a-form-item> -->
       </div>
     </div>
     <a-tabs
+      v-if="images.length > 0"
       v-model:activeKey="activeKey"
       :style="{ 'margin-top': '5px' }"
       size="small"
@@ -278,17 +277,23 @@ export default defineComponent({
           this.newEntry.lemma.lemma + '_' + date + '_' + (i + 1) + extensionFile
         );
       }
+
+      this.newEntry.letter = this.$route.params.letter.toString();
+      this.newEntry.context = context;
+      console.log(this.newEntry);
+      const dataCreateUF = await UF.createUF(
+        this.$store.dictionary.id,
+        this.newEntry
+      );
+      console.log(dataCreateUF);
+      this.$store.layout.isLoading = false;
+
       // Uploading Images
       for (let i = 0; i < this.images.length; i++) {
         const fd = new FormData();
         fd.append('file', this.images[i].file);
         axiosClientPostImage.post(`/${context[i]}`, fd);
       }
-
-      this.newEntry.letter = this.$route.params.letter.toString();
-      this.newEntry.context = context;
-      console.log(this.newEntry);
-      await UF.createUF(this.$store.dictionary.id, this.newEntry);
 
       //UpdatingDictionaryStore
       const dataSelectedDictionary = await Dictionary.getDictionaryByID(
@@ -302,7 +307,7 @@ export default defineComponent({
         this.$route.params.letter.toString()
       );
       console.log('this.$store.entries', this.$store.entries);
-      this.$store.layout.isLoading = false;
+
       this.$router.push({ name: 'dictionaries' });
     },
 

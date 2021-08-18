@@ -52,10 +52,9 @@
               </a>
             </a-tooltip>
 
-            <!-- <a-popconfirm
-              v-if="studies.length"
+            <a-popconfirm
               title="Seguro de Eliminar?"
-              @confirm="deleteStudy(record.id)"
+              @confirm="deleteEntry(record.id)"
             >
               <a-tooltip
                 title="Eliminar del estudio fraseologico"
@@ -67,7 +66,7 @@
                   />
                 </a>
               </a-tooltip>
-            </a-popconfirm> -->
+            </a-popconfirm>
           </template>
         </a-table>
       </a-tab-pane>
@@ -80,9 +79,16 @@
   ></entry-details-modal>
 </template>
 <script lang="ts">
-import { EyeFilled, EditFilled, PlusSquareFilled } from '@ant-design/icons-vue';
+import {
+  EyeFilled,
+  EditFilled,
+  PlusSquareFilled,
+  DeleteFilled,
+} from '@ant-design/icons-vue';
 import { defineComponent, h } from 'vue';
 import { EntryStore } from '@/store/modules/entry';
+import { UF } from '@/graphql/modules/entry/model';
+import { Dictionary } from '@/graphql/modules/dictionary/model.ts';
 
 import EntryDetailsModal from '@/components/pages/entry/EntryDetailsModal.vue';
 import SelectDictionary from './SelectDictionary.vue';
@@ -92,6 +98,7 @@ export default defineComponent({
     PlusSquareFilled,
     EyeFilled,
     EditFilled,
+    DeleteFilled,
     'entry-details-modal': EntryDetailsModal,
     'select-dictionary': SelectDictionary,
   },
@@ -208,6 +215,24 @@ export default defineComponent({
           id: selectedEntry.id,
         },
       });
+    },
+    async deleteEntry(id) {
+      const { data } = await UF.deleteEntry(id, this.$store.dictionary.id);
+      if (data.deleteEntryByDictionaryID) {
+        const dataSelectedDictionary = await Dictionary.getDictionaryByID(
+          this.$store.dictionary.id
+        );
+        const selectedDictionary =
+          dataSelectedDictionary.data.getDictionaryByID;
+        console.log('selectedDictionary', selectedDictionary);
+        this.$store.dictionary = selectedDictionary;
+        this.$store.entries = this.getEntriesByLetter(
+          this.$store.dictionary.entries,
+          this.activeKey
+        );
+      } else {
+        alert('Error al Eliminar el Articulo');
+      }
     },
     showEntryDetailsModalMethod(record) {
       this.selectedEntry = record;

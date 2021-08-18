@@ -15,7 +15,9 @@ export const createStudyMutation = gql`
       id
       name
       period
-      dictionaries
+      dictionaries {
+        id
+      }
     }
   }
 `;

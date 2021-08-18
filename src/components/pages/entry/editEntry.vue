@@ -312,7 +312,7 @@ export default defineComponent({
 
       this.newEntry.context = context;
       console.log(this.newEntry);
-      await UF.editEntry(this.newEntry);
+      UF.editEntry(this.newEntry);
 
       //UpdatingDictionaryStore
       const dataSelectedDictionary = await Dictionary.getDictionaryByID(

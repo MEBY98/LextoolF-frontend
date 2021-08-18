@@ -1,6 +1,7 @@
 import {
   createEntryByDictionaryIDMutation,
   editEntryMutation,
+  deleteEntryByDictionaryIDMutation,
 } from './mutations';
 import { apolloClient, FetchPolicy } from '@/graphql/apolloProvider';
 import { apolloMutate, apolloQuery } from '@/graphql/apollo';
@@ -17,6 +18,14 @@ export class UF {
   }
   static editEntry(entry) {
     return apolloMutate(editEntryMutation, { entry }, null, null);
+  }
+  static deleteEntry(entryID, dictionaryID) {
+    return apolloMutate(
+      deleteEntryByDictionaryIDMutation,
+      { entryID, dictionaryID },
+      null,
+      null
+    );
   }
   static getEntryByID(entryID: String) {
     return apolloQuery(
