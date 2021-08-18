@@ -45,17 +45,16 @@
             </a-tooltip>
 
             <a-tooltip title="Editar" placement="bottom">
-              <a @click="goToEditEntry">
+              <a @click="goToEditEntry(record)">
                 <EditFilled
                   :style="{ fontSize: '20px', color: '#08c', margin: '5px' }"
                 />
               </a>
             </a-tooltip>
 
-            <!-- <a-popconfirm
-              v-if="studies.length"
+            <a-popconfirm
               title="Seguro de Eliminar?"
-              @confirm="deleteStudy(record.id)"
+              @confirm="deleteEntry(record.id)"
             >
               <a-tooltip
                 title="Eliminar del estudio fraseologico"
@@ -67,7 +66,7 @@
                   />
                 </a>
               </a-tooltip>
-            </a-popconfirm> -->
+            </a-popconfirm>
           </template>
         </a-table>
       </a-tab-pane>
@@ -83,12 +82,13 @@
 import {
   EyeFilled,
   EditFilled,
-  DeleteFilled,
   PlusSquareFilled,
-  CarryOutFilled,
+  DeleteFilled,
 } from '@ant-design/icons-vue';
-import { defineComponent, ref, h } from 'vue';
+import { defineComponent, h } from 'vue';
 import { EntryStore } from '@/store/modules/entry';
+import { UF } from '@/graphql/modules/entry/model';
+import { Dictionary } from '@/graphql/modules/dictionary/model.ts';
 
 import EntryDetailsModal from '@/components/pages/entry/EntryDetailsModal.vue';
 import SelectDictionary from './SelectDictionary.vue';
@@ -98,14 +98,15 @@ export default defineComponent({
     PlusSquareFilled,
     EyeFilled,
     EditFilled,
+    DeleteFilled,
     'entry-details-modal': EntryDetailsModal,
     'select-dictionary': SelectDictionary,
   },
   data() {
     const selectedEntry: EntryStore = {
       id: '',
+      letter: '',
       context: [''],
-      letter: 'A',
       lemma: {
         id: '',
         lemma: '',
@@ -122,7 +123,6 @@ export default defineComponent({
         {
           id: '',
           UF: '',
-          // descriptors: [['']],
         },
       ],
     };
@@ -215,6 +215,24 @@ export default defineComponent({
           id: selectedEntry.id,
         },
       });
+    },
+    async deleteEntry(id) {
+      const { data } = await UF.deleteEntry(id, this.$store.dictionary.id);
+      if (data.deleteEntryByDictionaryID) {
+        const dataSelectedDictionary = await Dictionary.getDictionaryByID(
+          this.$store.dictionary.id
+        );
+        const selectedDictionary =
+          dataSelectedDictionary.data.getDictionaryByID;
+        console.log('selectedDictionary', selectedDictionary);
+        this.$store.dictionary = selectedDictionary;
+        this.$store.entries = this.getEntriesByLetter(
+          this.$store.dictionary.entries,
+          this.activeKey
+        );
+      } else {
+        alert('Error al Eliminar el Articulo');
+      }
     },
     showEntryDetailsModalMethod(record) {
       this.selectedEntry = record;

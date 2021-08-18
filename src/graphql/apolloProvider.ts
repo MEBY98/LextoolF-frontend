@@ -17,6 +17,7 @@ const cache = new InMemoryCache({
     }
     return undefined;
   },
+  addTypename: false,
   // fragmentMatcher
 });
 

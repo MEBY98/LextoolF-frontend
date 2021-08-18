@@ -35,79 +35,86 @@
     </span>
   </div>
 
-  <!-- LEMMA -->
-  <br />
-  <div class="d-flex-inline">
-    <h6 style="margin-right: 8px; font-weight: 500">Lema</h6>
-    <a-input
-      :value="lemma.lemma"
-      placeholder="Escriba el Lema"
-      style="width: 62%; margin-right: 8px"
-      @input="lemmaChange($event.target.value)"
-    ></a-input>
-    <clasification-select
-      :selected="lemma.clasification"
-      :clasifications="$store.lemmaClasifications"
-      style="width: 20%"
-      @clasification-change="updateLemmaClasification"
-    ></clasification-select>
-  </div>
+  <a-form :rules="rules">
+    <!-- LEMMA -->
+    <br />
 
-  <!-- SUBLEMMAS -->
-  <br />
-  <h6 v-if="sublemmas.length !== 0">Sublemas</h6>
-  <div
-    v-for="(sublemma, index) in sublemmas"
-    :key="index"
-    name="sublemmas"
-    style="margin-bottom: 10px"
-  >
-    <span style="font-weight: 500; font-size: 15px; margin-right: 8px">
-      Sublema {{ index + 1 }}
-    </span>
-    <a-input
-      :value="sublemmas[index].sublemma"
-      placeholder="Escriba el sublema"
-      style="width: 62%; margin-right: 8px"
-      @input="sublemmaChange($event.target.value, index)"
-    ></a-input>
-    <clasification-select
-      :selected="sublemmas[index].clasification"
-      :clasifications="$store.sublemmaClasifications"
-      style="width: 20%"
-      @clasification-change="updateSublemmaClasification($event, index)"
-    ></clasification-select>
-    <MinusCircleFilled
-      class="dynamic-delete-button"
-      :style="{ color: 'red', marginLeft: '8px' }"
-      @click="removeSublemma(index)"
-    />
-  </div>
+    <div class="d-flex-inline">
+      <h6 style="margin-right: 8px; font-weight: 500">Lema</h6>
+      <!-- <a-form-item class="d-flex-inline" name="lemmaInput"> -->
+      <a-input
+        :value="lemma.lemma"
+        placeholder="Escriba el Lema"
+        style="width: 62%; margin-right: 8px"
+        @input="lemmaChange($event.target.value)"
+      ></a-input>
+      <!-- </a-form-item> -->
+      <!-- <a-form-item class="d-flex-inline" name="lemmaSelect"> -->
+      <clasification-select
+        :selected="lemma.clasification"
+        :clasifications="$store.lemmaClasifications"
+        style="width: 20%"
+        @clasification-change="updateLemmaClasification"
+      ></clasification-select>
+      <!-- </a-form-item> -->
+    </div>
 
-  <!-- UFS -->
-  <br />
-  <h6 v-if="ufs.length !== 0">Unidades Fraseologicas</h6>
-  <div
-    v-for="(UF, index) in ufs"
-    :key="index"
-    name="ufs"
-    style="margin-bottom: 10px"
-  >
-    <span style="font-weight: 500; font-size: 15px; margin-right: 8px">
-      {{ ufsUbications[index] }}
-    </span>
-    <a-input
-      :value="ufs[index].UF"
-      placeholder="Escriba la UF"
-      style="width: 62%; margin-right: 8px"
-      @input="UFChange($event.target.value, index)"
-    ></a-input>
-    <MinusCircleFilled
-      class="dynamic-delete-button"
-      :style="{ color: 'red', marginLeft: '8px' }"
-      @click="removeUF(index)"
-    />
-  </div>
+    <!-- SUBLEMMAS -->
+    <br />
+    <h6 v-if="sublemmas.length !== 0">Sublemas</h6>
+    <div
+      v-for="(sublemma, index) in sublemmas"
+      :key="index"
+      name="sublemmas"
+      style="margin-bottom: 10px"
+    >
+      <span style="font-weight: 500; font-size: 15px; margin-right: 8px">
+        Sublema {{ index + 1 }}
+      </span>
+      <a-input
+        :value="sublemmas[index].sublemma"
+        placeholder="Escriba el sublema"
+        style="width: 62%; margin-right: 8px"
+        @input="sublemmaChange($event.target.value, index)"
+      ></a-input>
+      <clasification-select
+        :selected="sublemmas[index].clasification"
+        :clasifications="$store.sublemmaClasifications"
+        style="width: 20%"
+        @clasification-change="updateSublemmaClasification($event, index)"
+      ></clasification-select>
+      <MinusCircleFilled
+        class="dynamic-delete-button"
+        :style="{ color: 'red', marginLeft: '8px' }"
+        @click="removeSublemma(index)"
+      />
+    </div>
+
+    <!-- UFS -->
+    <br />
+    <h6 v-if="ufs.length !== 0">Unidades Fraseologicas</h6>
+    <div
+      v-for="(UF, index) in ufs"
+      :key="index"
+      name="ufs"
+      style="margin-bottom: 10px"
+    >
+      <span style="font-weight: 500; font-size: 15px; margin-right: 8px">
+        {{ ufsUbications[index] }}
+      </span>
+      <a-input
+        :value="ufs[index].UF"
+        placeholder="Escriba la UF"
+        style="width: 62%; margin-right: 8px"
+        @input="UFChange($event.target.value, index)"
+      ></a-input>
+      <MinusCircleFilled
+        class="dynamic-delete-button"
+        :style="{ color: 'red', marginLeft: '8px' }"
+        @click="removeUF(index)"
+      />
+    </div>
+  </a-form>
 
   <!-- FOOTER -->
   <br />
@@ -169,6 +176,23 @@ export default defineComponent({
   ],
   setup(props, context) {
     const showUbicationsModal = ref(false);
+    //FORM RULES
+    const rules = {
+      lemmaInput: [
+        {
+          required: true,
+          message: 'Por favor escriba el Lema',
+          trigger: 'blur',
+        },
+      ],
+      lemmaSelect: [
+        {
+          required: true,
+          message: 'Seleccione una clasificacion',
+          trigger: 'blur',
+        },
+      ],
+    };
 
     //UF METHODS
     const addUF = (selectedUbication) => {
@@ -216,6 +240,8 @@ export default defineComponent({
       showUbicationsModal.value = true;
     };
     return {
+      rules,
+
       showUbicationsModal,
       closeUbicationsModalMethod,
       showUbicationsModalMethod,

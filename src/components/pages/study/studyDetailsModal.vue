@@ -50,7 +50,7 @@ export default defineComponent({
     const columns = [
       {
         title: 'Nombre del Diccionario',
-        dataIndex: 'shortName',
+        dataIndex: 'name',
       },
       {
         title: 'Siglas',

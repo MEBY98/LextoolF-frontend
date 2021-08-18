@@ -227,7 +227,7 @@ export default defineComponent({
       let minYear = 1000000;
       console.log(dictionaries);
       if (dictionaries.length === 1) {
-        this.study.period = dictionaries[0].annoOfPublication;
+        this.study.period = dictionaries[0].annoOfPublication.toString();
       } else {
         dictionaries.forEach((element) => {
           if (element.annoOfPublication > maxYear) {
