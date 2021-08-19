@@ -1,0 +1,543 @@
+<template>
+  <h4>Agregar Nueva Fuente al Proyecto de Lemario</h4>
+  <br />
+  <div>
+    <a-tabs default-active-key="1" @change="callback">
+      <a-tab-pane key="1" tab="General">
+        <a-form ref="formRef" :model="source" :rules="rules">
+          <a-form-item
+            ref="name"
+            label="Nombre de la Fuente"
+            name="name"
+            :label-col="labelColModal"
+            :wrapper-col="wrapperColModal"
+          >
+            <a-input
+              v-model:value="source.name"
+              placeholde="Nombre de la Fuente"
+            ></a-input>
+          </a-form-item>
+          <a-form-item
+            ref="ref"
+            label="Referencia"
+            name="ref"
+            :label-col="labelColModal"
+            :wrapper-col="wrapperColModal"
+          >
+            <a-textarea
+              v-model:value="source.ref"
+              placeholder="Referencia de la Fuente"
+              allow-clear
+            />
+          </a-form-item>
+          <a-form-item
+            ref="type"
+            label="Tipo"
+            name="type"
+            :label-col="labelColModal"
+            :wrapper-col="wrapperColModal"
+          >
+            <a-select
+              v-model:value="selectOptions.value"
+              allowClear
+              @change="handleOptionsChange"
+            >
+              <a-select-opt-group label="Fuentes Linguísticas Escritas">
+                <a-select-option v-for="e in escritas" :key="e">
+                  {{ e.text }}
+                </a-select-option>
+              </a-select-opt-group>
+              <a-select-opt-group label="Fuentes Linguísticas Orales">
+                <a-select-option v-for="o in orales" :key="o">
+                  {{ o.text }}
+                </a-select-option>
+              </a-select-opt-group>
+              <a-select-opt-group label="Fuentes Metalinguísticas">
+                <a-select-option v-for="m in metas" :key="m">
+                  {{ m.text }}
+                </a-select-option>
+              </a-select-opt-group>
+            </a-select>
+          </a-form-item>
+          <a-form-item
+            ref="file"
+            label="Archivo"
+            name="file"
+            :label-col="labelColModal"
+            :wrapper-col="wrapperColModal"
+          >
+            <div class="section-file">
+              <label class="fileContainer">
+                Select files
+                <input
+                  type="file"
+                  class="file-upload"
+                  id="file"
+                  name="file"
+                  @change="onFileSelected"
+                />
+              </label>
+              <br />
+              <span v-if="!this.selectedFile" class="file-info">
+                No files selected
+              </span>
+              <span v-else>{{ this.selectedFile.name }}</span>
+            </div>
+          </a-form-item>
+        </a-form>
+      </a-tab-pane>
+      <a-tab-pane key="2" tab="Especificaciones" force-render>
+        <a-form :model="source">
+          <div v-show="source.subType === 'Diccionario'">
+            <a-form-item
+              ref="dictionaryType"
+              label="Tipo de diccionario"
+              name="dictionaryType"
+              :label-col="labelColModal"
+              :wrapper-col="wrapperColModal"
+            >
+              <a-select
+                v-model:value="source.bloque"
+                @change="handleBloqueChange"
+              >
+                <a-select-option
+                  v-for="dictionaryType in dictionariesTypes"
+                  :key="dictionaryType"
+                >
+                  {{ dictionaryType }}
+                </a-select-option>
+              </a-select>
+            </a-form-item>
+          </div>
+          <div
+            v-show="source.support === 'Libro' || source.support === 'Prensa'"
+          >
+            <a-form-item
+              ref="bloque"
+              label="Bloque de la Fuente"
+              name="bloque"
+              :label-col="labelColModal"
+              :wrapper-col="wrapperColModal"
+            >
+              <a-select
+                v-model:value="source.bloque"
+                @change="handleBloqueChange"
+              >
+                <a-select-option v-for="bloque in bloques" :key="bloque">
+                  {{ bloque }}
+                </a-select-option>
+              </a-select>
+            </a-form-item>
+            <a-form-item
+              ref="theme"
+              label="Tema/Género"
+              name="theme"
+              :label-col="labelColModal"
+              :wrapper-col="wrapperColModal"
+            >
+              <a-select v-model:value="source.theme">
+                <a-select-option v-for="tema in temas" :key="tema">
+                  {{ tema }}
+                </a-select-option>
+              </a-select>
+            </a-form-item>
+            <a-form-item
+              ref="publication"
+              label="Datos de publicación"
+              name="publication"
+              :label-col="labelColModal"
+              :wrapper-col="wrapperColModal"
+            >
+              <a-input
+                v-model:value="source.publication"
+                placeholde="Datos de publicación"
+              ></a-input>
+            </a-form-item>
+          </div>
+          <div v-show="source.support === 'Internet'">
+            <a-form-item
+              ref="URL"
+              label="URL de la Fuente"
+              name="URL"
+              :label-col="labelColModal"
+              :wrapper-col="wrapperColModal"
+            >
+              <a-input
+                v-model:value="source.URL"
+                placeholde="URL de la Fuente"
+              ></a-input>
+            </a-form-item>
+          </div>
+          <div
+            v-show="source.support === 'Audio' || source.support === 'Video'"
+          >
+            <a-form-item
+              ref="speaker"
+              label="Descripción del Hablante"
+              name="speaker"
+              :label-col="labelColModal"
+              :wrapper-col="wrapperColModal"
+            >
+              <a-textarea
+                v-model:value="source.speaker"
+                placeholder="Escriba la descripción del Hablante"
+                allow-clear
+              />
+            </a-form-item>
+            <a-form-item
+              ref="typology"
+              label="Tipología"
+              name="typology"
+              :label-col="labelColModal"
+              :wrapper-col="wrapperColModal"
+            >
+              <a-select v-model:value="source.typology">
+                <a-select-option v-for="typology in typologies" :key="typology">
+                  {{ typology }}
+                </a-select-option>
+              </a-select>
+            </a-form-item>
+            <a-form-item
+              ref="broadcastMedium"
+              label="Datos de publicación"
+              name="broadcastMedium"
+              :label-col="labelColModal"
+              :wrapper-col="wrapperColModal"
+            >
+              <a-select v-model:value="source.broadcastMedium">
+                <a-select-option
+                  v-for="broadcastMedium in broadcastMediums"
+                  :key="broadcastMedium"
+                >
+                  {{ broadcastMedium }}
+                </a-select-option>
+              </a-select>
+            </a-form-item>
+            <a-form-item
+              ref="cantMin"
+              label="Tiempo de duración"
+              name="cantMin"
+              :label-col="labelColModal"
+              :wrapper-col="wrapperColModal"
+            >
+              <a-time-picker
+                :default-open-value="moment('00:00:00', 'HH:mm:ss')"
+                @change="setCantMin"
+              />
+            </a-form-item>
+          </div>
+        </a-form>
+      </a-tab-pane>
+    </a-tabs>
+  </div>
+  <div style="text-align: right">
+    <a-button
+      key="submit"
+      type="primary"
+      style="margin-right: 5px"
+      @click="submit"
+    >
+      Crear
+    </a-button>
+    <a-button key="back" @click="goBack">Cancelar</a-button>
+  </div>
+</template>
+<script lang="ts">
+import 'ant-design-vue/lib/upload/style';
+import {
+  MinusCircleFilled,
+  PlusOutlined,
+  PlusSquareFilled,
+} from '@ant-design/icons-vue';
+import { Sources } from '@/graphql/modules/sourcesA/model';
+import VueDocPreview from 'vue-doc-preview';
+import { InboxOutlined } from '@ant-design/icons-vue';
+import { message } from 'ant-design-vue';
+import { defineComponent, ref } from 'vue';
+import { axiosClientPostImage } from '@/plugins/axios';
+import moment from 'moment';
+
+export default defineComponent({
+  components: {
+    InboxOutlined,
+    MinusCircleFilled,
+    PlusOutlined,
+    PlusSquareFilled,
+    VueDocPreview,
+  },
+  data() {
+    const rules = {
+      name: [
+        {
+          required: true,
+          message: 'Por favor escriba el nombre de la fuente',
+          trigger: 'blur',
+        },
+      ],
+      ref: [
+        {
+          required: true,
+          message: 'Por favor escriba la referencia de la fuente',
+          trigger: 'blur',
+        },
+      ],
+      type: [
+        {
+          required: true,
+          message: 'Por favor seleccione el tipo de la fuente',
+          trigger: 'blur',
+        },
+      ],
+      file: [
+        {
+          required: true,
+          message: 'Por favor seleccione un archivo',
+          trigger: 'blur',
+        },
+      ],
+    };
+    const escritas = [
+      { value: 'a', text: 'Libro' },
+      { value: 'b', text: 'Prensa' },
+      { value: 'c', text: 'Internet' },
+    ];
+    const orales = [
+      { value: 'd', text: 'Audio' },
+      { value: 'e', text: 'Video' },
+    ];
+    const metas = [
+      { value: 'f', text: 'Diccionario' },
+      { value: 'g', text: 'Estudio' },
+    ];
+    const bloques = ['Ficción', 'NoFicción'];
+    const theme = {
+      Ficción: ['Guion', 'Novela', 'Relato', 'Teatro'],
+      NoFicción: [
+        'Actualidad, ocio y vida cotidiana',
+        'Artes, cultura y espectáculos',
+        'Ciencias sociales, creencias y pensamiento',
+        'Ciencias y tecnología',
+        'Política, economía y justicia',
+        'Salud',
+      ],
+    };
+    const broadcastMediums = ['Cadena de radio', 'Cadena de TV', 'Internet'];
+    const typologies = [
+      'Conversación',
+      'Debate',
+      'Discurso',
+      'Entrevista',
+      'Entrevista semidirigida',
+      'Magacines y variedades',
+      'Noticia',
+      'Publicidad',
+      'Reportajes y documentales',
+      'Retransmisiones deportivas',
+      'Sorteos y concursos',
+      'Tertulia',
+      'Otros',
+    ];
+    const dictionariesTypes = [
+      'Normativo',
+      'De uso práctico',
+      'Monolingües',
+      'Bilingües',
+      'De aprendizaje',
+      'Etimológicos',
+      'De sinónimos y antónimos',
+      'Especializado',
+      'Inverso o de rimas',
+      'De gramática',
+      'De dudas',
+      'Tesauro',
+      'Ideológico o de ideas afines',
+      'Diccionario analógico conceptual',
+      'Visual o de imágenes',
+      'Enciclopédico',
+    ];
+    const source = {
+      name: '',
+      ref: '',
+      file: '',
+      type: '',
+      subType: '',
+      support: '',
+      // linguisticas libro o prensa
+      bloque: '',
+      theme: '',
+      publication: '',
+      //linguisticas internet
+      URL: '',
+      //linguisticas audio o video
+      cantMin: 0,
+      broadcastMedium: '',
+      typology: '',
+      speaker: '',
+      //metalinguisticas
+      dictionaryType: '',
+      century: '',
+    };
+    const selectOptions = {
+      value: '',
+    };
+    const formItemLayoutWithOutLabelModal = {
+      wrapperCol: {
+        xs: { span: 24, offset: 0 },
+        sm: { span: 20, offset: 4 },
+      },
+    };
+    const formItemLayoutModal = {
+      labelCol: {
+        xs: { span: 24 },
+        sm: { span: 4 },
+      },
+      wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 20 },
+      },
+    };
+    return {
+      escritas,
+      rules,
+      orales,
+      metas,
+      bloques,
+      theme,
+      temas: theme[bloques[0]],
+      secondTema: theme[bloques[0]][0],
+      broadcastMediums,
+      typologies,
+      dictionariesTypes,
+      selectOptions,
+      selectedFile: null,
+      formItemLayoutWithOutLabelModal,
+      source,
+      labelColModal: { span: 8 },
+      wrapperColModal: { span: 14 },
+      file: null,
+    };
+  },
+  methods: {
+    moment,
+    setCantMin() {
+      this.source.cantMin = moment().minutes();
+      console.log('cantMin', this.source.cantMin);
+    },
+    handleBloqueChange(value) {
+      this.temas = this.theme[value];
+      this.secondTema = this.theme[value][0];
+    },
+    callback(key) {
+      console.log(key);
+    },
+    submit() {
+      console.log(this.source);
+
+      if (!(this.selectedFile === null)) {
+        const element = this.selectedFile;
+        const extensionFile = '.' + element.name.split('.')[1];
+        const date = Date.now();
+        this.source.file = 'source_' + date + extensionFile;
+        console.log('file name', this.source.file);
+
+        const formData = new FormData();
+        console.log(this.selectedFile);
+        formData.append('file', this.selectedFile);
+        axiosClientPostImage
+          .post(`/${this.source.file}`, formData)
+          .then(function () {
+            console.log('SUCCESS!!');
+          })
+          .catch(function () {
+            console.log('FAILURE!!');
+          });
+      }
+
+      Sources.createSource(this.source);
+      this.$router.push({ name: 'sources' });
+    },
+    goBack() {
+      this.$router.push({ name: 'sources' });
+    },
+    onFileSelected(event) {
+      this.selectedFile = event.target.files[0];
+    },
+    handleOptionsChange(value) {
+      this.selectOptions.value = value.text.toString();
+      const s = this.selectOptions.value;
+
+      if (s === 'Libro' || s === 'Prensa' || s === 'Internet') {
+        this.source.type = 'Linguística';
+        this.source.subType = 'Escrito';
+        this.source.support = s;
+      }
+      if (s === 'Audio' || s === 'Video') {
+        this.source.type = 'Linguística';
+        this.source.subType = 'Oral';
+        this.source.support = s;
+      }
+      if (s === 'Estudio' || s === 'Diccionario') {
+        this.source.type = 'Metalinguística';
+        this.source.subType = s;
+      }
+      console.log('source', this.source);
+    },
+  },
+});
+</script>
+<style lang="scss">
+.fileContainer {
+  overflow: hidden;
+  position: relative;
+  background: #1890ff;
+  font-weight: 400;
+  border-color: #1890ff;
+  color: #fff;
+  padding: 6px 18px;
+  border-radius: 2px;
+  line-height: 21px;
+}
+
+.container #mio {
+  position: absolute;
+  bottom: 0;
+  text-align: right;
+}
+
+form input {
+  color: #fff;
+  background: #1890ff;
+  border-color: #1890ff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
+  padding: 10px;
+  font-weight: 400;
+  border: 1px solid #d9dadc;
+  border-radius: 2px;
+  font-size: 16px;
+  color: #393645;
+  resize: none;
+}
+
+.fileContainer [type='file'] {
+  cursor: pointer;
+  display: block;
+  font-size: 14px;
+  font-weight: 400;
+  filter: alpha(opacity=0);
+  min-height: 100%;
+  min-width: 100%;
+  opacity: 0;
+  position: absolute;
+  left: 0;
+  text-align: right;
+  top: -8px;
+}
+
+.file-info {
+  font-size: 13px;
+  color: #a9a7a9;
+  line-height: 53px;
+  padding-left: 10px;
+}
+</style>
