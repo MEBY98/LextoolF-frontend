@@ -5,10 +5,21 @@ export const findAllSourcesQuery = gql`
     findAllSources {
       id
       name
-      file
       ref
+      file
       type
       subType
+      support
+      bloque
+      theme
+      publication
+      URL
+      cantMin
+      broadcastMedium
+      typology
+      speaker
+      dictionaryType
+      century
     }
   }
 `;
@@ -18,10 +29,21 @@ export const getSourceByIDQuery = gql`
     getSourceByID(sourceID: $sourceID) {
       id
       name
-      type
       ref
-      subType
       file
+      type
+      subType
+      support
+      bloque
+      theme
+      publication
+      URL
+      cantMin
+      broadcastMedium
+      typology
+      speaker
+      dictionaryType
+      century
     }
   }
 `;

@@ -89,7 +89,7 @@
   ></new-source-modal>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, ref, UnwrapRef, h } from 'vue';
+import { defineComponent, reactive, ref, UnwrapRef } from 'vue';
 import {
   EyeFilled,
   EditFilled,

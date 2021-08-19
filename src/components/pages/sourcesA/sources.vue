@@ -4,7 +4,7 @@
   <a-tooltip title="Agregar Fuente" placement="right">
     <PlusSquareFilled
       :style="{ fontSize: '25px', color: '#08c', margin: '5px' }"
-      @click="showModalS"
+      @click="onAdd"
     />
   </a-tooltip>
   <a-table
@@ -91,11 +91,6 @@
       </a-popconfirm>
     </template>
   </a-table>
-  <new-source-modal
-    v-model:visible="newSourceModalShow"
-    @close-modal="showModalS"
-    @add-source="addSource"
-  ></new-source-modal>
   <source-details-modal
     v-model:visible="sourceDetailsModalShow"
     :selected-source="selectedSource"
@@ -113,7 +108,6 @@ import {
 } from '@ant-design/icons-vue';
 import { defineComponent, ref } from 'vue';
 import { Sources } from '@/graphql/modules/sourcesA/model.ts';
-import NewSourceModal from './newSourceModal.vue';
 import Table from 'ant-design-vue/lib/table';
 import SourceDetailsModal from './sourceDetailsModal.vue';
 
@@ -124,7 +118,6 @@ export default defineComponent({
     EditFilled,
     DeleteFilled,
     CarryOutFilled,
-    NewSourceModal,
     PlusSquareFilled,
     SearchOutlined,
     SourceDetailsModal,
@@ -132,13 +125,11 @@ export default defineComponent({
   data() {
     const sourceDetailsModalShow = false;
     const selectedSource = {};
-    const newSourceModalShow = false;
     const searchInput = ref();
     return {
       searchInput,
       selectedSource,
       sourceDetailsModalShow,
-      newSourceModalShow,
       columns: [
         {
           title: 'Nombre',
@@ -220,9 +211,14 @@ export default defineComponent({
     this.sources = data.findAllSources;
   },
   methods: {
+    onAdd() {
+      this.$router.push({
+        name: 'newSourceA',
+      });
+    },
     async deleteSourceByID(id) {
       const deletedSource = await Sources.deleteSourceByID(id);
-      let index = 0;
+      let index = -1;
       let found = false;
       for (index; index < this.sources.length && !found; index++) {
         const element = this.sources[index];
@@ -231,14 +227,6 @@ export default defineComponent({
         }
       }
       this.sources = this.sources.filter((item) => item.id !== id);
-    },
-    showModalS() {
-      this.newSourceModalShow = !this.newSourceModalShow;
-    },
-    addSource(source) {
-      this.sources.push(source);
-      console.log(source);
-      this.showModalS();
     },
     handleSearch: (confirm) => {
       confirm();
@@ -253,8 +241,8 @@ export default defineComponent({
     closeSourceDetailsModal() {
       this.sourceDetailsModalShow = false;
     },
-    async selectSourceToWork(recordID) {
-      const { data } = await Sources.getSourceByID(recordID);
+    async selectSourceToWork(sourceID) {
+      const { data } = await Sources.getSourceByID(sourceID);
       this.$store.sources = data.getSourceByID;
       this.$router.push({ name: 'extractionTask' });
     },

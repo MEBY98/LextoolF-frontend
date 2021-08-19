@@ -1,5 +1,9 @@
 import { apolloQuery, apolloMutate } from '@/graphql/apollo';
-import { findAllEntriesQuery, getEntryByIDQuery, getAllEntriesBySourceIDQuery } from './querys';
+import {
+  findAllEntriesQuery,
+  getEntryByIDQuery,
+  getAllEntriesBySourceIDQuery,
+} from './querys';
 import { FetchPolicy, apolloClientA } from '@/graphql/apolloProvider';
 import {
   createEntryMutation,

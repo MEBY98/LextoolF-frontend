@@ -108,10 +108,18 @@ export default defineComponent({
     };
   },
   async mounted() {
-    const id = this.$store.sources.id;
-    const { data } = await EntryA.getAllEntriesBySourceID(id);
+    const sourceID = this.$store.sources.id;
+    console.log('sourceID:', sourceID);
+    this.selectedSourceID = sourceID.toString();
+    console.log('selectedSourceID esta:', this.selectedSourceID);
+
+    const { data } = await EntryA.getAllEntriesBySourceID(sourceID);
+    console.log('data', data);
+
     this.entriesOfTheSource = data.getAllEntriesBySourceID;
-    this.selectedSourceID = id.toString();
+
+    console.log('data', data.getAllEntriesBySourceID);
+    console.log('entriesOfTheSource', this.entriesOfTheSource);
   },
   methods: {
     selectFilterOption(input: string, option: any) {

@@ -5,10 +5,21 @@ export const deleteSourceByIDMutation = gql`
     deleteSourceByID(SourceID: $SourceID) {
       id
       name
-      type
       ref
-      subType
       file
+      type
+      subType
+      support
+      bloque
+      theme
+      publication
+      URL
+      cantMin
+      broadcastMedium
+      typology
+      speaker
+      dictionaryType
+      century
     }
   }
 `;
@@ -18,10 +29,21 @@ export const createSourceMutation = gql`
     createSource(source: $source) {
       id
       name
-      type
       ref
-      subType
       file
+      type
+      subType
+      support
+      bloque
+      theme
+      publication
+      URL
+      cantMin
+      broadcastMedium
+      typology
+      speaker
+      dictionaryType
+      century
     }
   }
 `;
@@ -31,9 +53,21 @@ export const updateSourceByIDMutation = gql`
     updateSourceByID(source: $source) {
       id
       name
+      ref
+      file
       type
       subType
-      file
+      support
+      bloque
+      theme
+      publication
+      URL
+      cantMin
+      broadcastMedium
+      typology
+      speaker
+      dictionaryType
+      century
     }
   }
 `;

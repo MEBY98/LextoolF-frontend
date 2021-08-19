@@ -18,6 +18,7 @@ const lemario = () => import('@/components/pages/lemarioA/lemario.vue');
 const extractionTask = () =>
   import('@/components/pages/entryA/extractionTask.vue');
 const newEntryA = () => import('@/components/pages/entryA/newEntryA.vue');
+const newSource = () => import('@/components/pages/sourcesA/newSource.vue');
 
 export const SiteRoutes: RouteRecordRaw[] & any = [
   {
@@ -67,6 +68,12 @@ export const SiteRoutes: RouteRecordRaw[] & any = [
     exact: true,
     path: 'sources',
     component: sources,
+  },
+  {
+    name: 'newSourceA',
+    exact: true,
+    path: 'newSourceA',
+    component: newSource,
   },
   {
     name: 'dictionariesA',

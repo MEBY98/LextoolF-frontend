@@ -102,7 +102,7 @@ import {
   CarryOutFilled,
   SearchOutlined,
 } from '@ant-design/icons-vue';
-import { defineComponent, reactive, ref } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { DictionaryA } from '@/graphql/modules/dictionaryA/model.ts';
 import { LemarioA } from '@/graphql/modules/lemarioA/model.ts';
 import NewLemarioModal from './newLemarioModal.vue';
@@ -121,7 +121,6 @@ export default defineComponent({
     NewLemarioModal,
   },
   data() {
-    const showDetailsModal = false;
     const selectedDictionary = {
       id: '',
       name: '',
