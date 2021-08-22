@@ -16,7 +16,7 @@ export class SourcesStore {
   URL: String;
 
   //linguisticas audio o video
-  cantMin: Number;
+  cantMin: String;
   broadcastMedium: String;
   typology: String;
   speaker: String;

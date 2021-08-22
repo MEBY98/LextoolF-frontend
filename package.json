@@ -57,6 +57,7 @@
     "vue-feather": "^1.0.1",
     "vue-file-agent": "^1.7.3",
     "vue-router": "^4.0.0-beta.13",
+    "vue-upload-component": "^3.0.50",
     "vue3-carousel": "^0.1.4",
     "vue3-simple-file-input": "^1.0.3",
     "vuelidate": "^0.7.5",
@@ -95,6 +96,7 @@
     "prettier": "^2.1.2",
     "sass": "^1.27.0",
     "sass-loader": "^10.0.3",
-    "typescript": "^4.0.3"
+    "typescript": "^4.0.3",
+    "vue-file-input": "^1.0.2"
   }
 }

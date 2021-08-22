@@ -1,10 +1,10 @@
 <template>
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-10">
       <ul
         class="nav nav-primary nav-dotted nav-square-separated justify-content-center justify-content-md-start"
       >
-        <li class="nav-item hvr-forward col-md-6">
+        <li class="nav-item hvr-forward col-md-10">
           <a-card hoverable title="Fuente Seleccionada">
             <p>Nombre: {{ $store.sources.name }}</p>
             <p>Referencia: {{ $store.sources.ref }}</p>

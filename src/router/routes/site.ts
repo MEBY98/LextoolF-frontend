@@ -19,6 +19,7 @@ const extractionTask = () =>
   import('@/components/pages/entryA/extractionTask.vue');
 const newEntryA = () => import('@/components/pages/entryA/newEntryA.vue');
 const newSource = () => import('@/components/pages/sourcesA/newSource.vue');
+const upload = () => import('@/components/pages/entryA/upload.vue');
 
 export const SiteRoutes: RouteRecordRaw[] & any = [
   {
@@ -104,5 +105,11 @@ export const SiteRoutes: RouteRecordRaw[] & any = [
     exact: true,
     path: 'newEntryA/:source',
     component: newEntryA,
+  },
+  {
+    name: 'upload',
+    exact: true,
+    path: 'upload',
+    component: upload,
   },
 ];

@@ -59,35 +59,16 @@
               </a-select-opt-group>
             </a-select>
           </a-form-item>
-          <a-form-item
-            ref="file"
-            label="Archivo"
-            name="file"
-            :label-col="labelColModal"
-            :wrapper-col="wrapperColModal"
-          >
-            <div class="section-file">
-              <label class="fileContainer">
-                Select files
-                <input
-                  type="file"
-                  class="file-upload"
-                  id="file"
-                  name="file"
-                  @change="onFileSelected"
-                />
-              </label>
-              <br />
-              <span v-if="!this.selectedFile" class="file-info">
-                No files selected
-              </span>
-              <span v-else>{{ this.selectedFile.name }}</span>
-            </div>
-          </a-form-item>
         </a-form>
       </a-tab-pane>
       <a-tab-pane key="2" tab="Especificaciones" force-render>
         <a-form :model="source">
+          <div v-show="source.subType === null">
+            <h4>
+              Debe seleccionar un tipo de fuente para poder especificar otros
+              datos
+            </h4>
+          </div>
           <div v-show="source.subType === 'Diccionario'">
             <a-form-item
               ref="dictionaryType"
@@ -97,7 +78,7 @@
               :wrapper-col="wrapperColModal"
             >
               <a-select
-                v-model:value="source.bloque"
+                v-model:value="source.dictionaryType"
                 @change="handleBloqueChange"
               >
                 <a-select-option
@@ -107,6 +88,18 @@
                   {{ dictionaryType }}
                 </a-select-option>
               </a-select>
+            </a-form-item>
+            <a-form-item
+              ref="century"
+              label="Siglo"
+              name="century"
+              :label-col="labelColModal"
+              :wrapper-col="wrapperColModal"
+            >
+              <a-input
+                v-model:value="source.century"
+                placeholde="Siglo"
+              ></a-input>
             </a-form-item>
           </div>
           <div
@@ -199,7 +192,7 @@
             </a-form-item>
             <a-form-item
               ref="broadcastMedium"
-              label="Datos de publicación"
+              label="Medio de Difusión"
               name="broadcastMedium"
               :label-col="labelColModal"
               :wrapper-col="wrapperColModal"
@@ -221,6 +214,7 @@
               :wrapper-col="wrapperColModal"
             >
               <a-time-picker
+                placeholder="Seleccione"
                 :default-open-value="moment('00:00:00', 'HH:mm:ss')"
                 @change="setCantMin"
               />
@@ -285,13 +279,6 @@ export default defineComponent({
         {
           required: true,
           message: 'Por favor seleccione el tipo de la fuente',
-          trigger: 'blur',
-        },
-      ],
-      file: [
-        {
-          required: true,
-          message: 'Por favor seleccione un archivo',
           trigger: 'blur',
         },
       ],
@@ -369,7 +356,7 @@ export default defineComponent({
       //linguisticas internet
       URL: '',
       //linguisticas audio o video
-      cantMin: 0,
+      cantMin: '',
       broadcastMedium: '',
       typology: '',
       speaker: '',
@@ -419,8 +406,13 @@ export default defineComponent({
   },
   methods: {
     moment,
-    setCantMin() {
-      this.source.cantMin = moment().minutes();
+    setCantMin(time) {
+      let t = new Date(time);
+      let h = t.getHours();
+      let m = t.getMinutes();
+      let s = t.getSeconds();
+      let duracion = h + 'horas : ' + m + 'minutos : ' + s + 'segundos';
+      this.source.cantMin = duracion;
       console.log('cantMin', this.source.cantMin);
     },
     handleBloqueChange(value) {
@@ -485,59 +477,3 @@ export default defineComponent({
   },
 });
 </script>
-<style lang="scss">
-.fileContainer {
-  overflow: hidden;
-  position: relative;
-  background: #1890ff;
-  font-weight: 400;
-  border-color: #1890ff;
-  color: #fff;
-  padding: 6px 18px;
-  border-radius: 2px;
-  line-height: 21px;
-}
-
-.container #mio {
-  position: absolute;
-  bottom: 0;
-  text-align: right;
-}
-
-form input {
-  color: #fff;
-  background: #1890ff;
-  border-color: #1890ff;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
-  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
-  padding: 10px;
-  font-weight: 400;
-  border: 1px solid #d9dadc;
-  border-radius: 2px;
-  font-size: 16px;
-  color: #393645;
-  resize: none;
-}
-
-.fileContainer [type='file'] {
-  cursor: pointer;
-  display: block;
-  font-size: 14px;
-  font-weight: 400;
-  filter: alpha(opacity=0);
-  min-height: 100%;
-  min-width: 100%;
-  opacity: 0;
-  position: absolute;
-  left: 0;
-  text-align: right;
-  top: -8px;
-}
-
-.file-info {
-  font-size: 13px;
-  color: #a9a7a9;
-  line-height: 53px;
-  padding-left: 10px;
-}
-</style>
