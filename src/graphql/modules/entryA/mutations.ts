@@ -9,6 +9,7 @@ export const deleteEntryByIDMutation = gql`
       context
       UF
       source
+      selected
     }
   }
 `;
@@ -22,6 +23,7 @@ export const createEntryMutation = gql`
       context
       UF
       source
+      selected
     }
   }
 `;
@@ -35,6 +37,7 @@ export const updateEntryByIDMutation = gql`
       context
       UF
       source
+      selected
     }
   }
 `;

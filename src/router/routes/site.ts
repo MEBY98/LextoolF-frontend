@@ -10,6 +10,7 @@ const newEntry = () => import('@/components/pages/entry/newEntry.vue');
 const editEntry = () => import('@/components/pages/entry/editEntry.vue');
 
 const sources = () => import('@/components/pages/sourcesA/sources.vue');
+const entries = () => import('@/components/pages/entryA/entries.vue');
 const dictionariesA = () =>
   import('@/components/pages/dictionaryA/dictionariesA.vue');
 const newDictionaryA = () =>
@@ -19,7 +20,6 @@ const extractionTask = () =>
   import('@/components/pages/entryA/extractionTask.vue');
 const newEntryA = () => import('@/components/pages/entryA/newEntryA.vue');
 const newSource = () => import('@/components/pages/sourcesA/newSource.vue');
-const upload = () => import('@/components/pages/entryA/upload.vue');
 
 export const SiteRoutes: RouteRecordRaw[] & any = [
   {
@@ -107,9 +107,9 @@ export const SiteRoutes: RouteRecordRaw[] & any = [
     component: newEntryA,
   },
   {
-    name: 'upload',
+    name: 'entries',
     exact: true,
-    path: 'upload',
-    component: upload,
+    path: 'entries',
+    component: entries,
   },
 ];

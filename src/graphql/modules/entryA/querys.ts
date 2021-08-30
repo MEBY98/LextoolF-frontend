@@ -9,6 +9,7 @@ export const findAllEntriesQuery = gql`
       context
       UF
       source
+      selected
     }
   }
 `;
@@ -22,6 +23,7 @@ export const getEntryByIDQuery = gql`
       context
       UF
       source
+      selected
     }
   }
 `;
@@ -35,6 +37,21 @@ export const getAllEntriesBySourceIDQuery = gql`
       context
       UF
       source
+      selected
+    }
+  }
+`;
+
+export const findAllEntriesWhithSourceRefQuery = gql`
+  query findAllEntriesWhithSourceRef {
+    findAllEntriesWhithSourceRef {
+      id
+      lemma
+      letter
+      context
+      UF
+      source
+      selected
     }
   }
 `;

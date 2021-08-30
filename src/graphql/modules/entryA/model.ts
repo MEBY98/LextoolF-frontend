@@ -3,6 +3,7 @@ import {
   findAllEntriesQuery,
   getEntryByIDQuery,
   getAllEntriesBySourceIDQuery,
+  findAllEntriesWhithSourceRefQuery,
 } from './querys';
 import { FetchPolicy, apolloClientA } from '@/graphql/apolloProvider';
 import {
@@ -15,6 +16,15 @@ export class EntryA {
   static findAllEntries() {
     return apolloQuery(
       findAllEntriesQuery,
+      null,
+      FetchPolicy.network_only,
+      apolloClientA
+    );
+  }
+
+  static findAllEntriesWhithSourceRef() {
+    return apolloQuery(
+      findAllEntriesWhithSourceRefQuery,
       null,
       FetchPolicy.network_only,
       apolloClientA

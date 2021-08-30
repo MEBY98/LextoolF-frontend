@@ -60,6 +60,7 @@
   <entry-details-modal
     v-model:visible="entryDetailsModalShow"
     :selected-entry="selectedEntry"
+    :file-type="fileType"
     @close-modal="closeEntryDetailsModal"
   ></entry-details-modal>
 </template>
@@ -82,6 +83,7 @@ export default defineComponent({
   },
   data() {
     const selectedEntry = {};
+    const fileType = '';
     const selectedSourceID = '';
     const entryDetailsModalShow = false;
     const columns = [
@@ -101,6 +103,7 @@ export default defineComponent({
     ];
     return {
       selectedEntry,
+      fileType,
       entryDetailsModalShow,
       columns,
       selectedSourceID,
@@ -137,6 +140,7 @@ export default defineComponent({
     },
     entryDetailsModalShowMethod(entry) {
       this.selectedEntry = entry;
+      this.fileType = this.selectedEntry.context.split('_')[0];
       this.entryDetailsModalShow = true;
       console.log('selectedEntry esta:', this.selectedEntry);
     },

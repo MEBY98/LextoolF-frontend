@@ -37,33 +37,17 @@
             :label-col="labelColModal"
             :wrapper-col="wrapperColModal"
           >
-            <a-select
-              v-model:value="selectOptions.value"
-              allowClear
+            <a-cascader
+              :options="options"
+              placeholder="Seleccione una Tipo"
               @change="handleOptionsChange"
-            >
-              <a-select-opt-group label="Fuentes Linguísticas Escritas">
-                <a-select-option v-for="e in escritas" :key="e">
-                  {{ e.text }}
-                </a-select-option>
-              </a-select-opt-group>
-              <a-select-opt-group label="Fuentes Linguísticas Orales">
-                <a-select-option v-for="o in orales" :key="o">
-                  {{ o.text }}
-                </a-select-option>
-              </a-select-opt-group>
-              <a-select-opt-group label="Fuentes Metalinguísticas">
-                <a-select-option v-for="m in metas" :key="m">
-                  {{ m.text }}
-                </a-select-option>
-              </a-select-opt-group>
-            </a-select>
+            />
           </a-form-item>
         </a-form>
       </a-tab-pane>
       <a-tab-pane key="2" tab="Especificaciones" force-render>
         <a-form :model="source">
-          <div v-show="source.subType === null">
+          <div v-show="source.type === ''">
             <h4>
               Debe seleccionar un tipo de fuente para poder especificar otros
               datos
@@ -283,18 +267,59 @@ export default defineComponent({
         },
       ],
     };
-    const escritas = [
-      { value: 'a', text: 'Libro' },
-      { value: 'b', text: 'Prensa' },
-      { value: 'c', text: 'Internet' },
-    ];
-    const orales = [
-      { value: 'd', text: 'Audio' },
-      { value: 'e', text: 'Video' },
-    ];
-    const metas = [
-      { value: 'f', text: 'Diccionario' },
-      { value: 'g', text: 'Estudio' },
+    const options = [
+      {
+        value: 'Linguística',
+        label: 'Linguística',
+        children: [
+          {
+            value: 'Escrita',
+            label: 'Escrita',
+            children: [
+              {
+                value: 'Libro',
+                label: 'Libro',
+              },
+              {
+                value: 'Prensa',
+                label: 'Prensa',
+              },
+              {
+                value: 'Internet',
+                label: 'Internet',
+              },
+            ],
+          },
+          {
+            value: 'Oral',
+            label: 'Oral',
+            children: [
+              {
+                value: 'Audio',
+                label: 'Audio',
+              },
+              {
+                value: 'Video',
+                label: 'Video',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        value: 'Metalinguística',
+        label: 'Metalinguística',
+        children: [
+          {
+            value: 'Diccionario',
+            label: 'Diccionario',
+          },
+          {
+            value: 'Estudio',
+            label: 'Estudio',
+          },
+        ],
+      },
     ];
     const bloques = ['Ficción', 'NoFicción'];
     const theme = {
@@ -364,9 +389,6 @@ export default defineComponent({
       dictionaryType: '',
       century: '',
     };
-    const selectOptions = {
-      value: '',
-    };
     const formItemLayoutWithOutLabelModal = {
       wrapperCol: {
         xs: { span: 24, offset: 0 },
@@ -384,10 +406,8 @@ export default defineComponent({
       },
     };
     return {
-      escritas,
+      options,
       rules,
-      orales,
-      metas,
       bloques,
       theme,
       temas: theme[bloques[0]],
@@ -395,7 +415,6 @@ export default defineComponent({
       broadcastMediums,
       typologies,
       dictionariesTypes,
-      selectOptions,
       selectedFile: null,
       formItemLayoutWithOutLabelModal,
       source,
@@ -455,22 +474,16 @@ export default defineComponent({
       this.selectedFile = event.target.files[0];
     },
     handleOptionsChange(value) {
-      this.selectOptions.value = value.text.toString();
-      const s = this.selectOptions.value;
+      console.log('valueeeeeeeeeeee', value);
 
-      if (s === 'Libro' || s === 'Prensa' || s === 'Internet') {
-        this.source.type = 'Linguística';
-        this.source.subType = 'Escrito';
-        this.source.support = s;
+      if (value[0] === 'Linguística') {
+        this.source.type = value[0];
+        this.source.subType = value[1];
+        this.source.support = value[2];
       }
-      if (s === 'Audio' || s === 'Video') {
-        this.source.type = 'Linguística';
-        this.source.subType = 'Oral';
-        this.source.support = s;
-      }
-      if (s === 'Estudio' || s === 'Diccionario') {
-        this.source.type = 'Metalinguística';
-        this.source.subType = s;
+      if (value[0] === 'Metalinguística') {
+        this.source.type = value[0];
+        this.source.subType = value[1];
       }
       console.log('source', this.source);
     },
