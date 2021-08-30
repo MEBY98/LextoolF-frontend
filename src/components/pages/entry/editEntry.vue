@@ -11,9 +11,7 @@
         <h6 class="d-none d-sm-block">
           Diccionario: {{ $store.dictionary.name }}
         </h6>
-        <h6 class="d-none d-sm-block">
-          Letra: {{ $route.params.letter.toString() }}
-        </h6>
+        <h6 class="d-none d-sm-block">Letra: {{ newEntry.letter }}</h6>
       </div>
       <div class="w-100 h-100 d-flex justify-content-start">
         <!-- <a-form-item name="context"> -->
@@ -93,7 +91,12 @@
           v-model:ufs="newEntry.UFs"
           :observations="$store.UseInformationObservations"
           :ufs-ubications="UFUbications"
-          @update-uf-descriptor="updateUFUseInformationDescriptor"
+          @update-uf-anotation-descriptor="
+            updateUFAnotationUseInformationDescriptor
+          "
+          @update-uf-d1-descriptor="updateUFD1UseInformationDescriptor"
+          @update-uf-d2-descriptor="updateUFD2UseInformationDescriptor"
+          @update-uf-d3-descriptor="updateUFD3UseInformationDescriptor"
           @go-next-tab="goNextTab"
           @go-preview-tab="goPreviewTab"
           @go-dictionaries="goDictionaries"
@@ -196,6 +199,7 @@ import ParadigmaticInfoTab from './DescriptorsTabs/ParadigmaticInfo.vue';
 
 //DictionaryModel
 import { Dictionary } from '@/graphql/modules/dictionary/model.ts';
+import { UF as EntryModel } from '@/graphql/modules/entry/model.ts';
 
 function getBase64(img: Blob, callback: (base64Url: string) => void) {
   const reader = new FileReader();
@@ -246,6 +250,7 @@ export default defineComponent({
     const UFUbications = [];
     const showUbicationsModal = false;
     const selectedImageIndex = -1;
+
     return {
       activeKey,
       images,
@@ -257,9 +262,21 @@ export default defineComponent({
       wrapperCol: { span: 14 },
     };
   },
-  //   async mounted(){
-  //       this.newEntry =
-  //   },
+  async mounted() {
+    const dataGetEntryByID = await EntryModel.getEntryByID(
+      this.$route.params.id.toString()
+    );
+    this.newEntry = dataGetEntryByID.data.getEntryByID;
+
+    this.newEntry.context.forEach((c) => {
+      this.images.push({ file: '', base64: '', context: c });
+    });
+
+    const dataGetEntryUbicationsByID = await EntryModel.getEntryUbicationsByID(
+      this.$route.params.id.toString()
+    );
+    this.UFUbications = dataGetEntryUbicationsByID.data.getEntryUbicationsByID;
+  },
   methods: {
     getEntriesByLetter(allEntries, letter) {
       return allEntries.filter((entry) => entry.letter === letter);
@@ -269,23 +286,33 @@ export default defineComponent({
       let context = [];
       for (let i = 0; i < this.images.length; i++) {
         const element = this.images[i];
-        const extensionFile = '.' + element.file.name.split('.')[1];
-        const date = Date.now();
-        context.push(
-          this.newEntry.lemma.lemma + '_' + date + '_' + (i + 1) + extensionFile
-        );
+        if (element.context !== '') {
+          context.push(element.context);
+        } else {
+          const extensionFile = '.' + element.file.name.split('.')[1];
+          const date = Date.now();
+          context.push(
+            this.newEntry.lemma.lemma +
+              '_' +
+              date +
+              '_' +
+              (i + 1) +
+              extensionFile
+          );
+        }
       }
       // Uploading Images
       for (let i = 0; i < this.images.length; i++) {
         const fd = new FormData();
         fd.append('file', this.images[i].file);
-        axiosClientPostImage.post(`/${context[i]}`, fd);
+        if (this.images[i].context === '') {
+          axiosClientPostImage.post(`/${context[i]}`, fd);
+        }
       }
 
-      this.newEntry.letter = this.$route.params.letter.toString();
       this.newEntry.context = context;
       console.log(this.newEntry);
-      await UF.createUF(this.$store.dictionary.id, this.newEntry);
+      UF.editEntry(this.newEntry);
 
       //UpdatingDictionaryStore
       const dataSelectedDictionary = await Dictionary.getDictionaryByID(
@@ -296,7 +323,7 @@ export default defineComponent({
       this.$store.dictionary = selectedDictionary;
       this.$store.entries = this.getEntriesByLetter(
         this.$store.dictionary.entries,
-        this.$route.params.letter.toString()
+        this.newEntry.letter
       );
       console.log('this.$store.entries', this.$store.entries);
       this.$store.layout.isLoading = false;
@@ -388,10 +415,25 @@ export default defineComponent({
       this.newEntry.UFs[update.indexUFS].generalDescription[update.indexDT] =
         update.descriptor;
     },
-    updateUFUseInformationDescriptor(update) {
+    updateUFAnotationUseInformationDescriptor(update) {
       this.newEntry.UFs[update.indexUFS].useInformation[
         update.selectedObservation
-      ][update.indexDT] = update.descriptor;
+      ].anotation = update.descriptor;
+    },
+    updateUFD1UseInformationDescriptor(update) {
+      this.newEntry.UFs[update.indexUFS].useInformation[
+        update.selectedObservation
+      ].descriptors[0] = update.descriptor;
+    },
+    updateUFD2UseInformationDescriptor(update) {
+      this.newEntry.UFs[update.indexUFS].useInformation[
+        update.selectedObservation
+      ].descriptors[1] = update.descriptor;
+    },
+    updateUFD3UseInformationDescriptor(update) {
+      this.newEntry.UFs[update.indexUFS].useInformation[
+        update.selectedObservation
+      ].descriptors[2] = update.descriptor;
     },
     updateUFOrderLemmaDescriptor(update) {
       console.log(update);
@@ -459,7 +501,12 @@ export default defineComponent({
       this.selectedImageIndex = -1;
     },
     changeSelectedImage(index) {
-      this.selectedImageIndex = index;
+      console.log('changeSelectedImage:', index);
+      if (index === this.selectedImageIndex) {
+        this.selectedImageIndex = -1;
+      } else {
+        this.selectedImageIndex = index;
+      }
     },
 
     goNextTab() {

@@ -111,6 +111,7 @@ export default defineComponent({
         const image = {
           file,
           base64,
+          context: '',
         };
         this.showCroppie = false;
         this.closeCroppieModal(image);

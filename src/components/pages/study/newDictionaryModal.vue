@@ -163,6 +163,7 @@ export default defineComponent({
       reference: '',
       annoOfPublication: 0,
       letters: [],
+      entries: [],
     };
     const formItemLayoutWithOutLabelModal = {
       wrapperCol: {
@@ -221,6 +222,7 @@ export default defineComponent({
         reference: '',
         annoOfPublication: 0,
         letters: [],
+        entries: [],
       };
     },
     handleChangeLettersTransfer(targetKeys, direction, moveKeys) {

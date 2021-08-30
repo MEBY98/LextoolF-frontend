@@ -34,3 +34,31 @@ export const createEntryByDictionaryIDMutation = gql`
     }
   }
 `;
+
+export const deleteEntryByDictionaryIDMutation = gql`
+  mutation deleteEntryByDictionaryID(
+    $dictionaryID: String!
+    $entryID: String!
+  ) {
+    deleteEntryByDictionaryID(dictionaryID: $dictionaryID, entryID: $entryID)
+  }
+`;
+
+export const editEntryMutation = gql`
+  mutation editEntry($entry: EditedEntryType!) {
+    editEntry(entry: $entry) {
+      id
+      letter
+      context
+      lemma {
+        id
+      }
+      sublemmas {
+        id
+      }
+      UFs {
+        id
+      }
+    }
+  }
+`;
