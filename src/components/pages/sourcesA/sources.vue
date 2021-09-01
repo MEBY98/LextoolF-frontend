@@ -135,7 +135,7 @@ export default defineComponent({
           title: 'Nombre',
           key: 'name',
           dataIndex: 'name',
-          width: 300,
+          width: 150,
           sorter: (a, b) => a.name.localeCompare(b.name),
           slots: {
             filterDropdown: 'filterDropdown',
@@ -152,7 +152,7 @@ export default defineComponent({
           title: 'Referencia',
           dataIndex: 'ref',
           sorter: (a, b) => a.ref.localeCompare(b.ref),
-          width: 200,
+          width: 300,
           slots: {
             filterDropdown: 'filterDropdown',
             filterIcon: 'filterIcon',
@@ -165,10 +165,25 @@ export default defineComponent({
           },
         },
         {
+          title: 'URLs',
+          dataIndex: 'URL',
+          sorter: (a, b) => a.URL.localeCompare(b.URL),
+          width: 150,
+          slots: {
+            filterDropdown: 'filterDropdown',
+            filterIcon: 'filterIcon',
+          },
+          onFilter: (value, record) => {
+            return record.URL.toString()
+              .toLowerCase()
+              .includes(value.toLowerCase());
+          },
+        },
+        {
           title: 'Tipo',
           dataIndex: 'type',
           sorter: (a, b) => a.type.localeCompare(b.type),
-          width: 200,
+          width: 100,
           slots: {
             filterDropdown: 'filterDropdown',
             filterIcon: 'filterIcon',
@@ -181,10 +196,10 @@ export default defineComponent({
           },
         },
         {
-          title: 'Sub-Tipo',
+          title: 'Medio',
           dataIndex: 'subType',
           sorter: (a, b) => a.subType.localeCompare(b.subType),
-          width: 200,
+          width: 100,
           slots: {
             filterDropdown: 'filterDropdown',
             filterIcon: 'filterIcon',
@@ -197,9 +212,8 @@ export default defineComponent({
           },
         },
         {
-          title: 'Operación',
           key: 'operation',
-          width: 150,
+          width: 50,
           slots: { customRender: 'operation' },
         },
       ],
@@ -218,7 +232,7 @@ export default defineComponent({
     },
     async deleteSourceByID(id) {
       const deletedSource = await Sources.deleteSourceByID(id);
-      let index = -1;
+      let index = 0;
       let found = false;
       for (index; index < this.sources.length && !found; index++) {
         const element = this.sources[index];

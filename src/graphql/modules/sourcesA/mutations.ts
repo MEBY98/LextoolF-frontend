@@ -12,14 +12,20 @@ export const deleteSourceByIDMutation = gql`
       support
       bloque
       theme
-      publication
+      provice_p
+      session_p
+      magazine_type_p
       URL
       cantMin
       broadcastMedium
       typology
       speaker
+      recording_date
+      broadcast_date
       dictionaryType
       century
+      library_name
+      url_location
     }
   }
 `;
@@ -36,14 +42,20 @@ export const createSourceMutation = gql`
       support
       bloque
       theme
-      publication
+      provice_p
+      session_p
+      magazine_type_p
       URL
       cantMin
       broadcastMedium
       typology
       speaker
+      recording_date
+      broadcast_date
       dictionaryType
       century
+      library_name
+      url_location
     }
   }
 `;
@@ -60,14 +72,20 @@ export const updateSourceByIDMutation = gql`
       support
       bloque
       theme
-      publication
+      provice_p
+      session_p
+      magazine_type_p
       URL
       cantMin
       broadcastMedium
       typology
       speaker
+      recording_date
+      broadcast_date
       dictionaryType
       century
+      library_name
+      url_location
     }
   }
 `;

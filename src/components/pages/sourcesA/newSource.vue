@@ -32,7 +32,7 @@
           </a-form-item>
           <a-form-item
             ref="type"
-            label="Tipo"
+            label="Datos de clasificación"
             name="type"
             :label-col="labelColModal"
             :wrapper-col="wrapperColModal"
@@ -42,6 +42,18 @@
               placeholder="Seleccione una Tipo"
               @change="handleOptionsChange"
             />
+          </a-form-item>
+          <a-form-item
+            ref="URL"
+            label="URL de la Fuente"
+            name="URL"
+            :label-col="labelColModal"
+            :wrapper-col="wrapperColModal"
+          >
+            <a-input
+              v-model:value="source.URL"
+              placeholde="URL de la Fuente"
+            ></a-input>
           </a-form-item>
         </a-form>
       </a-tab-pane>
@@ -53,7 +65,7 @@
               datos
             </h4>
           </div>
-          <div v-show="source.subType === 'Diccionario'">
+          <div v-show="source.type === 'Metalinguística'">
             <a-form-item
               ref="dictionaryType"
               label="Tipo de diccionario"
@@ -61,10 +73,7 @@
               :label-col="labelColModal"
               :wrapper-col="wrapperColModal"
             >
-              <a-select
-                v-model:value="source.dictionaryType"
-                @change="handleBloqueChange"
-              >
+              <a-select v-model:value="source.dictionaryType">
                 <a-select-option
                   v-for="dictionaryType in dictionariesTypes"
                   :key="dictionaryType"
@@ -85,10 +94,39 @@
                 placeholde="Siglo"
               ></a-input>
             </a-form-item>
+            <div
+              v-show="
+                source.support === 'Internet' &&
+                source.type === 'Metalinguística'
+              "
+            >
+              <a-form-item
+                ref="library_name"
+                label="Biblioteca Virtual"
+                name="library_name"
+                :label-col="labelColModal"
+                :wrapper-col="wrapperColModal"
+              >
+                <a-input
+                  v-model:value="source.library_name"
+                  placeholde="Nombre de la biblioteca Virtual"
+                ></a-input>
+              </a-form-item>
+              <a-form-item
+                ref="url_location"
+                label="Localización URL"
+                name="url_location"
+                :label-col="labelColModal"
+                :wrapper-col="wrapperColModal"
+              >
+                <a-input
+                  v-model:value="source.url_location"
+                  placeholde="Localización URL"
+                ></a-input>
+              </a-form-item>
+            </div>
           </div>
-          <div
-            v-show="source.support === 'Libro' || source.support === 'Prensa'"
-          >
+          <div v-show="source.type === 'Linguística'">
             <a-form-item
               ref="bloque"
               label="Bloque de la Fuente"
@@ -107,7 +145,7 @@
             </a-form-item>
             <a-form-item
               ref="theme"
-              label="Tema/Género"
+              label="Clasificación temática"
               name="theme"
               :label-col="labelColModal"
               :wrapper-col="wrapperColModal"
@@ -119,30 +157,32 @@
               </a-select>
             </a-form-item>
             <a-form-item
-              ref="publication"
-              label="Datos de publicación"
-              name="publication"
+              v-show="source.support === 'Publicación Periódica'"
+              ref="session_p"
+              label="Sección del Periódico"
+              name="session_p"
               :label-col="labelColModal"
               :wrapper-col="wrapperColModal"
             >
-              <a-input
-                v-model:value="source.publication"
-                placeholde="Datos de publicación"
-              ></a-input>
+              <a-select v-model:value="source.session_p">
+                <a-select-option v-for="sp in session_p" :key="sp">
+                  {{ sp }}
+                </a-select-option>
+              </a-select>
             </a-form-item>
-          </div>
-          <div v-show="source.support === 'Internet'">
             <a-form-item
-              ref="URL"
-              label="URL de la Fuente"
-              name="URL"
+              v-show="source.support === 'Publicación Periódica'"
+              ref="magazine_type_p"
+              label="Tipo de revista"
+              name="magazine_type_p"
               :label-col="labelColModal"
               :wrapper-col="wrapperColModal"
             >
-              <a-input
-                v-model:value="source.URL"
-                placeholde="URL de la Fuente"
-              ></a-input>
+              <a-select v-model:value="source.magazine_type_p">
+                <a-select-option v-for="mtp in magazine_type_p" :key="mtp">
+                  {{ mtp }}
+                </a-select-option>
+              </a-select>
             </a-form-item>
           </div>
           <div
@@ -157,7 +197,7 @@
             >
               <a-textarea
                 v-model:value="source.speaker"
-                placeholder="Escriba la descripción del Hablante"
+                placeholder="Tenga en cuenta los datos nombre, sexo, grupo etario, nivel educacional, profesión, ciudad de origen, provincia."
                 allow-clear
               />
             </a-form-item>
@@ -191,6 +231,34 @@
               </a-select>
             </a-form-item>
             <a-form-item
+              ref="recording_date"
+              label="Fecha de grabación"
+              name="recording_date"
+              :label-col="labelColModal"
+              :wrapper-col="wrapperColModal"
+            >
+              <a-date-picker
+                style="width: 300px"
+                placeholder="Seleccione la Fecha de grabación"
+                :default-open-value="moment('YYYY-MM-DD')"
+                @change="onChangeRecording_date"
+              />
+            </a-form-item>
+            <a-form-item
+              ref="broadcast_date"
+              label="Fecha de emisión"
+              name="broadcast_date"
+              :label-col="labelColModal"
+              :wrapper-col="wrapperColModal"
+            >
+              <a-date-picker
+                style="width: 300px"
+                placeholder="Seleccione la Fecha de emisión"
+                :default-open-value="moment('YYYY-MM-DD')"
+                @change="onChangeBroadcast_date"
+              />
+            </a-form-item>
+            <a-form-item
               ref="cantMin"
               label="Tiempo de duración"
               name="cantMin"
@@ -198,7 +266,8 @@
               :wrapper-col="wrapperColModal"
             >
               <a-time-picker
-                placeholder="Seleccione"
+                style="width: 300px"
+                placeholder="Seleccione el Tiempo de duración"
                 :default-open-value="moment('00:00:00', 'HH:mm:ss')"
                 @change="setCantMin"
               />
@@ -281,8 +350,8 @@ export default defineComponent({
                 label: 'Libro',
               },
               {
-                value: 'Prensa',
-                label: 'Prensa',
+                value: 'Publicación Periódica',
+                label: 'Publicación Periódica',
               },
               {
                 value: 'Internet',
@@ -311,29 +380,43 @@ export default defineComponent({
         label: 'Metalinguística',
         children: [
           {
-            value: 'Diccionario',
-            label: 'Diccionario',
-          },
-          {
-            value: 'Estudio',
-            label: 'Estudio',
+            value: 'Escrita',
+            label: 'Escrita',
+            children: [
+              {
+                value: 'Libro',
+                label: 'Libro',
+              },
+              {
+                value: 'Internet',
+                label: 'Internet',
+              },
+            ],
           },
         ],
       },
     ];
     const bloques = ['Ficción', 'NoFicción'];
     const theme = {
-      Ficción: ['Guion', 'Novela', 'Relato', 'Teatro'],
+      Ficción: ['Novela', 'Relato', 'Teatro'],
       NoFicción: [
-        'Actualidad, ocio y vida cotidiana',
-        'Artes, cultura y espectáculos',
+        'Ocio y vida cotidiana',
+        'Artes y cultura',
         'Ciencias sociales, creencias y pensamiento',
-        'Ciencias y tecnología',
+        'Ciencias exactas, tecnología y Salud',
         'Política, economía y justicia',
-        'Salud',
       ],
     };
     const broadcastMediums = ['Cadena de radio', 'Cadena de TV', 'Internet'];
+    const session_p = [
+      'Nacionales',
+      'Internacionales',
+      'Culturales',
+      'Deportes',
+      'Economía',
+      'Otra',
+    ];
+    const magazine_type_p = ['Especializada', 'No especializada'];
     const typologies = [
       'Conversación',
       'Debate',
@@ -374,20 +457,30 @@ export default defineComponent({
       type: '',
       subType: '',
       support: '',
+
       // linguisticas libro o prensa
       bloque: '',
       theme: '',
-      publication: '',
+      provice_p: '',
+      session_p: '',
+      magazine_type_p: '',
+
       //linguisticas internet
       URL: '',
+
       //linguisticas audio o video
       cantMin: '',
       broadcastMedium: '',
       typology: '',
       speaker: '',
+      recording_date: '',
+      broadcast_date: '',
+
       //metalinguisticas
       dictionaryType: '',
       century: '',
+      library_name: '',
+      url_location: '',
     };
     const formItemLayoutWithOutLabelModal = {
       wrapperCol: {
@@ -410,6 +503,8 @@ export default defineComponent({
       rules,
       bloques,
       theme,
+      session_p,
+      magazine_type_p,
       temas: theme[bloques[0]],
       secondTema: theme[bloques[0]][0],
       broadcastMediums,
@@ -433,6 +528,24 @@ export default defineComponent({
       let duracion = h + 'horas : ' + m + 'minutos : ' + s + 'segundos';
       this.source.cantMin = duracion;
       console.log('cantMin', this.source.cantMin);
+    },
+    onChangeRecording_date(date) {
+      let d = new Date(date);
+      let month = date.format('M');
+      let day = date.format('D');
+      let year = date.format('YYYY');
+      let fecha = day + '-' + month + '-' + year;
+      this.source.recording_date = fecha;
+      console.log('date', fecha);
+    },
+    onChangeBroadcast_date(date, dateString) {
+      let d = new Date(date);
+      let month = date.format('M');
+      let day = date.format('D');
+      let year = date.format('YYYY');
+      let fecha = day + '-' + month + '-' + year;
+      this.source.broadcast_date = fecha;
+      console.log('date', fecha);
     },
     handleBloqueChange(value) {
       this.temas = this.theme[value];
@@ -484,6 +597,7 @@ export default defineComponent({
       if (value[0] === 'Metalinguística') {
         this.source.type = value[0];
         this.source.subType = value[1];
+        this.source.support = value[2];
       }
       console.log('source', this.source);
     },

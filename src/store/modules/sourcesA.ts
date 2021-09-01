@@ -1,16 +1,18 @@
 export class SourcesStore {
   id: String;
   name: String;
-  file: String;
   ref: String;
+  file: String;
   type: String;
   subType: String;
+  support: String;
 
   // linguisticas libro o prensa
   bloque: String;
-  support: String;
   theme: String;
-  publication: String;
+  provice_p: String;
+  session_p: String;
+  magazine_type_p: String;
 
   //linguisticas internet
   URL: String;
@@ -20,8 +22,12 @@ export class SourcesStore {
   broadcastMedium: String;
   typology: String;
   speaker: String;
+  recording_date: String;
+  broadcast_date: String;
 
   //metalinguisticas
   dictionaryType: String;
   century: String;
+  library_name: String;
+  url_location: String;
 }

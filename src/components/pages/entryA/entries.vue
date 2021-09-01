@@ -1,12 +1,15 @@
 <template>
   <h2>Unidades Fraseológicas Candidatas</h2>
   <br />
-  <a-tooltip title="Agregar Unidad Fraselógica" placement="right">
-    <PlusSquareFilled
-      :style="{ fontSize: '25px', color: '#08c', margin: '5px' }"
-      @click="onAdd"
-    />
-  </a-tooltip>
+  <div style="text-align: right">
+    <a-button key="documentar" type="primary" style="margin-right: 5px">
+      Documentar UFs
+    </a-button>
+    <a-button key="lematizar" type="primary">
+      Criterios de Lematización
+    </a-button>
+  </div>
+  <br />
   <a-table
     :data-source="entries"
     :columns="columns"
@@ -70,26 +73,12 @@
           />
         </a>
       </a-tooltip>
-      <a-tooltip title="Documentar UF candidata" placement="bottom">
-        <a @click="createUFDocumentation(record.id)">
-          <BookFilled
-            :style="{ fontSize: '20px', color: '#08c', margin: '5px' }"
-          />
-        </a>
-      </a-tooltip>
-      <a-tooltip title="Seleccionar UF candidata" placement="bottom">
-        <a @click="selectForLemario(record.id)">
-          <CarryOutFilled
-            :style="{ fontSize: '20px', color: '#08c', margin: '5px' }"
-          />
-        </a>
-      </a-tooltip>
       <a-popconfirm
         v-if="entries.length"
         title="Seguro de Eliminar?"
         @confirm="deleteUFByID(record.id)"
       >
-        <a-tooltip title="Eliminar de la fuente" placement="bottom">
+        <a-tooltip title="Eliminar UF candidata" placement="bottom">
           <a>
             <DeleteFilled
               :style="{ fontSize: '20px', color: 'red', margin: '5px' }"
@@ -102,6 +91,7 @@
   <entry-details-modal
     v-model:visible="entryDetailsModalShow"
     :selected-entry="selectedEntry"
+    :file-type="fileType"
     @close-modal="closeEntryDetailsModal"
   ></entry-details-modal>
 </template>
@@ -110,10 +100,7 @@ import {
   EyeFilled,
   EditFilled,
   DeleteFilled,
-  PlusSquareFilled,
-  CarryOutFilled,
   SearchOutlined,
-  BookFilled,
 } from '@ant-design/icons-vue';
 import { defineComponent, ref } from 'vue';
 import { EntryA } from '@/graphql/modules/entryA/model.ts';
@@ -125,20 +112,19 @@ export default defineComponent({
   components: {
     'a-table': Table,
     EyeFilled,
-    BookFilled,
     EditFilled,
     DeleteFilled,
-    CarryOutFilled,
-    PlusSquareFilled,
     SearchOutlined,
     EntryDetailsModal,
   },
   data() {
     const entryDetailsModalShow = false;
     const selectedEntry = {};
+    const fileType = '';
     const searchInput = ref();
     return {
       searchInput,
+      fileType,
       selectedEntry,
       entryDetailsModalShow,
       columns: [
@@ -146,6 +132,7 @@ export default defineComponent({
           title: 'UF',
           dataIndex: 'UF',
           key: 'UF',
+          width: 300,
           sorter: (a, b) => a.name.localeCompare(b.name),
           slots: {
             filterDropdown: 'filterDropdown',
@@ -161,6 +148,7 @@ export default defineComponent({
           title: 'Fuente',
           dataIndex: 'source',
           key: 'source',
+          width: 500,
           sorter: (a, b) => a.name.localeCompare(b.name),
           slots: {
             filterDropdown: 'filterDropdown',
@@ -174,9 +162,9 @@ export default defineComponent({
           },
         },
         {
-          title: 'Operación',
+          title: '',
           key: 'operation',
-          width: 200,
+          width: 100,
           slots: { customRender: 'operation' },
         },
       ],
@@ -188,14 +176,8 @@ export default defineComponent({
     this.entries = data.findAllEntriesWhithSourceRef;
   },
   methods: {
-    onAdd() {
-      this.$router.push({
-        name: 'newEntryA',
-      });
-    },
     async deleteUFByID(id) {
-      const deletedUF = await EntryA.deleteEntryByID(id);
-      let index = -1;
+      let index = 0;
       let found = false;
       for (index; index < this.entries.length && !found; index++) {
         const element = this.entries[index];
@@ -204,6 +186,7 @@ export default defineComponent({
         }
       }
       this.entries = this.entries.filter((item) => item.id !== id);
+      const deletedUF = await EntryA.deleteEntryByID(id);
     },
     handleSearch: (confirm) => {
       confirm();
@@ -213,14 +196,11 @@ export default defineComponent({
     },
     async ufDetailsModalShowMethod(entry) {
       this.selectedEntry = entry;
-      console.log('aaaaaaaaaaaaaaa', this.selectedEntrySource);
+      this.fileType = this.selectedEntry.context.split('_')[0];
       this.entryDetailsModalShow = true;
     },
     closeEntryDetailsModal() {
       this.entryDetailsModalShow = false;
-    },
-    async selectForLemario(entryID) {
-      console.log('aaaaaaaaaaaaaaa');
     },
   },
 });

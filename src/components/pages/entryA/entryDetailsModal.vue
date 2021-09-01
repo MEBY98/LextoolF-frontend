@@ -2,7 +2,7 @@
   <a-modal
     :visible="visible"
     title="Detalles de la Entrada"
-    width="500px"
+    width="450px"
     :footer="null"
     @cancel="closeModal"
   >
@@ -23,31 +23,26 @@
           </span>
         </template>
       </a-form-item>
-      <a-form-item :colon="false">
-        <template #label>
-          <span style="font-weight: 700">
-            Contexto:
-            <video
-              :src="MINIO_URL_A + '/' + selectedEntry.context"
-              v-show="
-                selectedEntry.context.split('_')[0] === 'Video_' ||
-                fileType === 'Video_'
-              "
-              width="320"
-              height="240"
-              controls
-            ></video>
-            <audio
-              :src="MINIO_URL_A + '/' + selectedEntry.context"
-              v-show="
-                selectedEntry.context.split('_')[0] === 'Audio_' ||
-                fileType === 'Audio_'
-              "
-              controls
-            ></audio>
-          </span>
-        </template>
-      </a-form-item>
+      <div style="padding: 2px">
+        <video
+          :src="MINIO_URL_A + '/' + selectedEntry.context"
+          v-show="
+            selectedEntry.context.split('_')[0] === 'Video' ||
+            fileType === 'Video'
+          "
+          width="320"
+          height="240"
+          controls
+        ></video>
+        <audio
+          :src="MINIO_URL_A + '/' + selectedEntry.context"
+          v-show="
+            selectedEntry.context.split('_')[0] === 'Audio' ||
+            fileType === 'Audio'
+          "
+          controls
+        ></audio>
+      </div>
     </a-form>
   </a-modal>
 </template>
