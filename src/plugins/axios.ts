@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { store } from './../store/store';
 
 export const axiosClientPostImage = axios.create({
   baseURL: 'http://localhost:10000/files',
@@ -23,4 +22,9 @@ export const axiosClientGetImage = axios.create({
   //     headers.Authorization = 'Bearer ' + store.site.token || '';
   //     return data;
   //   },
+});
+
+export const axiosClientFiles = axios.create({
+  baseURL: 'http://localhost:10000/files',
+  responseType: 'arraybuffer',
 });
