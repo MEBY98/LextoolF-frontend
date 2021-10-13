@@ -11,7 +11,6 @@ import { defineComponent } from 'vue';
 import es from 'ant-design-vue/lib/locale-provider/es_ES';
 import moment from 'moment';
 import 'moment/locale/es';
-import { store } from './store/store';
 moment.locale('es');
 
 export default defineComponent({
