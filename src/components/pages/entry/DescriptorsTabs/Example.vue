@@ -4,84 +4,81 @@
     <div style="text-align: right">
       <add-descriptor
         :tab="1"
-        :descriptors-types="descriptorsTypes"
+        :descriptors-types="$store.ExampleDescriptorsTypes"
       ></add-descriptor>
     </div>
     <br />
-    <tab-header></tab-header>
+    <tab-header
+      :descriptor-types="$store.ExampleDescriptorsTypes"
+      :column-width="columnWidth"
+    ></tab-header>
 
     <!-- BODY -->
     <tr
-      v-for="(element, indexUFS) in ufs"
-      :key="indexUFS"
-      class="row w-100 align-middle"
+      v-for="(element, indexElement) in elements"
+      :key="indexElement"
+      class="row w-100 d-flex align-items-center align-middle"
     >
       <td
         v-if="
-          ufsUbications[indexUFS] === 'Lema' ||
-          ufsUbications[indexUFS] === 'Sublema'
+          (elementsUbications[indexElement] === 'lema' ||
+            elementsUbications[indexElement] === 'sublema') &&
+          $store.clasifications[elementsClasificationsIndexs[indexElement]]
+            .clasification === 'UF'
         "
-        class="col-3 d-flex align-items-center"
+        :class="`col-${columnWidth[0]}`"
       >
-        <span v-if="ufs[indexUFS].UF" style="font-weight: 500">
-          {{ ufs[indexUFS].UF }}
-        </span>
+        <span v-html="elements[indexElement].element"></span>
       </td>
       <td
         v-if="
-          ufsUbications[indexUFS] === 'Lema' ||
-          ufsUbications[indexUFS] === 'Sublema'
+          (elementsUbications[indexElement] === 'lema' ||
+            elementsUbications[indexElement] === 'sublema') &&
+          $store.clasifications[elementsClasificationsIndexs[indexElement]]
+            .clasification === 'UF'
         "
-        class="col-3 d-flex align-items-center align-middle"
+        :class="`col-${columnWidth[1]}`"
       >
-        <span v-if="ufs[indexUFS].UF" style="font-weight: 500">
-          {{ ufsUbications[indexUFS] }}
+        <span>
+          {{ elementsUbications[indexElement] }}
         </span>
       </td>
-      <td
-        v-if="
-          ufsUbications[indexUFS] === 'Lema' ||
-          ufsUbications[indexUFS] === 'Sublema'
-        "
-        class="d-table-cell"
+      <div
+        v-for="(descriptorType, indexDT) in $store.ExampleDescriptorsTypes"
+        :key="indexDT"
+        :class="`col-${columnWidth[2]}`"
       >
-        <descriptor-type
-          :type="descriptorsTypes[0].inputType"
-          :descriptors="descriptorsTypes[0].descriptors"
-          :value="ufs[indexUFS].example.anotation"
-          :label="descriptorsTypes[0].name"
-          :multi-input="descriptorsTypes[0].multiInput"
-          @input-change="updateUFAnotationDescriptor($event, indexUFS)"
-          @select-change="updateUFAnotationDescriptor($event, indexUFS)"
-        ></descriptor-type>
-        <descriptor-type
-          :type="descriptorsTypes[1].inputType"
-          :descriptors="descriptorsTypes[1].descriptors"
-          :value="ufs[indexUFS].example.typeOfExample"
-          :label="descriptorsTypes[1].name"
-          :multi-input="descriptorsTypes[1].multiInput"
-          @input-change="updateUFTypeOfExampleDescriptor($event, indexUFS)"
-          @select-change="updateUFTypeOfExampleDescriptor($event, indexUFS)"
-        ></descriptor-type>
-        <descriptor-type
-          :type="descriptorsTypes[2].inputType"
-          :descriptors="descriptorsTypes[2].descriptors"
-          :value="ufs[indexUFS].example.formatOfExample"
-          :label="descriptorsTypes[2].name"
-          :multi-input="descriptorsTypes[2].multiInput"
-          @input-change="updateUFFormatOfExampleDescriptor($event, indexUFS)"
-          @select-change="updateUFFormatOfExampleDescriptor($event, indexUFS)"
-        ></descriptor-type>
-        <descriptor-type
-          :type="descriptorsTypes[3].inputType"
-          :descriptors="descriptorsTypes[3].descriptors"
-          :value="ufs[indexUFS].example.functionOfExample"
-          :label="descriptorsTypes[3].name"
-          :multi-input="descriptorsTypes[3].multiInput"
-          @input-change="updateUFFunctionOfExampleDescriptor($event, indexUFS)"
-          @select-change="updateUFFunctionOfExampleDescriptor($event, indexUFS)"
-        ></descriptor-type>
-      </td>
+        <td
+          v-if="
+            (elementsUbications[indexElement] === 'lema' ||
+              elementsUbications[indexElement] === 'sublema') &&
+            $store.clasifications[elementsClasificationsIndexs[indexElement]]
+              .clasification === 'UF'
+          "
+        >
+          <descriptor-type
+            :style="{ width: '150px' }"
+            :type="descriptorType.inputType"
+            :descriptors="descriptorType.descriptors"
+            :value="elements[indexElement].example[attributes[indexDT]]"
+            :multi-input="descriptorType.multiInput"
+            @input-change="
+              updateElementDescriptor($event, indexElement, attributes[indexDT])
+            "
+            @select-change="
+              updateElementDescriptor($event, indexElement, attributes[indexDT])
+            "
+          ></descriptor-type>
+        </td>
+      </div>
+      <a-divider
+        v-if="
+          (elementsUbications[indexElement] === 'lema' ||
+            elementsUbications[indexElement] === 'sublema') &&
+          $store.clasifications[elementsClasificationsIndexs[indexElement]]
+            .clasification === 'UF'
+        "
+      ></a-divider>
     </tr>
 
     <!-- FOOTER -->
@@ -89,9 +86,11 @@
     <tabs-footer
       :first-tab="false"
       :last-tab="false"
+      :disable-next-button="disableNextButton"
+      :disable-preview-button="disablePreviewButton"
       @go-next-tab="goNextTab"
       @go-preview-tab="goPreviewTab"
-      @go-dictionaries="goDictionaries"
+      @go-entries="goEntries"
       @save="save"
     ></tabs-footer>
   </div>
@@ -99,13 +98,12 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-
 import TabsHeader from './TabsHeader/TabsHeader.vue';
-import TabsFooterMixin from './TabsFooter/TabsFooter.mixin.js';
 import TabsFooter from './TabsFooter/TabsFooter.vue';
 import AddDescriptor from './AddDescriptor/AddDescriptor.vue';
 import DescriptorType from './DescriptorType/DescriptorType.vue';
-
+import UseTabFooter from './TabsFooter/UseTabFooter';
+import { store } from '@/store/store';
 export default defineComponent({
   components: {
     'tab-header': TabsHeader,
@@ -113,47 +111,52 @@ export default defineComponent({
     'descriptor-type': DescriptorType,
     'add-descriptor': AddDescriptor,
   },
-  mixins: [TabsFooterMixin],
   props: {
-    descriptorsTypes: {
-      type: [Object],
+    elements: {
+      type: Array,
     },
-    ufs: {
-      type: [Object],
+    elementsUbications: {
+      type: Array,
     },
-    ufsUbications: {
-      type: [Object],
+    elementsClasificationsIndexs: {
+      type: Array,
+    },
+    disableNextButton: {
+      type: Boolean,
+      default: () => false,
+    },
+    disablePreviewButton: {
+      type: Boolean,
+      default: () => false,
     },
   },
   emits: [
-    'update-uf-anotation-descriptor',
-    'update-uf-type-descriptor',
-    'update-uf-format-descriptor',
-    'update-uf-function-descriptor',
+    'update-element-descriptor',
+    'go-next-tab',
+    'go-preview-tab',
+    'go-entries',
+    'save',
   ],
   setup(props, context) {
-    const updateUFAnotationDescriptor = (descriptor, indexUFS) => {
-      const update = { descriptor, indexUFS };
-      context.emit('update-uf-anotation-descriptor', update);
+    const updateElementDescriptor = (descriptor, indexElement, attribute) => {
+      const update = { descriptor, indexElement, attribute };
+      context.emit('update-element-descriptor', update);
     };
-    const updateUFTypeOfExampleDescriptor = (descriptor, indexUFS) => {
-      const update = { descriptor, indexUFS };
-      context.emit('update-uf-type-descriptor', update);
-    };
-    const updateUFFormatOfExampleDescriptor = (descriptor, indexUFS) => {
-      const update = { descriptor, indexUFS };
-      context.emit('update-uf-format-descriptor', update);
-    };
-    const updateUFFunctionOfExampleDescriptor = (descriptor, indexUFS) => {
-      const update = { descriptor, indexUFS };
-      context.emit('update-uf-function-descriptor', update);
-    };
-
+    const { goNextTab, goPreviewTab, goEntries, save } = UseTabFooter(context);
+    const descriptorW = Math.floor(8 / store.ExampleDescriptorsTypes.length);
     return {
-      updateUFAnotationDescriptor,
-      updateUFTypeOfExampleDescriptor,
-      updateUFFormatOfExampleDescriptor,
-      updateUFFunctionOfExampleDescriptor,
+      attributes: [
+        'anotation',
+        'typeOfExample',
+        'formatOfExample',
+        'functionOfExample',
+      ],
+      updateElementDescriptor,
+      columnWidth: [2, 2, descriptorW],
+      goNextTab,
+      goPreviewTab,
+      goEntries,
+      save,
     };
   },
 });

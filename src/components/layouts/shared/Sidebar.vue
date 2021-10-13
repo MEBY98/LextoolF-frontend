@@ -10,7 +10,8 @@
           class="br-menu-link"
         >
           <div class="br-menu-item">
-            <i :class="link.icon" class="menu-item-icon icon tx-25"></i>
+            <show-icon :icon="link.icon" :style-icon="styleIcon"></show-icon>
+            <!-- <i :class="link.icon" class="menu-item-icon icon tx-25"></i> -->
             <span class="menu-item-label">{{ link.text }}</span>
             <i
               v-if="link.children"
@@ -45,24 +46,32 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import ShowIcon from '@/components/shared/ShowIcon.vue';
 
 export default defineComponent({
-  components: {},
+  components: {
+    'show-icon': ShowIcon,
+  },
   props: {},
   setup() {
     return {};
   },
   data: () => ({
+    styleIcon: {
+      fontSize: '20px',
+      color: '#ccc',
+      opacity: 1,
+    },
     links: [
       {
-        text: 'Estudios Fraseologicos',
-        icon: 'ion-ios-book-outline',
+        text: 'Estudios fraseográficos',
+        icon: 'BookOutlined',
         to: { name: 'studies' },
       },
       {
-        text: 'Proyectos de Diccionarios ',
-        icon: 'ion-ios-book',
-        to: { name: 'dictionariesA' },
+        text: 'Reportes',
+        icon: 'BarChartOutlined',
+        to: { name: 'reports' },
       },
     ],
   }),

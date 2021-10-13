@@ -1,182 +1,232 @@
 <template>
   <div style="text-align: right">
-    <PlusSquareFilled
-      v-if="selectedUF !== -1"
-      :style="{
-        fontSize: '24px',
-        color: '#08c',
-        'margin-bottom': '10px',
-      }"
+    <tooltip-icon
+      v-if="selectedCD !== -1"
+      :icon="'PlusSquareFilled'"
+      :text="'Definición'"
+      :title="'Agregar definición'"
       @click="addContornoDefinition"
-    />
-    <span
-      v-if="selectedUF !== -1"
-      style="font-weight: 500; margin-left: 8px; margin-right: 8px"
-    >
-      Definición
-    </span>
+    ></tooltip-icon>
     <add-descriptor
-      v-if="selectedDescriptor === 0"
+      v-if="selectedDescriptor === 0 && selectedCD !== -1"
       :tab="4"
       :observation="'Definición'"
-      :descriptors-types="definitionsDescriptorsTypes"
+      :descriptors-types="$store.DefinitionDescriptorsTypes"
     ></add-descriptor>
     <add-descriptor
-      v-if="selectedDescriptor === 1"
+      v-if="selectedDescriptor === 1 && selectedCD !== -1"
       :tab="4"
       :observation="'Contorno'"
-      :descriptors-types="contornoDescriptorsTypes"
+      :descriptors-types="$store.ContornoDescriptorsTypes"
     ></add-descriptor>
   </div>
   <br />
-  <tab-header></tab-header>
+  <tr class="row w-100">
+    <th :class="`col-${columnWidth[0]}`">
+      <h6>Unidad fraseológica</h6>
+    </th>
+    <th :class="`col-${columnWidth[1]}`">
+      <h6>Ubicación</h6>
+    </th>
+    <th :class="`col-${columnWidth[2]}`">
+      <h6>Definición</h6>
+    </th>
+    <th :class="`col-${columnWidth[2]}`">
+      <h6>Contorno definicional</h6>
+    </th>
+  </tr>
 
-  <tr
-    v-for="(uf, indexUFS) in ufs"
-    :key="indexUFS"
-    class="row w-100 align-middle"
-  >
-    <div
-      v-for="(cd, indexCD) in ufs[indexUFS].ContornoDefinition"
+  <div v-for="(element, indexElement) in elements" :key="indexElement">
+    <tr
+      v-for="(cd, indexCD) in elements[indexElement].contornoDefinition"
       :key="indexCD"
-      class="row w-100 align-middle m-1"
+      class="row w-100 d-flex align-items-center align-middle"
     >
       <td
         v-if="
-          ufsUbications[indexUFS] === 'Lema' ||
-          ufsUbications[indexUFS] === 'Sublema'
+          (elementsUbications[indexElement] === 'lema' ||
+            elementsUbications[indexElement] === 'sublema') &&
+          $store.clasifications[elementsClasificationsIndexs[indexElement]]
+            .clasification === 'UF'
         "
-        class="col-3 d-flex align-items-center align-middle"
+        :class="`col-${columnWidth[0]}`"
       >
-        <a-checkbox
-          class="mr-3"
-          :checked="selectedUF === indexUFS && selectedCD === indexCD"
-          @change="handleSelectDefinition(indexUFS, indexCD)"
-        ></a-checkbox>
-        <span v-if="ufs[indexUFS].UF" style="font-weight: 500">
-          {{ ufs[indexUFS].UF }}
+        <div class="d-flex align-items-center align-middle">
+          <a-checkbox
+            class="mr-2"
+            :checked="
+              selectedElement === indexElement && selectedCD === indexCD
+            "
+            @change="handleSelectDefinition(indexElement, indexCD)"
+          ></a-checkbox>
+          <span v-html="elements[indexElement].element"></span>
+        </div>
+      </td>
+      <td
+        v-if="
+          (elementsUbications[indexElement] === 'lema' ||
+            elementsUbications[indexElement] === 'sublema') &&
+          $store.clasifications[elementsClasificationsIndexs[indexElement]]
+            .clasification === 'UF'
+        "
+        :class="`col-${columnWidth[1]}`"
+      >
+        <span>
+          {{ elementsUbications[indexElement] }}
         </span>
       </td>
       <td
         v-if="
-          ufsUbications[indexUFS] === 'Lema' ||
-          ufsUbications[indexUFS] === 'Sublema'
+          (elementsUbications[indexElement] === 'lema' ||
+            elementsUbications[indexElement] === 'sublema') &&
+          $store.clasifications[elementsClasificationsIndexs[indexElement]]
+            .clasification === 'UF'
         "
-        class="col-3 d-flex align-items-center align-middle"
+        :class="`col-${columnWidth[2]}`"
       >
-        <span v-if="ufs[indexUFS].UF" style="font-weight: 500">
-          {{ ufsUbications[indexUFS] }}
-        </span>
+        <a-input
+          :value="elements[indexElement].contornoDefinition[indexCD].definition"
+          style="width: 290px"
+          @input="
+            updateElementDefinition($event.target.value, indexElement, indexCD)
+          "
+        ></a-input>
       </td>
       <td
         v-if="
-          ufsUbications[indexUFS] === 'Lema' ||
-          ufsUbications[indexUFS] === 'Sublema'
+          (elementsUbications[indexElement] === 'lema' ||
+            elementsUbications[indexElement] === 'sublema') &&
+          $store.clasifications[elementsClasificationsIndexs[indexElement]]
+            .clasification === 'UF'
         "
-        class="col-6 d-flex align-items-center align-middle"
+        :class="`col-${columnWidth[2]}`"
       >
-        <span v-if="ufs[indexUFS].UF" class="mr-2" style="font-weight: 500">
-          Definición
-        </span>
         <a-input
-          class="mr-2"
-          :value="
-            ufs[indexUFS].ContornoDefinition[indexCD].definition.definition
+          :value="elements[indexElement].contornoDefinition[indexCD].contorno"
+          style="width: 290px; margin-right: 5px"
+          @input="
+            updateElementContorno($event.target.value, indexElement, indexCD)
           "
-          @input="updateUFDefinition($event.target.value, indexUFS, indexCD)"
         ></a-input>
-        <span v-if="ufs[indexUFS].UF" class="mr-2" style="font-weight: 500">
-          Contorno
-        </span>
-        <a-input
-          class="mr-2"
-          :value="ufs[indexUFS].ContornoDefinition[indexCD].contorno.contorno"
-          @input="updateUFContorno($event.target.value, indexUFS, indexCD)"
-        ></a-input>
-        <MinusCircleFilled
-          v-if="ufs[indexUFS].ContornoDefinition.length > 1"
-          class="dynamic-delete-button"
-          :style="{ color: 'red', marginLeft: '8px' }"
-          @click="removeContornoDefinition(indexUFS, indexCD)"
-        />
+        <tooltip-icon
+          v-if="elements[indexElement].contornoDefinition.length > 1"
+          :icon="'MinusCircleFilled'"
+          :text="''"
+          :title="'Eliminar definición'"
+          @click="removeContornoDefinition(indexElement, indexCD)"
+        ></tooltip-icon>
       </td>
-    </div>
-  </tr>
-
-  <div
-    v-if="selectedCD !== -1"
-    class="container mt-3 border"
-    style="width: 400px; background: #e9ecef"
-  >
-    <a-radio-group v-model:value="selectedDescriptor" class="m-3">
-      <a-radio class="mr-5" :value="0">Definición</a-radio>
-      <a-radio :value="1">Contorno</a-radio>
-    </a-radio-group>
-    <div class="row w-100 m-3">
-      <div v-if="selectedDescriptor === 0">
-        <descriptor-type
-          :type="definitionsDescriptorsTypes[0].inputType"
-          :descriptors="definitionsDescriptorsTypes[0].descriptors"
-          :multi-input="definitionsDescriptorsTypes[0].multiInput"
-          :value="
-            ufs[selectedUF].ContornoDefinition[selectedCD].definition
-              .descriptors.typeOfDefinition
-          "
-          :label="definitionsDescriptorsTypes[0].name"
-          @input-change="updateUFTypeOfDefinitionDescriptor($event)"
-          @select-change="updateUFTypeOfDefinitionDescriptor($event)"
-        ></descriptor-type>
-        <descriptor-type
-          :type="definitionsDescriptorsTypes[1].inputType"
-          :descriptors="definitionsDescriptorsTypes[1].descriptors"
-          :multi-input="definitionsDescriptorsTypes[1].multiInput"
-          :value="
-            ufs[selectedUF].ContornoDefinition[selectedCD].definition
-              .descriptors.relationship
-          "
-          :label="definitionsDescriptorsTypes[1].name"
-          @input-change="updateUFRelationshipDefinitionDescriptor($event)"
-          @select-change="updateUFRelationshipDefinitionDescriptor($event)"
-        ></descriptor-type>
-      </div>
-      <div v-if="selectedDescriptor === 1">
-        <descriptor-type
-          v-for="(descriptorType, indexDT) in contornoDescriptorsTypes"
-          :key="indexDT"
-          :type="descriptorType.inputType"
-          :descriptors="descriptorType.descriptors"
-          :multi-input="descriptorType.multiInput"
-          :value="
-            ufs[selectedUF].ContornoDefinition[selectedCD].contorno.descriptors
-          "
-          :label="descriptorType.name"
-          @input-change="updateUFContornoDescriptor($event)"
-          @select-change="updateUFContornoDescriptor($event)"
-        ></descriptor-type>
-      </div>
-    </div>
+    </tr>
+    <a-divider
+      v-if="
+        (elementsUbications[indexElement] === 'lema' ||
+          elementsUbications[indexElement] === 'sublema') &&
+        $store.clasifications[elementsClasificationsIndexs[indexElement]]
+          .clasification === 'UF'
+      "
+    ></a-divider>
   </div>
 
+  <transition name="no-mode-fade">
+    <div
+      v-if="selectedCD !== -1"
+      class="container mt-3 border"
+      style="width: 450px; border-radius: 10px; box-shadow: 5px 5px 5px #ccc"
+    >
+      <a-radio-group v-model:value="selectedDescriptor" class="m-3">
+        <a-radio class="mr-5" :value="0">Definición</a-radio>
+        <a-radio :value="1">Contorno definicional</a-radio>
+      </a-radio-group>
+      <div class="row w-100 m-3">
+        <div v-if="selectedDescriptor === 0">
+          <descriptor-type
+            v-for="(descriptorType,
+            indexDefinitionDT) in $store.DefinitionDescriptorsTypes"
+            :key="indexDefinitionDT"
+            :type="descriptorType.inputType"
+            :descriptors="descriptorType.descriptors"
+            :multi-input="descriptorType.multiInput"
+            :value="
+              elements[selectedElement].contornoDefinition[selectedCD][
+                definitionAttributes[indexDefinitionDT]
+              ]
+            "
+            :label="descriptorType.name"
+            @input-change="
+              updateElementDescriptor(
+                $event,
+                selectedElement,
+                selectedCD,
+                definitionAttributes[indexDefinitionDT]
+              )
+            "
+            @select-change="
+              updateElementDescriptor(
+                $event,
+                selectedElement,
+                selectedCD,
+                definitionAttributes[indexDefinitionDT]
+              )
+            "
+          ></descriptor-type>
+        </div>
+        <div v-if="selectedDescriptor === 1">
+          <descriptor-type
+            v-for="(descriptorType,
+            indexContornoDT) in $store.ContornoDescriptorsTypes"
+            :key="indexContornoDT"
+            :type="descriptorType.inputType"
+            :descriptors="descriptorType.descriptors"
+            :multi-input="descriptorType.multiInput"
+            :value="
+              elements[selectedElement].contornoDefinition[selectedCD][
+                contornoAttributes[indexContornoDT]
+              ]
+            "
+            :label="descriptorType.name"
+            @input-change="
+              updateElementDescriptor(
+                $event,
+                selectedElement,
+                selectedCD,
+                contornoAttributes[indexContornoDT]
+              )
+            "
+            @select-change="
+              updateElementDescriptor(
+                $event,
+                selectedElement,
+                selectedCD,
+                contornoAttributes[indexContornoDT]
+              )
+            "
+          ></descriptor-type>
+        </div>
+      </div>
+    </div>
+  </transition>
   <!-- FOOTER -->
   <br />
   <tabs-footer
     :first-tab="false"
     :last-tab="false"
+    :disable-next-button="disableNextButton"
+    :disable-preview-button="disablePreviewButton"
     @go-next-tab="goNextTab"
     @go-preview-tab="goPreviewTab"
-    @go-dictionaries="goDictionaries"
+    @go-entries="goEntries"
     @save="save"
   ></tabs-footer>
 </template>
 <script lang="ts">
+import { defineComponent, ref } from 'vue';
 import { PlusSquareFilled, MinusCircleFilled } from '@ant-design/icons-vue';
 import TabsHeader from './TabsHeader/TabsHeader.vue';
-import TabsFooterMixin from './TabsFooter/TabsFooter.mixin.js';
 import TabsFooter from './TabsFooter/TabsFooter.vue';
 import AddDescriptor from './AddDescriptor/AddDescriptor.vue';
+import TooltipIcon from '@/components/shared/TooltipIcon.vue';
 import DescriptorType from './DescriptorType/DescriptorType.vue';
-
-import { defineComponent, reactive, ref } from 'vue';
+import UseTabFooter from './TabsFooter/UseTabFooter';
 export default defineComponent({
   components: {
     PlusSquareFilled,
@@ -185,119 +235,145 @@ export default defineComponent({
     'tabs-footer': TabsFooter,
     'descriptor-type': DescriptorType,
     'add-descriptor': AddDescriptor,
+    'tooltip-icon': TooltipIcon,
   },
-  mixins: [TabsFooterMixin],
   props: {
-    ufs: {
-      type: [Object],
+    elements: {
+      type: Array,
     },
-    ufsUbications: {
-      type: [String],
+    elementsUbications: {
+      type: Array,
     },
-    definitionsDescriptorsTypes: {
-      type: [Object],
+    elementsClasificationsIndexs: {
+      type: Array,
     },
-    contornoDescriptorsTypes: {
-      type: [Object],
+    disableNextButton: {
+      type: Boolean,
+      default: () => false,
+    },
+    disablePreviewButton: {
+      type: Boolean,
+      default: () => false,
     },
   },
   emits: [
-    'update-uf-type-definition-descriptor',
-    'update-uf-relationship-definition-descriptor',
-    'update-uf-contorno-descriptor',
+    'update-element-descriptor',
     'add-contorno-definition',
-    'update-uf-definition',
-    'update-uf-contorno',
+    'update-element-definition',
+    'update-element-contorno',
     'remove-contorno-definition',
+    'go-next-tab',
+    'go-preview-tab',
+    'go-entries',
+    'save',
   ],
   setup(props, context) {
-    const selectedUF = ref(-1);
+    const selectedElement = ref(-1);
     const selectedCD = ref(-1);
     const selectedDescriptor = ref(-1);
-    // const allDescriptorsTypes =
-    //   props.definitionsDescriptorsTypes +
-    //   props.contornoDescriptorsTypes;
-
-    const updateUFTypeOfDefinitionDescriptor = (descriptor) => {
-      console.log(descriptor);
+    const updateElementDescriptor = (
+      descriptor,
+      indexElement,
+      indexCD,
+      attribute
+    ) => {
       const update = {
         descriptor,
-        selectedUF: selectedUF.value,
-        selectedCD: selectedCD.value,
+        indexElement,
+        indexCD,
+        attribute,
       };
-      context.emit('update-uf-type-definition-descriptor', update);
-    };
-    const updateUFRelationshipDefinitionDescriptor = (descriptor) => {
-      console.log(descriptor);
-      const update = {
-        descriptor,
-        selectedUF: selectedUF.value,
-        selectedCD: selectedCD.value,
-      };
-      context.emit('update-uf-relationship-definition-descriptor', update);
-    };
-    const updateUFContornoDescriptor = (descriptor) => {
-      console.log(descriptor);
-      const update = {
-        descriptor,
-        selectedUF: selectedUF.value,
-        selectedCD: selectedCD.value,
-      };
-      context.emit('update-uf-contorno-descriptor', update);
+      context.emit('update-element-descriptor', update);
     };
 
-    const handleSelectDefinition = (indexUFS, indexCD) => {
-      if (indexCD === selectedCD.value && indexUFS === selectedUF.value) {
-        selectedUF.value = -1;
+    const handleSelectDefinition = (indexElement, indexCD) => {
+      if (
+        indexCD === selectedCD.value &&
+        indexElement === selectedElement.value
+      ) {
+        selectedElement.value = -1;
         selectedCD.value = -1;
       } else {
-        selectedUF.value = indexUFS;
+        selectedElement.value = indexElement;
         selectedCD.value = indexCD;
       }
     };
 
     const addContornoDefinition = () => {
-      context.emit('add-contorno-definition', selectedUF.value);
+      context.emit('add-contorno-definition', selectedElement.value);
     };
 
-    const updateUFDefinition = (value, indexUFS, indexCD) => {
+    const updateElementDefinition = (value, indexElement, indexCD) => {
       const update = {
         definition: value,
-        selectedUF: indexUFS,
-        selectedCD: indexCD,
+        indexElement,
+        indexCD,
       };
-      context.emit('update-uf-definition', update);
+      context.emit('update-element-definition', update);
     };
 
-    const updateUFContorno = (value, indexUFS, indexCD) => {
+    const updateElementContorno = (value, indexElement, indexCD) => {
       const update = {
         contorno: value,
-        selectedUF: indexUFS,
-        selectedCD: indexCD,
+        indexElement,
+        indexCD,
       };
-      context.emit('update-uf-contorno', update);
+      context.emit('update-element-contorno', update);
     };
 
-    const removeContornoDefinition = (indexUFS, indexCD) => {
+    const removeContornoDefinition = (indexElement, indexCD) => {
       const update = {
-        indexUFS,
+        indexElement,
         indexCD,
       };
       context.emit('remove-contorno-definition', update);
     };
+    const { goNextTab, goPreviewTab, goEntries, save } = UseTabFooter(context);
     return {
-      selectedUF,
+      definitionAttributes: [
+        'typeOfDefinition',
+        'argumentalSchema',
+        'relationship',
+      ],
+      contornoAttributes: [
+        'typeOfContorno',
+        'positionOfContorno',
+        'formatOfContorno',
+      ],
+      selectedElement,
       selectedCD,
       addContornoDefinition,
       selectedDescriptor,
-      updateUFContornoDescriptor,
-      updateUFTypeOfDefinitionDescriptor,
-      updateUFRelationshipDefinitionDescriptor,
+      updateElementDescriptor,
       handleSelectDefinition,
-      updateUFDefinition,
-      updateUFContorno,
+      updateElementDefinition,
+      updateElementContorno,
       removeContornoDefinition,
+      columnWidth: [2, 2, 4],
+      goNextTab,
+      goPreviewTab,
+      goEntries,
+      save,
     };
   },
 });
 </script>
+
+<style scoped>
+.no-mode-fade-enter-active,
+.no-mode-fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.no-mode-fade-enter-from,
+.no-mode-fade-leave-to {
+  opacity: 0;
+}
+
+.opacity {
+  opacity: 0.3;
+}
+.opacity:hover {
+  opacity: 0.8;
+}
+</style>
