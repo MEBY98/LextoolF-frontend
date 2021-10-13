@@ -1,13 +1,13 @@
-import { store } from '@/store/store';
-import { ApolloLink } from 'apollo-boost';
+// import { store } from '@/store/store';
+// import { ApolloLink } from 'apollo-boost';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import ApolloClient from 'apollo-client';
-import { setContext } from 'apollo-link-context';
+// import { setContext } from 'apollo-link-context';
 import { createHttpLink } from 'apollo-link-http';
-import { WebSocketLink } from 'apollo-link-ws';
-import { getOperationAST } from 'graphql';
+// import { WebSocketLink } from 'apollo-link-ws';
+// import { getOperationAST } from 'graphql';
 
-import router from './../router/router';
+// import router from './../router/router';
 
 const cache = new InMemoryCache({
   dataIdFromObject: (obj) => {
@@ -21,35 +21,25 @@ const cache = new InMemoryCache({
   // fragmentMatcher
 });
 
-const httpLinkA = createHttpLink({
-  uri: 'http://localhost:11000/graphql',
-});
-
 const httpLink = createHttpLink({
-  uri: 'http://localhost:10000/graphql',
+  uri: process.env.VUE_APP_BACKEND_URL,
 });
 
 const defaultOptions: any = {
   watchQuery: {
-    fetchPolicy: 'cache-and-network',
+    // fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'network-only',
     errorPolicy: 'all',
   },
   query: {
-    fetchPolicy: 'cache-first',
+    // fetchPolicy: 'cache-first',
+    fetchPolicy: 'network-only',
     errorPolicy: 'all',
   },
   mutate: {
     errorPolicy: 'all',
   },
 };
-
-export const apolloClientA = new ApolloClient({
-  connectToDevTools: true,
-  link: httpLinkA,
-  cache,
-  defaultOptions,
-  queryDeduplication: true,
-});
 
 export const apolloClient = new ApolloClient({
   connectToDevTools: true,

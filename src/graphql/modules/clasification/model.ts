@@ -1,10 +1,10 @@
 import { apolloQuery, apolloMutate } from '@/graphql/apollo';
 import { FetchPolicy, apolloClient } from '@/graphql/apolloProvider';
+import { getAllClasificationsQuery } from './querys';
 import {
-  getAllClasificationsQuery,
-  getAllLemmaClasificationsQuery,
-  getAllSublemmaClasificationsQuery,
-} from './querys';
+  CreateClasificationMutation,
+  EditClasificationMutation,
+} from './mutations';
 
 export class Clasification {
   static getAllClasifications() {
@@ -15,20 +15,20 @@ export class Clasification {
       apolloClient
     );
   }
-  static getLemmaClasifications() {
-    return apolloQuery(
-      getAllLemmaClasificationsQuery,
+  static createClasification(newClasification) {
+    return apolloMutate(
+      CreateClasificationMutation,
+      { newClasification },
       null,
-      FetchPolicy.network_only,
-      apolloClient
+      null
     );
   }
-  static getSublemmaClasifications() {
-    return apolloQuery(
-      getAllSublemmaClasificationsQuery,
+  static editClasification(editedClasification) {
+    return apolloMutate(
+      EditClasificationMutation,
+      { editedClasification },
       null,
-      FetchPolicy.network_only,
-      apolloClient
+      null
     );
   }
 }

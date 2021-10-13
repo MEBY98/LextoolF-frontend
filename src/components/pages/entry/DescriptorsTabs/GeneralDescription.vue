@@ -4,41 +4,77 @@
     <div style="text-align: right">
       <add-descriptor
         :tab="1"
-        :descriptors-types="descriptorsTypes"
+        :descriptors-types="$store.GeneralDescriptionDescriptorsTypes"
       ></add-descriptor>
     </div>
     <br />
-    <tab-header></tab-header>
+    <tab-header
+      :descriptor-types="$store.GeneralDescriptionDescriptorsTypes"
+      :column-width="columnWidth"
+    ></tab-header>
 
     <!-- BODY -->
     <tr
-      v-for="(element, indexUFS) in ufs"
-      :key="indexUFS"
-      class="row w-100 align-middle"
-      :style="isPair(indexUFS) ? rowStyle : {}"
+      v-for="(element, indexElement) in elements"
+      :key="indexElement"
+      class="row w-100 d-inline-flex align-items-center justify-content-center"
     >
-      <td class="col-3 d-flex align-items-center">
-        <span v-if="ufs[indexUFS].UF" style="font-weight: 500">
-          {{ ufs[indexUFS].UF }}
+      <td
+        v-if="
+          $store.clasifications[elementsClasificationsIndexs[indexElement]]
+            .clasification === 'UF'
+        "
+        :class="`col-${columnWidth[0]}`"
+      >
+        <span v-html="elements[indexElement].element"></span>
+      </td>
+      <td
+        v-if="
+          $store.clasifications[elementsClasificationsIndexs[indexElement]]
+            .clasification === 'UF'
+        "
+        :class="`col-${columnWidth[1]}`"
+      >
+        <span>
+          {{ elementsUbications[indexElement] }}
         </span>
       </td>
-      <td class="col-3 d-flex align-items-center align-middle">
-        <span v-if="ufs[indexUFS].UF" style="font-weight: 500">
-          {{ ufsUbications[indexUFS] }}
-        </span>
-      </td>
-      <td class="d-table-cell">
-        <descriptor-type
-          v-for="(descriptorType, indexDT) in descriptorsTypes"
-          :key="indexDT"
-          :type="descriptorType.inputType"
-          :descriptors="descriptorType.descriptors"
-          :value="ufs[indexUFS].generalDescription[indexDT]"
-          :label="descriptorType.name"
-          @input-change="updateUFDescriptor($event, indexDT, indexUFS)"
-          @select-change="updateUFDescriptor($event, indexDT, indexUFS)"
-        ></descriptor-type>
-      </td>
+      <div
+        v-for="(attribute, indexAttribute) in elementAttributes"
+        :key="attribute"
+        :class="`col-${columnWidth[2]}`"
+      >
+        <td
+          v-if="
+            $store.clasifications[elementsClasificationsIndexs[indexElement]]
+              .clasification === 'UF'
+          "
+        >
+          <descriptor-type
+            :type="
+              $store.GeneralDescriptionDescriptorsTypes[indexAttribute]
+                .inputType
+            "
+            :descriptors="
+              $store.GeneralDescriptionDescriptorsTypes[indexAttribute]
+                .descriptors
+            "
+            :value="elements[indexElement].generalDescription[attribute]"
+            @input-change="
+              updateElementDescriptor($event, indexElement, attribute)
+            "
+            @select-change="
+              updateElementDescriptor($event, indexElement, attribute)
+            "
+          ></descriptor-type>
+        </td>
+      </div>
+      <a-divider
+        v-if="
+          $store.clasifications[elementsClasificationsIndexs[indexElement]]
+            .clasification === 'UF'
+        "
+      ></a-divider>
     </tr>
 
     <!-- FOOTER -->
@@ -46,9 +82,11 @@
     <tabs-footer
       :first-tab="false"
       :last-tab="false"
+      :disable-next-button="disableNextButton"
+      :disable-preview-button="disablePreviewButton"
       @go-next-tab="goNextTab"
       @go-preview-tab="goPreviewTab"
-      @go-dictionaries="goDictionaries"
+      @go-entries="goEntries"
       @save="save"
     ></tabs-footer>
   </div>
@@ -56,13 +94,13 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-
 import TabsHeader from './TabsHeader/TabsHeader.vue';
-import TabsFooterMixin from './TabsFooter/TabsFooter.mixin.js';
 import TabsFooter from './TabsFooter/TabsFooter.vue';
 import AddDescriptor from './AddDescriptor/AddDescriptor.vue';
 import DescriptorType from './DescriptorType/DescriptorType.vue';
-import useRowStyle from './Composables/RowStyleComposable';
+import UseTabFooter from './TabsFooter/UseTabFooter';
+import UseFetchAttributeFromObject from '@/utils/FetchAttributeFromObject/UseFetchAttributeFromObject';
+import { store } from '@/store/store';
 export default defineComponent({
   components: {
     'tab-header': TabsHeader,
@@ -70,29 +108,56 @@ export default defineComponent({
     'descriptor-type': DescriptorType,
     'add-descriptor': AddDescriptor,
   },
-  mixins: [TabsFooterMixin],
   props: {
-    descriptorsTypes: {
-      type: [Object],
+    elements: {
+      type: Array,
     },
-    ufs: {
-      type: [Object],
+    elementsUbications: {
+      type: Array,
     },
-    ufsUbications: {
-      type: [Object],
+    elementsClasificationsIndexs: {
+      type: Array,
+    },
+    disableNextButton: {
+      type: Boolean,
+      default: () => false,
+    },
+    disablePreviewButton: {
+      type: Boolean,
+      default: () => false,
     },
   },
-  emits: ['update-uf-descriptor'],
+  emits: [
+    'go-next-tab',
+    'go-preview-tab',
+    'go-entries',
+    'save',
+    'update-element-descriptor',
+  ],
   setup(props, context) {
-    const { isPair, rowStyle } = useRowStyle();
-    const updateUFDescriptor = (descriptor, indexDT, indexUFS) => {
-      const update = { descriptor, indexDT, indexUFS };
-      context.emit('update-uf-descriptor', update);
+    const { goNextTab, goPreviewTab, goEntries, save } = UseTabFooter(context);
+    const { fetchAttributeFromObject } = UseFetchAttributeFromObject();
+    const updateElementDescriptor = (value, indexElement, attribute) => {
+      const update = {
+        value,
+        indexElement,
+        attribute,
+      };
+      context.emit('update-element-descriptor', update);
     };
     return {
-      updateUFDescriptor,
-      rowStyle,
-      isPair,
+      columnWidth: [
+        2,
+        1,
+        Math.floor(9 / store.GeneralDescriptionDescriptorsTypes.length),
+      ],
+      goNextTab,
+      goPreviewTab,
+      goEntries,
+      save,
+      elementAttributes: ['tipo', 'structure', 'conceptualDomain'],
+      updateElementDescriptor,
+      fetchAttributeFromObject,
     };
   },
 });

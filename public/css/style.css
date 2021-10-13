@@ -13011,7 +13011,8 @@ textarea.parsley-error:active {
 
 /*  3.15 Widgets  */
 
--------------------------------------------------/ .widget-1 {
+/* -------------------------------------------- */
+.widget-1 {
 	border-radius: 3px;
 }
 
@@ -18310,7 +18311,7 @@ textarea.parsley-success:focus {
 }
 
 .bg-br-primary {
-	background: #FFD86F, #FC6262)!important;
+	background: #FFD86F, #FC6262 !important;
 	border: none;
 }
 

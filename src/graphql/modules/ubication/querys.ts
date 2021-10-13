@@ -5,10 +5,6 @@ export const getAllUbicationsQuery = gql`
     getAllUbications {
       id
       ubication
-      clasifications {
-        id
-        clasification
-      }
     }
   }
 `;

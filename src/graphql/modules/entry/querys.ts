@@ -12,38 +12,40 @@ export const getEntryByIDQuery = gql`
       id
       letter
       context
-      lemma {
+      elements {
         id
-        lemma
+        element
         clasification
-      }
-      sublemmas {
-        id
-        sublemma
-        clasification
-      }
-      UFs {
-        id
-        UF
         ubication
-        generalDescription
+        generalDescription {
+          tipo
+          structure
+          conceptualDomain
+        }
+        orderLemma {
+          order
+          criteriaOfLematization
+          formalStructure
+          ubicationOfContorno
+          typeOfVariant
+          formatOfVariant
+          tipographyOfVariant
+        }
         useInformation {
           anotation
-          descriptors
+          position
+          format
+          tipography
         }
-        orderLemma
-        ContornoDefinition {
-          definition {
-            definition
-            descriptors {
-              typeOfDefinition
-              relationship
-            }
-          }
-          contorno {
-            contorno
-            descriptors
-          }
+        contornoDefinition {
+          definition
+          typeOfDefinition
+          argumentalSchema
+          relationship
+          contorno
+          typeOfContorno
+          positionOfContorno
+          formatOfContorno
         }
         example {
           anotation
@@ -51,7 +53,11 @@ export const getEntryByIDQuery = gql`
           formatOfExample
           functionOfExample
         }
-        paradigmaticInfo
+        paradigmaticInfo {
+          typeOfRelationship
+          formOfPresentation
+          position
+        }
       }
     }
   }

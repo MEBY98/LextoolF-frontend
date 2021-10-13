@@ -1,42 +1,48 @@
 <template>
   <a-modal :visible="visible" :footer="null" @cancel="closeModal">
     <span v-if="observation !== null" style="font-weigth: 700">
-      Observacion: {{ observation }}
+      Observación: {{ observation }}
     </span>
     <a-divider v-if="observation !== null" />
     <a-radio-group v-model:value="selectedDescriptorType">
       <div v-for="(d, index) in descriptorsTypes" :key="index" class="d-inline">
-        <a-radio v-if="d.inputType !== 'textInput'" :value="d.id">
+        <a-radio v-if="d.inputType !== 'text'" :value="d.id">
           {{ d.name }}
         </a-radio>
       </div>
     </a-radio-group>
     <a-divider />
-    <a-input
-      v-if="selectedDescriptorType !== ''"
-      v-model:value="descriptor"
-      :placeholder="'Escriba el Nuevo Descriptor'"
-    ></a-input>
-    <a-divider />
-    <div class="d-flex flex-row-reverse">
-      <a-button
-        v-if="selectedDescriptorType !== ''"
-        type="primary"
-        @click="addDescriptor"
-      >
-        Agregar
-      </a-button>
-      <a-button class="mr-2" @click="closeModal">Cancelar</a-button>
-    </div>
+    <a-form :model="newDescriptor" :rules="rules" @finish="handleFinish">
+      <a-form-item name="description" :colon="false">
+        <a-input
+          v-if="selectedDescriptorType !== ''"
+          v-model:value="newDescriptor.description"
+          :placeholder="'Escriba la descripción'"
+        ></a-input>
+      </a-form-item>
+      <a-form-item>
+        <form-footer
+          :cancel-label="'Cancelar'"
+          :submit-icon="'PlusOutlined'"
+          :submit-label="'Agregar'"
+          @click-cancel="closeModal"
+        ></form-footer>
+      </a-form-item>
+    </a-form>
   </a-modal>
 </template>
 <script lang="ts">
-import Vue, { defineComponent, ref } from 'vue';
-
+import { defineComponent, Ref, ref } from 'vue';
 import { DescriptorType as DescriptorTypeModel } from '@/graphql/modules/DescriptorsTypes/model';
-import { Observation as ObservationModel } from '@/graphql/modules/Observation/model';
+import { NewDescriptor } from '@/models/Descriptor';
+import UseDescriptorRules from './UseDescriptorRules';
+import UseUpdateStoreDescriptors from './UseUpdateStoreDescriptors';
+import FormFooter from '@/components/shared/FormFooter.vue';
 
 export default defineComponent({
+  components: {
+    'form-footer': FormFooter,
+  },
   props: {
     observation: {
       type: String,
@@ -48,62 +54,38 @@ export default defineComponent({
       type: Boolean,
     },
     descriptorsTypes: {
-      type: [Object],
+      type: Array,
     },
     tab: {
       type: Number,
     },
   },
   emits: ['add-descriptor', 'close-modal'],
-  data() {
-    const selectedDescriptorType = new String('');
-    const descriptor = new String('');
+  setup(props, context) {
+    const selectedDescriptorType: Ref<string> = ref('');
+    const newDescriptor: Ref<NewDescriptor> = ref({
+      description: '',
+    });
+    const { rules } = UseDescriptorRules();
+    const handleFinish = async () => {
+      await DescriptorTypeModel.createDescriptorByDescriptorType(
+        selectedDescriptorType.value,
+        { description: newDescriptor.value.description }
+      );
+      const { updateStore } = UseUpdateStoreDescriptors(props.tab);
+      await updateStore();
+      context.emit('add-descriptor');
+    };
+    const closeModal = () => {
+      context.emit('close-modal');
+    };
     return {
       selectedDescriptorType,
-      descriptor,
+      newDescriptor,
+      rules,
+      handleFinish,
+      closeModal,
     };
-  },
-  methods: {
-    async addDescriptor() {
-      this.$store.layout.isLoading = true;
-      const dataDescriptor = await DescriptorTypeModel.createDescriptorByDescriptorType(
-        this.selectedDescriptorType,
-        { description: this.descriptor }
-      );
-      if (this.tab === 1) {
-        const dataGeneralDescriptorsDescriptorsTypes = await DescriptorTypeModel.getAllGeneralDescriptionDescriptorsTypes();
-        this.$store.GeneralDescriptionDescriptorsTypes =
-          dataGeneralDescriptorsDescriptorsTypes.data.getAllGeneralDescriptionDescriptorsTypes;
-      } else if (this.tab === 2) {
-        const dataUseInformationObservations = await ObservationModel.getAllUseInformationObservations();
-        this.$store.UseInformationObservations =
-          dataUseInformationObservations.data.getAllUseInformationObservations;
-      } else if (this.tab === 3) {
-        const dataOrderLemmaObservations = await ObservationModel.getAllOrderLemmaObservations();
-        this.$store.OrderLemmaObservations =
-          dataOrderLemmaObservations.data.getAllOrderLemmaObservations;
-      } else if (this.tab === 4) {
-        const dataDefinitionDescriptorsTypes = await DescriptorTypeModel.getAllDefinitionDescriptorsTypes();
-        this.$store.DefinitionDescriptorsTypes =
-          dataDefinitionDescriptorsTypes.data.getAllDefinitionDescriptorsTypes;
-        const dataContornoDescriptorsTypes = await DescriptorTypeModel.getAllContornoDescriptorsTypes();
-        this.$store.ContornoDescriptorsTypes =
-          dataContornoDescriptorsTypes.data.getAllContornoDescriptorsTypes;
-      } else if (this.tab === 5) {
-        const dataExampleDescriptorsTypes = await DescriptorTypeModel.getAllExampleDescriptorsTypes();
-        this.$store.ExampleDescriptorsTypes =
-          dataExampleDescriptorsTypes.data.getAllExampleDescriptorsTypes;
-      } else if (this.tab === 6) {
-        const dataParadigmaticInfoDescriptorsTypes = await DescriptorTypeModel.getAllParadigmaticInfoDescriptorsTypes();
-        this.$store.ParadigmaticInfoDescriptorsTypes =
-          dataParadigmaticInfoDescriptorsTypes.data.getAllParadigmaticInfoDescriptorsTypes;
-      }
-      this.$store.layout.isLoading = false;
-      this.$emit('add-descriptor');
-    },
-    closeModal() {
-      this.$emit('close-modal');
-    },
   },
 });
 </script>

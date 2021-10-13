@@ -12,24 +12,17 @@ export const createEntryByDictionaryIDMutation = gql`
       id
       letter
       context
-      lemma {
+      elements {
         id
+        element
         clasification {
           id
           clasification
         }
-      }
-      sublemmas {
-        id
-        sublemma
-        clasification {
+        ubication {
           id
-          clasification
+          ubication
         }
-      }
-      UFs {
-        id
-        UF
       }
     }
   }
@@ -50,14 +43,17 @@ export const editEntryMutation = gql`
       id
       letter
       context
-      lemma {
+      elements {
         id
-      }
-      sublemmas {
-        id
-      }
-      UFs {
-        id
+        element
+        clasification {
+          id
+          clasification
+        }
+        ubication {
+          id
+          ubication
+        }
       }
     }
   }

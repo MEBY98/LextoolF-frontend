@@ -14,3 +14,25 @@ export const createDescriptorByDescriptorTypeMutation = gql`
     }
   }
 `;
+
+export const deleteDescriptorByDescriptorTypeMutation = gql`
+  mutation deleteDescriptorByDescriptorType(
+    $descriptorID: String!
+    $descriptorTypeID: String!
+  ) {
+    deleteDescriptorByDescriptorType(
+      descriptorID: $descriptorID
+      descriptorTypeID: $descriptorTypeID
+    ) {
+      id
+      name
+      tab
+      descriptors {
+        id
+        description
+      }
+      inputType
+      multiInput
+    }
+  }
+`;

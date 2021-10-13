@@ -1,263 +1,229 @@
 <template>
   <div style="text-align: right">
-    <ubications-modal
-      v-model:visible="showUbicationsModal"
-      @add-uf="addUF"
-      @close="closeUbicationsModalMethod"
-    ></ubications-modal>
-    <PlusSquareFilled
-      :style="{
-        fontSize: '24px',
-        color: '#08c',
-        'margin-bottom': '10px',
-      }"
+    <tooltip-icon
+      :icon="'PlusSquareFilled'"
+      :text="'Ubicación'"
+      :title="'Crear nueva ubicación'"
+      @click="showNewUbicationModalMethod"
+    ></tooltip-icon>
+    <tooltip-icon
+      :icon="'PlusSquareFilled'"
+      :text="'Clasificación'"
+      :title="'Crear nueva clasificación'"
+      @click="showNewClasificationModalMethod"
+    ></tooltip-icon>
+    <tooltip-icon
+      :icon="'PlusSquareFilled'"
+      :text="'Elemento'"
+      :title="'Extraer elemento'"
       @click="showUbicationsModalMethod"
-    />
-    <span
-      style="font-weight: 500; margin-left: 8px; margin-right: 8px"
-      @click="showUbicationsModalMethod"
-    >
-      UF
-    </span>
-    <PlusSquareFilled
-      :style="{
-        fontSize: '24px',
-        color: '#08c',
-        'margin-bottom': '10px',
-      }"
-      @click="addSublemma"
-    />
-    <span
-      style="font-weight: 500; margin-left: 8px; margin-right: 8px"
-      @click="addSublemma"
-    >
-      Sublema
-    </span>
+    ></tooltip-icon>
   </div>
 
-  <a-form :rules="rules">
-    <!-- LEMMA -->
-    <br />
-
-    <div class="d-flex-inline">
-      <h6 style="margin-right: 8px; font-weight: 500">Lema</h6>
-      <!-- <a-form-item class="d-flex-inline" name="lemmaInput"> -->
-      <a-input
-        :value="lemma.lemma"
-        placeholder="Escriba el Lema"
-        style="width: 62%; margin-right: 8px"
-        @input="lemmaChange($event.target.value)"
-      ></a-input>
-      <!-- </a-form-item> -->
-      <!-- <a-form-item class="d-flex-inline" name="lemmaSelect"> -->
-      <clasification-select
-        :selected="lemma.clasification"
-        :clasifications="$store.lemmaClasifications"
-        style="width: 20%"
-        @clasification-change="updateLemmaClasification"
-      ></clasification-select>
-      <!-- </a-form-item> -->
-    </div>
-
-    <!-- SUBLEMMAS -->
-    <br />
-    <h6 v-if="sublemmas.length !== 0">Sublemas</h6>
-    <div
-      v-for="(sublemma, index) in sublemmas"
-      :key="index"
-      name="sublemmas"
-      style="margin-bottom: 10px"
-    >
-      <span style="font-weight: 500; font-size: 15px; margin-right: 8px">
-        Sublema {{ index + 1 }}
+  <br />
+  <tr class="row w-100">
+    <th class="col-3">
+      <h6>Ubicación</h6>
+    </th>
+    <th class="col-5">
+      <h6>Anotación del lexicógrafo</h6>
+    </th>
+    <th class="col-4">
+      <h6>Clasificación</h6>
+    </th>
+  </tr>
+  <tr
+    v-for="(element, indexElement) in elements"
+    :key="indexElement"
+    class="row w-100 d-flex align-items-center justify-center"
+  >
+    <td class="col-3">
+      <span>
+        {{ elementsUbications[indexElement] }}
       </span>
-      <a-input
-        :value="sublemmas[index].sublemma"
-        placeholder="Escriba el sublema"
-        style="width: 62%; margin-right: 8px"
-        @input="sublemmaChange($event.target.value, index)"
-      ></a-input>
-      <clasification-select
-        :selected="sublemmas[index].clasification"
-        :clasifications="$store.sublemmaClasifications"
-        style="width: 20%"
-        @clasification-change="updateSublemmaClasification($event, index)"
-      ></clasification-select>
-      <MinusCircleFilled
-        class="dynamic-delete-button"
-        :style="{ color: 'red', marginLeft: '8px' }"
-        @click="removeSublemma(index)"
-      />
-    </div>
-
-    <!-- UFS -->
-    <br />
-    <h6 v-if="ufs.length !== 0">Unidades Fraseologicas</h6>
-    <div
-      v-for="(UF, index) in ufs"
-      :key="index"
-      name="ufs"
-      style="margin-bottom: 10px"
-    >
-      <span style="font-weight: 500; font-size: 15px; margin-right: 8px">
-        {{ ufsUbications[index] }}
-      </span>
-      <a-input
-        :value="ufs[index].UF"
-        placeholder="Escriba la UF"
-        style="width: 62%; margin-right: 8px"
-        @input="UFChange($event.target.value, index)"
-      ></a-input>
-      <MinusCircleFilled
-        class="dynamic-delete-button"
-        :style="{ color: 'red', marginLeft: '8px' }"
-        @click="removeUF(index)"
-      />
-    </div>
-  </a-form>
+    </td>
+    <td class="col-5">
+      <ck-editor-component
+        :value="elements[indexElement].element"
+        @input="changeElement($event, indexElement)"
+      ></ck-editor-component>
+    </td>
+    <td class="col-4">
+      <general-select
+        :elements="$store.clasifications"
+        :display-attribute="'clasification'"
+        :key-value="'clasification'"
+        :placeholder="'Clasifique'"
+        :multiple="false"
+        :index-value="true"
+        :value="elementsClasificationsIndexs[indexElement]"
+        @change="clasificateElement($event, indexElement)"
+      ></general-select>
+      <div class="d-inline opacity">
+        <tooltip-icon
+          class="opacity"
+          :icon="'MinusCircleFilled'"
+          :text="''"
+          :style-icon="{
+            fontSize: '20px',
+            color: 'red',
+          }"
+          :title="'Eliminar elemento'"
+          @click="removeElement(indexElement)"
+        ></tooltip-icon>
+      </div>
+    </td>
+    <a-divider></a-divider>
+  </tr>
 
   <!-- FOOTER -->
   <br />
   <tabs-footer
     :first-tab="true"
     :last-tab="false"
+    :disable-next-button="disableNextButton"
+    :disable-preview-button="disablePreviewButton"
     @go-next-tab="goNextTab"
     @go-preview-tab="goPreviewTab"
-    @go-dictionaries="goDictionaries"
+    @go-entries="goEntries"
     @save="save"
   ></tabs-footer>
+  <ubications-modal
+    :visible="showUbicationsModal"
+    :has-lemma="hasLemma"
+    @add-element="addElement"
+    @close-modal="closeUbicationsModalMethod"
+  ></ubications-modal>
+  <new-ubication-modal
+    :visible="showNewUbicationModal"
+    @close-modal="closeNewUbicationModalMethod"
+  ></new-ubication-modal>
+  <new-clasification-modal
+    :visible="showNewClasificationModal"
+    @close-modal="closeNewClasificationModalMethod"
+  ></new-clasification-modal>
 </template>
 
 <script lang="ts">
-import { MinusCircleFilled, PlusSquareFilled } from '@ant-design/icons-vue';
-
-import { defineComponent, ref } from 'vue';
-
-import UbicationsModal from '../UbicationsModal.vue';
-import ClasificationSelect from '../ClasificationSelect.vue';
+import { defineComponent } from 'vue';
+import TooltipIcon from '@/components/shared/TooltipIcon.vue';
+import UbicationsModal from './UbicationsModal/UbicationsModal.vue';
+import NewUbicationModal from '../../ubication/NewUbicationModal.vue';
+import NewClasificationModal from '../../clasification/NewClasificationModal.vue';
+import Select from '@/components/shared/Select.vue';
 import TabsFooter from './TabsFooter/TabsFooter.vue';
-import TabsFooterMixin from './TabsFooter/TabsFooter.mixin.js';
-
+import UseUbicationsModal from './UbicationsModal/UseUbicationsModal';
+import UseNewUbicationModal from '../../ubication/UseNewUbicationModal';
+import UseNewClasificationModal from '../../clasification/UseNewClasificationModal';
+import UseTabFooter from './TabsFooter/UseTabFooter';
+import CKEditorComponentVue from '../HtmlEditor/CKEditorComponent.vue';
 export default defineComponent({
   components: {
-    MinusCircleFilled,
-    PlusSquareFilled,
     'ubications-modal': UbicationsModal,
-    'clasification-select': ClasificationSelect,
+    'new-ubication-modal': NewUbicationModal,
+    'new-clasification-modal': NewClasificationModal,
+    'general-select': Select,
     'tabs-footer': TabsFooter,
+    'tooltip-icon': TooltipIcon,
+    'ck-editor-component': CKEditorComponentVue,
   },
-  mixins: [TabsFooterMixin],
   props: {
-    lemma: {
-      type: Object,
+    elements: {
+      type: Array,
     },
-    sublemmas: {
-      type: [Object],
+    elementsUbications: {
+      type: Array,
     },
-    ufs: {
-      type: [Object],
+    elementsClasificationsIndexs: {
+      type: Array,
     },
-    ufsUbications: {
-      type: [String],
+    hasLemma: {
+      type: Boolean,
+    },
+    disableNextButton: {
+      type: Boolean,
+      default: () => false,
+    },
+    disablePreviewButton: {
+      type: Boolean,
+      default: () => false,
     },
   },
   emits: [
-    'add-uf',
-    'uf-change',
-    'remove-uf',
-
-    'lemma-change',
-    'update-lemma-clasification',
-
-    'add-sublemma',
-    'sublemma-change',
-    'update-sublemma-clasification',
-    'remove-sublemma',
+    'add-element',
+    'change-element',
+    'remove-element',
+    'clasificate-element',
+    'go-next-tab',
+    'go-preview-tab',
+    'save',
+    'go-entries',
   ],
   setup(props, context) {
-    const showUbicationsModal = ref(false);
-    //FORM RULES
-    const rules = {
-      lemmaInput: [
-        {
-          required: true,
-          message: 'Por favor escriba el Lema',
-          trigger: 'blur',
-        },
-      ],
-      lemmaSelect: [
-        {
-          required: true,
-          message: 'Seleccione una clasificacion',
-          trigger: 'blur',
-        },
-      ],
+    const addElement = (ubication) => {
+      context.emit('add-element', ubication);
+      closeUbicationsModalMethod();
     };
-
-    //UF METHODS
-    const addUF = (selectedUbication) => {
-      context.emit('add-uf', selectedUbication);
-      showUbicationsModal.value = false;
+    const changeElement = (element: string, index: number) => {
+      const update = {
+        element,
+        index,
+      };
+      context.emit('change-element', update);
     };
-    const UFChange = (uf, index) => {
-      const update = { uf, index };
-      context.emit('uf-change', update);
+    const removeElement = (index) => {
+      context.emit('remove-element', index);
     };
-    const removeUF = (index) => {
-      context.emit('remove-uf', index);
+    const clasificateElement = (index, indexElement) => {
+      const update = {
+        index,
+        indexElement,
+      };
+      context.emit('clasificate-element', update);
     };
-
-    //SUBLEMMA METHODS
-    const addSublemma = () => {
-      context.emit('add-sublemma');
-      console.log('context:', context);
-    };
-    const sublemmaChange = (sublemma, index) => {
-      const update = { sublemma, index };
-      context.emit('sublemma-change', update);
-    };
-    const updateSublemmaClasification = (clasification, index) => {
-      const update = { clasification, index };
-      context.emit('update-sublemma-clasification', update);
-    };
-    const removeSublemma = (index) => {
-      context.emit('remove-sublemma', index);
-    };
-
-    //LEMMA METHODS
-    const lemmaChange = (lemma) => {
-      context.emit('lemma-change', lemma);
-    };
-    const updateLemmaClasification = (clasification) => {
-      context.emit('update-lemma-clasification', clasification);
-    };
-
-    //UBICATIONS MODAL METHODS
-    const closeUbicationsModalMethod = () => {
-      showUbicationsModal.value = false;
-    };
-    const showUbicationsModalMethod = () => {
-      showUbicationsModal.value = true;
-    };
+    const {
+      showUbicationsModal,
+      showUbicationsModalMethod,
+      closeUbicationsModalMethod,
+    } = UseUbicationsModal();
+    const {
+      showNewUbicationModal,
+      showNewUbicationModalMethod,
+      closeNewUbicationModalMethod,
+    } = UseNewUbicationModal();
+    const {
+      showNewClasificationModal,
+      showNewClasificationModalMethod,
+      closeNewClasificationModalMethod,
+    } = UseNewClasificationModal();
+    const { goNextTab, goPreviewTab, goEntries, save } = UseTabFooter(context);
     return {
-      rules,
-
       showUbicationsModal,
       closeUbicationsModalMethod,
       showUbicationsModalMethod,
-
-      addUF,
-      UFChange,
-      removeUF,
-
-      addSublemma,
-      sublemmaChange,
-      updateSublemmaClasification,
-      removeSublemma,
-
-      lemmaChange,
-      updateLemmaClasification,
+      showNewUbicationModal,
+      showNewUbicationModalMethod,
+      closeNewUbicationModalMethod,
+      showNewClasificationModal,
+      showNewClasificationModalMethod,
+      closeNewClasificationModalMethod,
+      goNextTab,
+      goPreviewTab,
+      goEntries,
+      save,
+      addElement,
+      changeElement,
+      removeElement,
+      clasificateElement,
     };
   },
 });
 </script>
+<style scoped>
+.opacity {
+  opacity: 0.5;
+}
+.opacity:hover {
+  opacity: 0.8;
+}
+</style>

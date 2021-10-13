@@ -1,15 +1,10 @@
 <template>
-  <PlusSquareFilled
-    :style="{
-      fontSize: '24px',
-      color: '#08c',
-      'margin-bottom': '10px',
-    }"
-    @click="showAddDescriptorModal = true"
-  />
-  <span style="font-weight: 500; margin-left: 8px; margin-right: 8px">
-    Descriptor
-  </span>
+  <tooltip-icon
+    :icon="'PlusSquareFilled'"
+    :text="'Descriptor'"
+    :title="'Crear descriptor'"
+    @click="showAddDescriptorModalMethod"
+  ></tooltip-icon>
   <add-descriptor-modal
     :visible="showAddDescriptorModal"
     :observation="observation"
@@ -21,14 +16,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
-import { PlusSquareFilled } from '@ant-design/icons-vue';
+import { defineComponent } from 'vue';
 import AddDescriptorModal from './AddDescriptorModal.vue';
+import TooltipIcon from '@/components/shared/TooltipIcon.vue';
+import UseAddDescriptorModal from './UseAddDescriptorModal';
 
 export default defineComponent({
   components: {
-    PlusSquareFilled,
     'add-descriptor-modal': AddDescriptorModal,
+    'tooltip-icon': TooltipIcon,
   },
   props: {
     observation: {
@@ -38,28 +34,22 @@ export default defineComponent({
       },
     },
     descriptorsTypes: {
-      type: [Object],
+      type: Array,
     },
     tab: {
       type: Number,
     },
   },
   setup() {
-    const showAddDescriptorModal = ref(false);
-    const showAddDescriptorModalMethod = () => {
-      showAddDescriptorModal.value = true;
-    };
-    const closeAddDescriptorModalMethod = () => {
-      showAddDescriptorModal.value = false;
-    };
-    const addDescriptor = (descriptor) => {
-      console.log(descriptor);
-    };
+    const {
+      showAddDescriptorModal,
+      showAddDescriptorModalMethod,
+      closeAddDescriptorModalMethod,
+    } = UseAddDescriptorModal();
     return {
       showAddDescriptorModal,
       showAddDescriptorModalMethod,
       closeAddDescriptorModalMethod,
-      addDescriptor,
     };
   },
 });

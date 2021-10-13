@@ -7,8 +7,8 @@ import { apolloClient, FetchPolicy } from '@/graphql/apolloProvider';
 import { apolloMutate, apolloQuery } from '@/graphql/apollo';
 import { getEntryByIDQuery, getEntryUbicationsByIDQuery } from './querys';
 
-export class UF {
-  static createUF(dictionaryID, newEntry) {
+export class Entry {
+  static createEntry(dictionaryID, newEntry) {
     return apolloMutate(
       createEntryByDictionaryIDMutation,
       { dictionaryID, newEntry },

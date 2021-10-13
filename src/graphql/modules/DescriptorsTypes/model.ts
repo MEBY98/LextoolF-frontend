@@ -1,51 +1,48 @@
 import { apolloQuery, apolloMutate } from '@/graphql/apollo';
 import { FetchPolicy, apolloClient } from '@/graphql/apolloProvider';
+import { getDescriptorsTypesByTabQuery } from './querys';
 import {
-  getAllGeneralDescriptionDescriptorsTypesQuery,
-  getAllContornoDescriptorsTypesQuery,
-  getAllDefinitionDescriptorsTypesQuery,
-  getAllExampleDescriptorsTypesQuery,
-  getAllParadigmaticInfoDescriptorsTypesQuery,
-} from './querys';
-import { createDescriptorByDescriptorTypeMutation } from './mutations';
+  createDescriptorByDescriptorTypeMutation,
+  deleteDescriptorByDescriptorTypeMutation,
+} from './mutations';
 
 export class DescriptorType {
   static getAllGeneralDescriptionDescriptorsTypes() {
     return apolloQuery(
-      getAllGeneralDescriptionDescriptorsTypesQuery,
-      null,
+      getDescriptorsTypesByTabQuery,
+      { tab: 'GeneralDescription' },
       FetchPolicy.network_only,
       apolloClient
     );
   }
   static getAllDefinitionDescriptorsTypes() {
     return apolloQuery(
-      getAllDefinitionDescriptorsTypesQuery,
-      null,
+      getDescriptorsTypesByTabQuery,
+      { tab: 'Definition' },
       FetchPolicy.network_only,
       apolloClient
     );
   }
   static getAllContornoDescriptorsTypes() {
     return apolloQuery(
-      getAllContornoDescriptorsTypesQuery,
-      null,
+      getDescriptorsTypesByTabQuery,
+      { tab: 'Contorno' },
       FetchPolicy.network_only,
       apolloClient
     );
   }
   static getAllExampleDescriptorsTypes() {
     return apolloQuery(
-      getAllExampleDescriptorsTypesQuery,
-      null,
+      getDescriptorsTypesByTabQuery,
+      { tab: 'Example' },
       FetchPolicy.network_only,
       apolloClient
     );
   }
   static getAllParadigmaticInfoDescriptorsTypes() {
     return apolloQuery(
-      getAllParadigmaticInfoDescriptorsTypesQuery,
-      null,
+      getDescriptorsTypesByTabQuery,
+      { tab: 'ParadigmaticInfo' },
       FetchPolicy.network_only,
       apolloClient
     );
@@ -54,6 +51,14 @@ export class DescriptorType {
     return apolloMutate(
       createDescriptorByDescriptorTypeMutation,
       { descriptorTypeID, descriptor },
+      null,
+      null
+    );
+  }
+  static deleteDescriptorByDescriptorType(descriptorID, descriptorTypeID) {
+    return apolloMutate(
+      deleteDescriptorByDescriptorTypeMutation,
+      { descriptorID, descriptorTypeID },
       null,
       null
     );

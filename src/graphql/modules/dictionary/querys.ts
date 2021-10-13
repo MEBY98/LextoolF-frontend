@@ -1,100 +1,146 @@
 import gql from 'graphql-tag';
 
-export const getDictionaryByIDQuery = gql`
-  query getDictionaryByID($dictionaryID: String!) {
-    getDictionaryByID(dictionaryID: $dictionaryID) {
+export const getAllDictionariesQuery = gql`
+  query getAllDictionaries {
+    getAllDictionaries {
       id
-      name
-      shortName
-      author {
-        name
+      dictionaryInfo {
+        id
         siglas
       }
-      annoOfPublication
-      reference
       letters
       entries {
-        id
         letter
-        context
-        lemma {
+        elements {
           id
-          lemma
+          element
           clasification {
             id
             clasification
           }
-        }
-        UFs {
-          id
-          UF
           ubication {
             id
             ubication
           }
           generalDescription {
-            id
-            description
+            tipo
+            structure
+            conceptualDomain
+          }
+          orderLemma {
+            order
+            criteriaOfLematization
+            formalStructure
+            ubicationOfContorno
+            typeOfVariant
+            formatOfVariant
+            tipographyOfVariant
           }
           useInformation {
             anotation
-            descriptors {
-              id
-              description
-            }
+            position
+            format
+            tipography
           }
-          orderLemma {
-            id
-            description
-          }
-          ContornoDefinition {
-            definition {
-              definition
-              descriptors {
-                typeOfDefinition {
-                  id
-                  description
-                }
-                relationship {
-                  id
-                  description
-                }
-              }
-            }
-            contorno {
-              contorno
-              descriptors {
-                id
-                description
-              }
-            }
+          contornoDefinition {
+            definition
+            typeOfDefinition
+            argumentalSchema
+            relationship
+            contorno
+            typeOfContorno
+            positionOfContorno
+            formatOfContorno
           }
           example {
             anotation
-            typeOfExample {
-              id
-              description
-            }
-            formatOfExample {
-              id
-              description
-            }
-            functionOfExample {
-              id
-              description
-            }
+            typeOfExample
+            formatOfExample
+            functionOfExample
           }
           paradigmaticInfo {
-            id
-            description
+            typeOfRelationship
+            formOfPresentation
+            position
           }
         }
-        sublemmas {
+      }
+    }
+  }
+`;
+
+export const getDictionaryByIDQuery = gql`
+  query getDictionaryByID($dictionaryID: String!) {
+    getDictionaryByID(dictionaryID: $dictionaryID) {
+      id
+      dictionaryInfo {
+        id
+        name
+        siglas
+        annoOfPublication
+        reference
+        author {
           id
-          sublemma
+          name
+          siglas
+        }
+      }
+      letters
+      entries {
+        id
+        letter
+        context
+        elements {
+          id
+          element
           clasification {
             id
             clasification
+          }
+          ubication {
+            id
+            ubication
+          }
+          generalDescription {
+            tipo
+            structure
+            conceptualDomain
+          }
+          orderLemma {
+            order
+            criteriaOfLematization
+            formalStructure
+            ubicationOfContorno
+            typeOfVariant
+            formatOfVariant
+            tipographyOfVariant
+          }
+          useInformation {
+            anotation
+            position
+            format
+            tipography
+          }
+          contornoDefinition {
+            definition
+            typeOfDefinition
+            argumentalSchema
+            relationship
+            contorno
+            typeOfContorno
+            positionOfContorno
+            formatOfContorno
+          }
+          example {
+            anotation
+            typeOfExample
+            formatOfExample
+            functionOfExample
+          }
+          paradigmaticInfo {
+            typeOfRelationship
+            formOfPresentation
+            position
           }
         }
       }

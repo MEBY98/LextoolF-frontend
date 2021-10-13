@@ -1,11 +1,10 @@
 import App from '@/App.vue';
 import { createApp } from 'vue';
 import { registerPlugins } from './plugins/allPlugins';
-
-export const app = createApp(App);
-
+import CKEditor from '@ckeditor/ckeditor5-vue';
 import Antd from 'ant-design-vue';
+export const app = createApp(App);
 app.use(Antd);
-
+app.use(CKEditor);
 registerPlugins(app);
 app.mount('#app');

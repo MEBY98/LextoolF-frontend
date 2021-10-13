@@ -1,8 +1,7 @@
 import axios from 'axios';
-import { store } from './../store/store';
 
 export const axiosClientPostImage = axios.create({
-  baseURL: 'http://localhost:10000/files',
+  baseURL: process.env.VUE_APP_MINIO_URL,
   method: 'post',
   //   headers: {
   //     'Content-Type': 'multipart/form-data',
@@ -14,7 +13,7 @@ export const axiosClientPostImage = axios.create({
 });
 
 export const axiosClientGetImage = axios.create({
-  baseURL: 'http://localhost:10000/files',
+  baseURL: process.env.VUE_APP_MINIO_URL,
   method: 'get',
   //   headers: {
   //     'Content-Type': 'multipart/form-data',
@@ -23,4 +22,9 @@ export const axiosClientGetImage = axios.create({
   //     headers.Authorization = 'Bearer ' + store.site.token || '';
   //     return data;
   //   },
+});
+
+export const axiosClientFiles = axios.create({
+  baseURL: process.env.VUE_APP_MINIO_URL,
+  responseType: 'arraybuffer',
 });
