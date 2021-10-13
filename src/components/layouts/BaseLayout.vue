@@ -1,6 +1,6 @@
 <template>
   <div class="br-logo">
-    <a href="index.html">
+    <a @click="goToStudies">
       <h2 class="mb-1 ml-2">
         <span class="text-primary">Lex</span>
         <span class="fw-500">tool &#402;</span>
@@ -20,21 +20,33 @@
   <Sidebar />
   <Navbar />
 
+  <!-- <div
+      class="br-mainpanel br-mainpanel-large d-flex flex-column"
+      style="position: relative"
+    >
+      <div class="br-pageheader pd-y-15 pd-l-20">
+      <BreadCrumbs />
+    </div>
+      br-pageheader
+
+      <div class="container-fluid pd-30">
+        <router-view />
+      </div>
+      <Footer />
+      <ResizeSensor />
+    </div> -->
   <div
     class="br-mainpanel br-mainpanel-large d-flex flex-column"
     style="position: relative"
   >
-    <!-- <div class="br-pageheader pd-y-15 pd-l-20">
-      <BreadCrumbs />
-    </div> -->
-    <!-- br-pageheader -->
     <div class="container-fluid pd-30">
-      <router-view />
+      <router-view v-slot="{ Component }">
+        <transition name="slide-fade" mode="out-in">
+          <component :is="Component" />
+        </transition>
+      </router-view>
     </div>
-    <Footer />
-    <ResizeSensor />
   </div>
-
   <backTop />
 </template>
 
@@ -48,6 +60,7 @@ import Footer from './shared/Footer.vue';
 import ResizeSensor from './shared/ResizeSensor.vue';
 import BreadCrumbs from './shared/BreadCrumbs.vue';
 import { loadScripts } from '@/utils/loadSctipt';
+import UseRoutes from '@/router/UseRoutes';
 
 export default defineComponent({
   components: {
@@ -60,7 +73,8 @@ export default defineComponent({
   },
   props: {},
   setup() {
-    return {};
+    const { goToStudies } = UseRoutes();
+    return { goToStudies };
   },
   data: () => ({}),
   computed: {},
@@ -107,5 +121,37 @@ export default defineComponent({
 }
 .br-mainpanel-large {
   min-height: 100vh;
+}
+
+.slide-fade-enter-from {
+  opacity: 0;
+}
+.slide-fade-enter-active {
+  animation: slide-in 0.5s ease-out forwards;
+  transition: opacity 0.5s;
+}
+.slide-fade-leave-to {
+  opacity: 0;
+}
+.slide-fade-leave-active {
+  animation: slide-out 0.5s ease-out forwards;
+  transition: opacity 0.5s ease;
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateY(20px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes slide-out {
+  from {
+    transform: translateY(0px);
+  }
+  to {
+    transform: translateY(20px);
+  }
 }
 </style>
