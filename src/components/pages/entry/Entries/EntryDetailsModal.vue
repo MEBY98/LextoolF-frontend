@@ -11,7 +11,6 @@
 
 <script lang="ts">
 import { defineComponent, ref, watch } from 'vue';
-import { MINIO_URL } from '@/utils/minIO.ts';
 import CarouselImages from '../CarouselImages/CarouselImages.vue';
 
 export default defineComponent({
@@ -44,7 +43,6 @@ export default defineComponent({
       context.emit('close-modal');
     };
     return {
-      MINIO_URL,
       closeModal,
       images,
     };

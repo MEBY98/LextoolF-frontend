@@ -106,7 +106,6 @@
 <script lang="ts">
 import { computed, defineComponent, ref, watch } from 'vue';
 import ShowIcon from '@/components/shared/ShowIcon.vue';
-import { MINIO_URL } from '@/utils/minIO';
 export default defineComponent({
   components: {
     'show-icon': ShowIcon,
@@ -174,13 +173,15 @@ export default defineComponent({
         } else {
           const context = props.images[activeImage.value].context;
           const base64 = props.images[activeImage.value].base64;
-          if (context !== '') result = MINIO_URL + '/' + context;
+          if (context !== '')
+            result = process.env.VUE_APP_MINIO_URL + '/' + context;
           else result = base64;
         }
       } else {
         const context = props.images[activeImage.value].context;
         const base64 = props.images[activeImage.value].base64;
-        if (context !== '') result = MINIO_URL + '/' + context;
+        if (context !== '')
+          result = process.env.VUE_APP_MINIO_URL + '/' + context;
         else result = base64;
       }
       return result;
@@ -211,7 +212,6 @@ export default defineComponent({
       imageUrl,
       dotsLength,
       validateDeteleIcon,
-      MINIO_URL,
       deleteImage,
       goNextImage,
       goPreviewImage,

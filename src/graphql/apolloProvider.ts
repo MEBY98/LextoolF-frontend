@@ -22,7 +22,7 @@ const cache = new InMemoryCache({
 });
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:10000/graphql',
+  uri: process.env.VUE_APP_BACKEND_URL,
 });
 
 const defaultOptions: any = {
