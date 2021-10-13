@@ -98,4 +98,22 @@ export const SiteRoutes: RouteRecordRaw[] & any = [
     path: 'reports',
     component: reports,
   },
+  {
+    name: 'extractionTask',
+    exact: true,
+    path: 'extractionTask',
+    component: extractionTask,
+  },
+  {
+    name: 'newEntryA',
+    exact: true,
+    path: 'newEntryA/:source',
+    component: newEntryA,
+  },
+  {
+    name: 'entries',
+    exact: true,
+    path: 'entries',
+    component: entries,
+  },
 ];
