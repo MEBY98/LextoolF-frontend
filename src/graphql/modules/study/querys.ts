@@ -5,18 +5,25 @@ export const getAllStudiesQuery = gql`
     getAllStudies {
       id
       name
-      period
+      initYear
+      finalYear
       state
       dictionaries {
         id
-        name
-        shortName
-        author {
+        letters
+        entries
+        dictionaryInfo {
+          id
           name
           siglas
+          annoOfPublication
+          reference
+          author {
+            id
+            name
+            siglas
+          }
         }
-        annoOfPublication
-        letters
       }
     }
   }
@@ -27,21 +34,32 @@ export const getStudyByIDQuery = gql`
     getStudyByID(studyID: $studyID) {
       id
       name
-      period
+      initYear
+      finalYear
       state
       dictionaries {
         id
-        name
-        shortName
-        author {
-          name
-          siglas
-        }
-        annoOfPublication
-        reference
         letters
+        dictionaryInfo
         entries
       }
+    }
+  }
+`;
+
+export const getDictionariesInfoByIDQuery = gql`
+  query getDictionariesInfoByID($studyID: String!) {
+    getDictionariesInfoByID(studyID: $studyID) {
+      id
+      name
+      siglas
+      author {
+        id
+        name
+        siglas
+      }
+      annoOfPublication
+      reference
     }
   }
 `;

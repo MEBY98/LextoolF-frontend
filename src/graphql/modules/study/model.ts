@@ -1,5 +1,9 @@
 import { apolloQuery, apolloMutate } from '@/graphql/apollo';
-import { getAllStudiesQuery, getStudyByIDQuery } from './querys';
+import {
+  getAllStudiesQuery,
+  getStudyByIDQuery,
+  getDictionariesInfoByIDQuery,
+} from './querys';
 import { FetchPolicy, apolloClient } from '@/graphql/apolloProvider';
 import {
   deleteStudyByIDMutation,
@@ -20,6 +24,15 @@ export class Study {
   static getStudyByID(studyID: String) {
     return apolloQuery(
       getStudyByIDQuery,
+      { studyID },
+      FetchPolicy.network_only,
+      apolloClient
+    );
+  }
+
+  static getDictionariesInfoByID(studyID: String) {
+    return apolloQuery(
+      getDictionariesInfoByIDQuery,
       { studyID },
       FetchPolicy.network_only,
       apolloClient

@@ -2,46 +2,62 @@ import gql from 'graphql-tag';
 
 export const deleteStudyByIDMutation = gql`
   mutation deleteStudyByID($studyID: String!) {
-    deleteStudyByID(studyID: $studyID) {
-      id
-      name
-    }
+    deleteStudyByID(studyID: $studyID)
   }
 `;
 
 export const createStudyMutation = gql`
-  mutation createStudyMutation($fraseograficStudy: NewfraseograficStudyType!) {
+  mutation createStudy($fraseograficStudy: NewfraseograficStudyType!) {
     createStudy(fraseograficStudy: $fraseograficStudy) {
       id
       name
-      period
+      initYear
+      finalYear
+      state
       dictionaries {
         id
+        letters
+        entries
+        dictionaryInfo {
+          id
+          name
+          siglas
+          annoOfPublication
+          reference
+          author {
+            id
+            name
+            siglas
+          }
+        }
       }
     }
   }
 `;
 
 export const editStudyMutation = gql`
-  mutation editStudy($newStudy: EditfraseograficStudyType!) {
+  mutation editStudy($newStudy: EditedfraseograficStudyType!) {
     editStudy(newStudy: $newStudy) {
       id
       name
-      period
+      initYear
+      finalYear
       state
       dictionaries {
         id
-        name
-        shortName
-        author {
+        letters
+        entries
+        dictionaryInfo {
+          id
           name
           siglas
-        }
-        annoOfPublication
-        reference
-        letters
-        entries {
-          id
+          annoOfPublication
+          reference
+          author {
+            id
+            name
+            siglas
+          }
         }
       }
     }
