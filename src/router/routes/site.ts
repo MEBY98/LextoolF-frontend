@@ -1,20 +1,23 @@
 import { RouteRecordRaw } from 'vue-router';
 
 const home = () => import('@/components/pages/home.vue');
-const studies = () => import('@/components/pages/study/studies.vue');
-const newStudy = () => import('@/components/pages/study/newStudy.vue');
-const editStudy = () => import('@/components/pages/study/editStudy.vue');
-const dictionaries = () =>
-  import('@/components/pages/dictionary/dictionaries.vue');
-
-const newEntry = () => import('@/components/pages/entry/newEntry.vue');
-const editEntry = () => import('@/components/pages/entry/editEntry.vue');
-const sources = () => import('@/components/pages/sourcesA/sources.vue');
-const dictionariesA = () =>
-  import('@/components/pages/dictionaryA/dictionariesA.vue');
-const newDictionaryA = () =>
-  import('@/components/pages/dictionaryA/newDictionaryA.vue');
-const lemario = () => import('@/components/pages/lemarioA/lemario.vue');
+const studies = () => import('@/components/pages/study/Studies/Studies.vue');
+const newStudy = () => import('@/components/pages/study/NewStudy/NewStudy.vue');
+const editStudy = () =>
+  import('@/components/pages/study/EditStudy/EditStudy.vue');
+const entries = () => import('@/components/pages/entry/Entries/Entries.vue');
+const dictionariesInfo = () =>
+  import('@/components/pages/dictionaryInfo/DictionariesInfo.vue');
+const authors = () => import('@/components/pages/author/Authors.vue');
+const newEntry = () => import('@/components/pages/entry/NewEntry/NewEntry.vue');
+const editEntry = () =>
+  import('@/components/pages/entry/EditEntry/EditEntry.vue');
+const descriptors = () =>
+  import('@/components/pages/descriptor/Descriptors.vue');
+const ubications = () => import('@/components/pages/ubication/Ubications.vue');
+const clasifications = () =>
+  import('@/components/pages/clasification/Clasifications.vue');
+const reports = () => import('@/components/pages/report/Reports.vue');
 
 export const SiteRoutes: RouteRecordRaw[] & any = [
   {
@@ -30,6 +33,18 @@ export const SiteRoutes: RouteRecordRaw[] & any = [
     component: studies,
   },
   {
+    name: 'dictionariesInfo',
+    exact: true,
+    path: 'dictionariesInfo',
+    component: dictionariesInfo,
+  },
+  {
+    name: 'authors',
+    exact: true,
+    path: 'authors',
+    component: authors,
+  },
+  {
     name: 'newStudy',
     exact: true,
     path: 'newStudy',
@@ -42,10 +57,10 @@ export const SiteRoutes: RouteRecordRaw[] & any = [
     component: editStudy,
   },
   {
-    name: 'dictionaries',
+    name: 'entries',
     exact: true,
-    path: 'dictionaries',
-    component: dictionaries,
+    path: 'entries',
+    component: entries,
   },
   {
     name: 'newEntry',
@@ -60,27 +75,27 @@ export const SiteRoutes: RouteRecordRaw[] & any = [
     component: editEntry,
   },
   {
-    name: 'sources',
+    name: 'descriptors',
     exact: true,
-    path: 'sources',
-    component: sources,
+    path: 'descriptors',
+    component: descriptors,
   },
   {
-    name: 'dictionariesA',
+    name: 'ubications',
     exact: true,
-    path: 'dictionariesA',
-    component: dictionariesA,
+    path: 'ubications',
+    component: ubications,
   },
   {
-    name: 'newDictionaryA',
+    name: 'clasifications',
     exact: true,
-    path: 'newDictionaryA',
-    component: newDictionaryA,
+    path: 'clasifications',
+    component: clasifications,
   },
   {
-    name: 'lemario',
+    name: 'reports',
     exact: true,
-    path: 'lemario',
-    component: lemario,
+    path: 'reports',
+    component: reports,
   },
 ];
