@@ -11,17 +11,6 @@
       <br />
       <a-button @click="onStudies">Estudios</a-button>
     </a-card>
-    <a-card
-      hoverable
-      title="Módulo Lexicográfico"
-      style="width: 400px; height: 200px"
-    >
-      <p>
-        Módulo de gestión del lemario como parte de la confección de un
-        diccionario de fraseologismos
-      </p>
-      <a-button @click="onSources">Fuentes</a-button>
-    </a-card>
   </a-space>
 </template>
 <script lang="ts">
@@ -30,9 +19,6 @@ export default defineComponent({
   methods: {
     onStudies() {
       this.$router.push('studies');
-    },
-    onSources() {
-      this.$router.push('sources');
     },
   },
 });
