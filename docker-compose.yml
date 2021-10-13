@@ -1,0 +1,10 @@
+version: '3'
+services:
+  lextoolf-front:
+    image: lextoolf-front
+    restart: always
+    build:
+      context: .
+    ports:
+      -9022:80
+      
