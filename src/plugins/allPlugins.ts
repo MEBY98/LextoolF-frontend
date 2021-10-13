@@ -1,4 +1,4 @@
-import { apolloClient, apolloClientA } from '../graphql/apolloProvider';
+import { apolloClient } from '../graphql/apolloProvider';
 import { DefaultApolloClient } from '@vue/apollo-composable';
 import { store } from '@/store/store';
 import router from '@/router/router';
