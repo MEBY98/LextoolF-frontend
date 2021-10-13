@@ -1,20 +1,20 @@
 export class ObservationStore {
-  id: String;
-  name: String;
-  tab: String;
-  descriptorsTypes: [DescriptorTypeStore];
+  id: string;
+  name: string;
+  tab: string;
+  descriptorsTypes: DescriptorTypeStore[];
 }
 
 export class DescriptorStore {
-  id: String;
-  description: String;
+  id: string;
+  description: string;
 }
 
 export class DescriptorTypeStore {
-  id: String;
-  name: String;
-  inputType: String;
-  multiInput: Boolean;
-  tab: String;
-  descriptors: [DescriptorStore];
+  id: string;
+  name: string;
+  inputType: string;
+  multiInput: boolean;
+  tab: string;
+  descriptors: DescriptorStore[];
 }

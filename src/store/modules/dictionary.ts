@@ -1,17 +1,9 @@
 import { EntryStore } from './entry';
+import { DictionaryInfoStore } from './dictionaryInfo';
 
 export class DictionaryStore {
-  id: String;
-  name: String;
-  shortName: String;
-  author: [Author];
-  annoOfPublication: Number;
-  reference: String;
-  letters: String[];
-  entries: [EntryStore];
-}
-
-export class Author {
-  name: String;
-  siglas: String;
+  id: string;
+  dictionaryInfo: DictionaryInfoStore;
+  letters: string[];
+  entries: EntryStore[];
 }

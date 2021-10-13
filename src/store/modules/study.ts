@@ -1,7 +1,9 @@
 import { DictionaryStore } from './dictionary';
 
 export class StudyStore {
-  id: String;
-  name: String;
-  dictionaries: [DictionaryStore];
+  id: string;
+  name: string;
+  initYear: number;
+  finalYear: number;
+  dictionaries: DictionaryStore[];
 }
