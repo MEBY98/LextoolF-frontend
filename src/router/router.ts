@@ -59,12 +59,12 @@ router.beforeEach((to, from, next) => {
     .slice()
     .reverse()
     .find((r) => r.meta && r.meta.title);
-  if (nearestWithTitle) document.title = nearestWithTitle.meta.title;
+  if (nearestWithTitle) document.title = nearestWithTitle.path;
 
   next();
 });
 
-router.afterEach((to, from) => {
+router.afterEach(() => {
   setTimeout(() => {
     // done();
   }, 200);
