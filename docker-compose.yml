@@ -10,5 +10,5 @@ services:
       - VUE_APP_MINIO_URL='http://10.25.27.77:9021/files'
       - VUE_APP_BACKEND_URL='http://10.25.27.77:9021/graphql'
     ports:
-      -9022:80
+      - 9022:80
       
